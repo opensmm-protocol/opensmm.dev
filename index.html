@@ -41,11 +41,11 @@
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
       <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
       <a href="#how">How it works</a>
       <a href="#tools">Tools</a>
       <a href="#settlement">Settlement</a>
       <a href="#trust">Trust</a>
-      <a href="#node">Run a node</a>
       <a href="#supply">Providers</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
@@ -70,7 +70,7 @@
           <button class="copy" data-copy="quickstart" aria-label="Copy quick start command">Copy</button>
         </div>
       </div>
-      <p class="hero-note">MIT licensed. Ten MCP tools. One rule: the same call over REST and MCP returns the same order. Browse the <a href="/catalog/">live catalog</a> — 4,000+ services, refreshed from supply nodes.</p>
+      <p class="hero-note">MIT licensed. Ten MCP tools. One rule: the same call over REST and MCP returns the same order. Browse the <a href="/catalog/">live catalog</a> — 4,000+ services, refreshed from supply nodes. Or follow the <a href="/node/">step-by-step guide</a> to run your own gateway node.</p>
     </div>
 
     <div class="wire" role="img" aria-label="A protocol session: search, quote, payment required, settlement, completion.">
@@ -213,6 +213,7 @@ npm run gateway</pre>
       fixture, every service carries <code>"synthetic": true</code>, so nothing there is sellable
       supply until you connect a provider. To count nodes, use the census command in
       <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md">docs/NODES.md</a>.
+      For complete step-by-step setup and node reporting, see the dedicated <a href="/node/">Run a node guide</a>.
     </p>
   </div>
 </section>
@@ -239,7 +240,8 @@ npm run gateway</pre>
       Your key is never returned, logged or listed. Add a payout address and every order on your
       services pays you directly. Or skip the JSON entirely:
       <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/PROVIDER_ONBOARDING.md">paste a prompt into your AI assistant</a>
-      and let it do the call.
+      and let it do the call. To run a standalone protocol gateway node instead, see the
+      <a href="/node/">node setup guide</a>.
     </p>
   </div>
 </section>
@@ -252,6 +254,7 @@ npm run gateway</pre>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
       <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>
