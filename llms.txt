@@ -50,6 +50,40 @@ capabilities, offersCount, gateway-measured metrics). Metrics are measured
 by the gateway from real orders, never self-reported. Quality tiers are
 derived with the open formula in spec §9.1 — recompute them yourself.
 
+## Run your own node
+
+A gateway node is one process serving REST /v0 and MCP /mcp on one port,
+with no keys and no external services. From a checkout (Node.js >= 22.18):
+
+```bash
+git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci
+PORT=8080 OPENSMM_STATE_FILE=./opensmm-state.json npm run gateway
+```
+
+What you get: GET /v0/services serves the mock catalog, where every service
+has `"synthetic": true` and `providerRef: "provider-alpha"` — fixtures, not
+sellable supply; the live catalog stays empty until you connect a real
+provider. GET /v0/providers lists the nodes with gateway-measured metrics.
+A node you register yourself starts at lifecycle `UNVERIFIED` and the
+gateway promotes it to `ACTIVE` only from measured orders; the built-in
+`provider-alpha` mock node is the exception — it reports `lifecycle: ACTIVE`
+with `sampleSize: 0` because it is a fixture, not a measured node. MCP
+clients connect to http://localhost:8080/mcp (Streamable HTTP: send
+`accept: application/json, text/event-stream`).
+
+```bash
+curl -s http://localhost:8080/v0/services   # mock catalog, synthetic: true
+curl -s http://localhost:8080/v0/providers  # nodes and measured metrics
+```
+
+The node has no TLS and no authentication, and `npm run gateway` binds all
+interfaces, not loopback: keep the port closed with a firewall (under Docker
+map it to loopback with `-p 127.0.0.1:8080:8080`) and put a TLS proxy in
+front before you expose it. Full instructions, including the public endpoint
+setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
+
 ## Docs
 
 - Protocol spec: https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0
