@@ -46,7 +46,7 @@
       <a href="#tools">Tools</a>
       <a href="#settlement">Settlement</a>
       <a href="#trust">Trust</a>
-      <a href="#supply">Supply</a>
+      <a href="#supply">Providers</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -188,6 +188,32 @@
       Supervision is built in: catalogs re-sync on an interval, three consecutive sync failures
       suspend a node, one success brings it back. New nodes start <code>UNVERIFIED</code> with a
       per-order volume cap — an exit scam cannot take more than the cap allows.
+    </p>
+  </div>
+</section>
+
+<section id="node" class="section">
+  <div class="wrap">
+    <h2>Run a node in 5 minutes</h2>
+    <p class="section-lede">
+      A gateway node is one process serving REST <code>/v0</code> and MCP <code>/mcp</code> on one port,
+      with no keys and no external services. It runs from a checkout of the protocol repository —
+      Node.js ≥ 22.18 and nothing else.
+    </p>
+    <div class="code-block code-wrap">
+      <div class="code-head"><span>run a node</span><button class="copy" data-copy="node-cmds" aria-label="Copy node start commands">Copy</button></div>
+<pre id="node-cmds">git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci
+npm run gateway</pre>
+    </div>
+    <p class="section-note">
+      The node reports <code>http://localhost:8080</code> on stderr. Check it with
+      <code>curl -s http://localhost:8080/v0/services</code> — the catalog it serves is the mock
+      fixture, every service carries <code>"synthetic": true</code>, so nothing there is sellable
+      supply until you connect a provider. To count nodes, use the census command in
+      <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md">docs/NODES.md</a>.
+      For complete step-by-step setup and node reporting, see the dedicated <a href="/node/">Run a node guide</a>.
     </p>
   </div>
 </section>

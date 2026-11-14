@@ -59,8 +59,10 @@ with no keys and no external services. From a checkout (Node.js >= 22.18):
 git clone https://github.com/opensmm-protocol/mcp-server.git
 cd mcp-server
 npm ci
-PORT=8080 OPENSMM_STATE_FILE=./opensmm-state.json npm run gateway
+npm run gateway
 ```
+
+The node reports its port on stderr: `OpenSMM 0.1.0 gateway listening on http://localhost:8080 (REST /v0, MCP /mcp; provider: mock, mock catalog — not real supply)`.
 
 What you get: GET /v0/services serves the mock catalog, where every service
 has `"synthetic": true` and `providerRef: "provider-alpha"` — fixtures, not
@@ -76,7 +78,11 @@ clients connect to http://localhost:8080/mcp (Streamable HTTP: send
 ```bash
 curl -s http://localhost:8080/v0/services   # mock catalog, synthetic: true
 curl -s http://localhost:8080/v0/providers  # nodes and measured metrics
+node scripts/node-census.mjs --url http://127.0.0.1:8080   # "status": "up"
 ```
+
+Node definition and the census command (weekly node count):
+https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md
 
 The node has no TLS and no authentication, and `npm run gateway` binds all
 interfaces, not loopback: keep the port closed with a firewall (under Docker
@@ -90,4 +96,6 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - JSON Schemas: https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0/schemas
 - Runnable examples: https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0/examples
 - Provider onboarding (incl. a copy-paste AI prompt): https://github.com/opensmm-protocol/mcp-server/blob/main/docs/PROVIDER_ONBOARDING.md
+- Node census (definition of a node, weekly count): https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md
+- Deployment (TLS, public endpoint): https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - MCP server manifest: https://opensmm.dev/mcp.json

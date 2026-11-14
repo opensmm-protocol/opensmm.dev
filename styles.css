@@ -515,6 +515,7 @@ h2 {
 @media (max-width: 560px) {
   .nav-row { flex-direction: column; gap: 10px; }
   .wire-body { font-size: 11.5px; min-height: 320px; }
+  .code-wrap pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 }
 
 @media (prefers-reduced-motion: reduce) {
