@@ -84,6 +84,12 @@ code { font-family: var(--mono); font-size: 0.86em; }
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
   gap: 56px;
   align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+.hero-copy {
+  min-width: 0;
+  max-width: 100%;
 }
 
 h1 {
@@ -107,6 +113,8 @@ h1 {
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .btn {
@@ -129,6 +137,8 @@ h1 {
   padding: 8px 8px 8px 12px;
   background: #fff;
   max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 .cmd-chip code {
   font-size: 12.5px;
@@ -137,6 +147,8 @@ h1 {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 38ch;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .copy {
@@ -503,7 +515,7 @@ h2 {
 
 @media (max-width: 900px) {
   .hero { padding: 56px 0 56px; }
-  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .flow { grid-template-columns: 1fr; }
   .flow li { border-right: none; border-bottom: 1px solid var(--rule); padding: 16px 0; }
   .flow li:last-child { border-bottom: none; }
@@ -516,6 +528,36 @@ h2 {
   .nav-row { flex-direction: column; gap: 10px; }
   .wire-body { font-size: 11.5px; min-height: 320px; }
   .code-wrap pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .hero-grid,
+  .hero-copy,
+  .hero-actions {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .cmd-chip {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .cmd-chip code {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .formula,
+  .code-block,
+  .code-block pre,
+  .settle-diagram {
+    max-width: 100%;
+    min-width: 0;
+  }
+  .settle-diagram {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
