@@ -98,4 +98,5 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - Provider onboarding (incl. a copy-paste AI prompt): https://github.com/opensmm-protocol/mcp-server/blob/main/docs/PROVIDER_ONBOARDING.md
 - Node census (definition of a node, weekly count): https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md
 - Deployment (TLS, public endpoint): https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
+- For SMM panels (deal, three steps, limits): https://opensmm.dev/panels/
 - MCP server manifest: https://opensmm.dev/mcp.json
