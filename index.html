@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OpenSMM — the open order protocol between AI agents and social growth</title>
-<meta name="description" content="OpenSMM is an open, provider-neutral protocol for ordering social media growth services from AI agents. Catalog, quotes, direct USDC settlement on Base, measured provider quality. MCP tools or plain HTTP.">
+<meta name="description" content="OpenSMM is an open, provider-neutral protocol for ordering social media growth services from AI agents. Demo catalog, quotes, direct USDC settlement on Base (tested on Base Sepolia testnet), measured provider quality. MCP tools or plain HTTP.">
 <meta property="og:title" content="OpenSMM — the open order protocol between AI agents and social growth">
-<meta property="og:description" content="Provider-neutral order protocol: search, quote, direct USDC settlement on Base, measured provider quality. MCP tools or plain HTTP.">
+<meta property="og:description" content="Provider-neutral order protocol: search, quote, direct USDC settlement on Base (tested on Base Sepolia testnet), measured provider quality. MCP tools or plain HTTP.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/">
 <link rel="canonical" href="https://opensmm.dev/">
@@ -15,7 +15,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareSourceCode",
   "name": "OpenSMM Protocol",
-  "description": "Open, provider-neutral protocol for ordering and executing social media growth services by AI agents. MCP tools and REST /v0, direct USDC settlement on Base, gateway-measured provider quality.",
+  "description": "Open, provider-neutral protocol for ordering and executing social media growth services by AI agents. MCP tools and REST /v0, direct USDC settlement on Base (tested on Base Sepolia testnet), gateway-measured provider quality.",
   "codeRepository": "https://github.com/opensmm-protocol/mcp-server",
   "license": "https://opensource.org/licenses/MIT",
   "programmingLanguage": "TypeScript",
@@ -61,8 +61,8 @@
       <h1>The open wire between AI&nbsp;agents and social&nbsp;growth.</h1>
       <p class="lede">
         OpenSMM is a provider-neutral order protocol. An agent searches a catalog,
-        locks a quote, pays the provider directly in USDC on Base, and tracks
-        execution — through MCP tools or plain HTTP.
+        locks a quote, pays the provider directly in USDC on Base (tested on Base Sepolia
+        testnet for now), and tracks execution — through MCP tools or plain HTTP.
       </p>
       <div class="hero-actions">
         <a class="btn" href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Read the spec</a>
@@ -71,7 +71,12 @@
           <button class="copy" data-copy="quickstart" aria-label="Copy quick start command">Copy</button>
         </div>
       </div>
-      <p class="hero-note">MIT licensed. Ten MCP tools. One rule: the same call over REST and MCP returns the same order. Browse the <a href="/catalog/">live catalog</a> — 4,000+ services, refreshed from supply nodes. Or follow the <a href="/node/">step-by-step guide</a> to run your own gateway node.</p>
+      <p class="hero-note">MIT licensed. Ten MCP tools. One rule: the same call over REST and MCP returns the same order. Browse the <a href="/catalog/">demo catalog</a> — sample services from a mock node. Or follow the <a href="/node/">step-by-step guide</a> to run your own gateway node.</p>
+      <p class="section-note">Demo catalog. This is a demo catalog
+      snapshot from a gateway node's mock fixtures — sample service names and rates, not
+      sellable supply. Ordering becomes possible after a provider (an SMM panel or another
+      supply node) connects to the gateway. Settlement is tested with USDC on Base Sepolia
+      (testnet); mainnet USDC is not enabled yet.</p>
     </div>
 
     <div class="wire" role="img" aria-label="A protocol session: search, quote, payment required, settlement, completion.">
@@ -106,7 +111,7 @@
       <li>
         <span class="flow-step">4</span>
         <h3>Pay</h3>
-        <p>The agent sends USDC on Base to the provider's own address — x402 style. The gateway never holds funds.</p>
+        <p>The agent sends USDC on Base Sepolia (testnet) to the provider's own address — x402 style. The gateway never holds funds.</p>
       </li>
       <li>
         <span class="flow-step">5</span>
@@ -141,14 +146,15 @@
     <h2>Money never transits the gateway</h2>
     <p class="section-lede">
       Direct settlement is the canonical topology. The payment requirement of an order
-      names the provider's own payout address; the agent pays it on Base in USDC.
+      names the provider's own payout address; the agent pays it in USDC on Base Sepolia
+      (testnet) today — mainnet USDC on Base is not enabled yet.
       OpenSMM routes, quotes and measures — it is software, not a counterparty.
     </p>
-    <div class="settle-diagram" role="img" aria-label="The agent pays the provider directly in USDC on Base; the gateway routes and measures.">
+    <div class="settle-diagram" role="img" aria-label="The agent pays the provider directly in USDC on Base Sepolia (testnet); the gateway routes and measures.">
       <div class="money-row">
         <div class="node">Agent</div>
         <div class="money-line">
-          <span class="money-label">USDC on Base</span>
+          <span class="money-label">USDC (testnet)</span>
           <span class="money-arrow"></span>
         </div>
         <div class="node">Provider</div>
