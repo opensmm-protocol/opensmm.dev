@@ -459,7 +459,7 @@ h2 {
   font-size: 14px;
   color: var(--muted);
 }
-.footer-links { display: flex; gap: 20px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 8px 20px; }
 .footer-links a { color: var(--muted); }
 .footer-links a:hover { color: var(--ink); text-decoration: none; }
 
@@ -564,3 +564,11 @@ h2 {
   html { scroll-behavior: auto; }
   .wire-cursor { animation: none; }
 }
+
+/* ---------- panels page ---------- */
+
+.deal-list { margin: 20px 0 0 22px; max-width: 680px; color: var(--muted); font-size: 16px; line-height: 1.7; }
+.deal-list li + li { margin-top: 8px; }
+.section h3 { margin: 36px 0 0; font-size: 18px; font-weight: 500; }
+.section h3:first-of-type { margin-top: 24px; }
+.section h3 + .code-block { margin-top: 12px; }
