@@ -95,6 +95,14 @@ function jsonLd(obj) {
   return `<script type="application/ld+json">\n${JSON.stringify(obj, null, 1)}\n</script>`;
 }
 
+/* The same honest mark on every catalog page: this snapshot is demo data, an
+   order needs a connected provider, and settlement is testnet-only for now. */
+const DEMO_NOTICE = `<p class="section-note">Demo catalog. This is a demo catalog
+    snapshot from a gateway node's mock fixtures — sample service names and rates, not
+    sellable supply. Ordering becomes possible after a provider (an SMM panel or another
+    supply node) connects to the gateway. Settlement is tested with USDC on Base Sepolia
+    (testnet); mainnet USDC is not enabled yet.</p>`;
+
 function page({ title, description, canonical, body, ld }) {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -258,11 +266,13 @@ async function emitHub(byPlatform, total) {
   <div class="wrap">
     ${crumbs([{ label: "Catalog" }])}
     <h1>Service catalog</h1>
+    ${DEMO_NOTICE}
     <p class="section-lede">
-      Live catalog of <strong>${fmtQty(total)} growth services</strong> exposed through the
-      OpenSMM protocol. Every entry is orderable by an AI agent via MCP tools or plain
-      HTTP <code>/v0</code>, quoted instantly and settled in USDC on Base.
-      Rates, limits and quality flags refresh from the network of supply nodes.
+      Demo catalog of <strong>${fmtQty(total)} sample growth services</strong> exposed through the
+      OpenSMM protocol. Every entry is a mock fixture of the gateway node itself
+      (<code>"synthetic": true</code>): an AI agent can search it via MCP tools or plain
+      HTTP <code>/v0</code>, but an order is possible only after a provider is connected.
+      Rates, limits and quality flags are illustrative, not quotes from the market.
     </p>
     <ul class="hub-list">
 ${cards}
@@ -271,8 +281,8 @@ ${cards}
 </section>`;
 
   const html = page({
-    title: "Service catalog — 4,000+ growth services for AI agents | OpenSMM",
-    description: `Live OpenSMM catalog: ${fmtQty(total)} social media growth services across Telegram, Instagram, YouTube, TikTok, X and VK. Machine-readable rates, instant quotes, USDC settlement on Base.`,
+    title: "Service catalog — demo catalog of growth services for AI agents | OpenSMM",
+    description: `Demo OpenSMM catalog: ${fmtQty(total)} sample social media growth services across Telegram, Instagram, YouTube, TikTok, X and VK. Mock fixtures, not sellable supply — ordering becomes possible after a provider connects. Settlement is tested with USDC on Base Sepolia (testnet).`,
     canonical: `${SITE}/catalog/`,
     body,
     ld: {
@@ -309,10 +319,12 @@ ${serviceTable(items)}`,
   <div class="wrap">
     ${crumbs([{ label: "Catalog", href: "/catalog/" }, { label }])}
     <h1>${esc(label)} growth services</h1>
+    ${DEMO_NOTICE}
     <p class="section-lede">
-      ${fmtQty(services.length)} live ${esc(label)} services in the OpenSMM catalog —
+      ${fmtQty(services.length)} sample ${esc(label)} services in the demo OpenSMM catalog —
       ${OBJECTIVE_COPY[objectives[0]] ?? "growth services"} and more, with machine-readable
-      rates, refill flags and instant x402 quotes. Orderable by AI agents over MCP or HTTP.
+      rates, refill flags and x402 quotes. Ordering is possible once a provider (an SMM panel
+      or another supply node) connects.
     </p>
     ${objectiveNav}
   </div>
@@ -324,8 +336,8 @@ ${sections}
 </section>`;
 
   const html = page({
-    title: `${label} services — live rates & agent API | OpenSMM catalog`,
-    description: `${fmtQty(services.length)} ${label} growth services in the open OpenSMM catalog: ${objectives.map((o) => OBJECTIVE_LABELS[o]).join(", ") || "full service range"}. Live rates, instant quotes, USDC settlement on Base, MCP and HTTP API for AI agents.`,
+    title: `${label} services — demo catalog & agent API | OpenSMM catalog`,
+    description: `${fmtQty(services.length)} sample ${label} growth services in the demo OpenSMM catalog: ${objectives.map((o) => OBJECTIVE_LABELS[o]).join(", ") || "full service range"}. Ordering becomes possible after a provider connects; settlement is tested with USDC on Base Sepolia (testnet). MCP and HTTP API for AI agents.`,
     canonical: `${SITE}/catalog/${platform}/`,
     body,
     ld: itemListLd(services, `${SITE}/catalog/${platform}/`, `${label} growth services`),
@@ -354,12 +366,13 @@ ${serviceTable(items)}`,
       { label, href: `/catalog/${platform}/` },
       { label: objLabel },
     ])}
-    <h1>Buy ${esc(label)} ${esc(objLabel)} via API</h1>
+    <h1>${esc(label)} ${esc(objLabel)} — demo catalog</h1>
+    ${DEMO_NOTICE}
     <p class="section-lede">
-      ${fmtQty(services.length)} live offers for ${esc(label)} ${esc(OBJECTIVE_COPY[objective] ?? objLabel)},
+      ${fmtQty(services.length)} sample offers for ${esc(label)} ${esc(OBJECTIVE_COPY[objective] ?? objLabel)},
       from <strong>${fmtRate(cheapest)}</strong>. Machine-readable catalog, instant
-      <code>quote_smm_order</code> pricing and direct USDC settlement on Base —
-      built for AI agents, usable from any HTTP client.
+      <code>quote_smm_order</code> pricing and settlement tested with USDC on Base Sepolia
+      (testnet) — built for AI agents, usable from any HTTP client.
     </p>
     <p class="cat-nav">All ${esc(label)} services: <a href="/catalog/${platform}/">${fmtQty(platformTotal)} entries</a></p>
   </div>
@@ -371,8 +384,8 @@ ${sections}
 </section>`;
 
   const html = page({
-    title: `Buy ${label} ${objLabel} — from ${fmtRate(cheapest)} via agent API | OpenSMM`,
-    description: `${fmtQty(services.length)} live ${label} ${objLabel} offers in the OpenSMM protocol catalog, rates from ${fmtRate(cheapest)}. Instant x402 quotes, USDC on Base, MCP tools and HTTP /v0 for AI agents.`,
+    title: `${label} ${objLabel} — demo catalog, sample rates from ${fmtRate(cheapest)} | OpenSMM`,
+    description: `${fmtQty(services.length)} sample ${label} ${objLabel} offers in the demo OpenSMM protocol catalog, rates from ${fmtRate(cheapest)}. Ordering becomes possible after a provider connects; settlement is tested with USDC on Base Sepolia (testnet). MCP tools and HTTP /v0 for AI agents.`,
     canonical: `${SITE}/catalog/${platform}/${objective}/`,
     body,
     ld: itemListLd(services, `${SITE}/catalog/${platform}/${objective}/`, `${label} ${objLabel}`),
