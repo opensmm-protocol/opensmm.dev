@@ -114,3 +114,9 @@ for (const btn of document.querySelectorAll(".copy")) {
     }
   });
 }
+
+/* Metrika goal: click on a "run a node" link */
+document.addEventListener("click", (event) => {
+  const link = event.target instanceof Element && event.target.closest('a[href="/node/"]');
+  if (link && typeof window.ym === "function") window.ym(114382488, "reachGoal", "node_cta_click");
+});
