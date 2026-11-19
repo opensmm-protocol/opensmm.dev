@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Заказ SMM-услуг через ИИ-агента — протокол OpenSMM</title>
+<meta name="description" content="Как ИИ-агент заказывает SMM-услуги по протоколу OpenSMM: поиск, котировка, заказ с ответом 402, оплата USDC напрямую провайдеру, два независимых статуса. Один clientReference → один orderId на любом транспорте.">
+<meta property="og:title" content="Заказ SMM-услуг через ИИ-агента — протокол OpenSMM">
+<meta property="og:description" content="Поиск, котировка, заказ с ответом 402, прямая оплата USDC провайдеру. Идемпотентность протокола: один clientReference → один orderId на любом транспорте.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/order-smm-via-ai-agent/">
+<link rel="canonical" href="https://opensmm.dev/order-smm-via-ai-agent/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/order-smm-via-ai-agent/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/order-smm-via-ai-agent/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/order-smm-via-ai-agent/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Каталог</a>
+      <a href="/node/">Запустить узел</a>
+      <a href="/panels/">Для панелей</a>
+      <a href="/#how">Как это работает</a>
+      <a href="/#tools">Инструменты</a>
+      <a href="/#settlement">Расчёты</a>
+      <a href="/#trust">Доверие</a>
+      <a href="/#supply">Поставщики</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Главная</a>
+      <span class="crumb-sep">/</span>
+      <span>Заказ через ИИ-агента</span>
+    </nav>
+    <h1>Заказ SMM-услуг через ИИ-агента</h1>
+    <p class="section-lede">
+      OpenSMM — открытый протокол, по которому ИИ-агент находит услуги роста соцсетей,
+      запрашивает котировку, создаёт заказ и оплачивает его напрямую исполнителю. Агент
+      работает через MCP-инструменты или обычный HTTP: порядок шагов и объекты одни и те же.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Как проходит заказ</h2>
+    <ol class="deal-list">
+      <li><strong>Поиск.</strong> <code>search_services</code> находит предложения по платформе и цели на всех подключённых узлах, с ценами за тысячу.</li>
+      <li><strong>Котировка.</strong> <code>get_quote</code> фиксирует услугу, количество, цену и срок действия. Котировка обязательна перед заказом и расходуется ровно один раз.</li>
+      <li><strong>Заказ.</strong> <code>create_order</code> идемпотентен по <code>clientReference</code> и отвечает HTTP 402 с требованиями к оплате.</li>
+      <li><strong>Оплата.</strong> Агент платит USDC на Base Sepolia (testnet) по схеме x402 — напрямую на адрес провайдера из требований. Гейтвей деньги не держит.</li>
+      <li><strong>Отслеживание.</strong> <code>get_order_status</code> опрашивает два независимых статуса — оплату и исполнение — до <code>COMPLETED</code>.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Один clientReference → один orderId</h2>
+    <p class="section-lede">
+      Идемпотентность — на уровне протокола. REST передаёт заголовок <code>Idempotency-Key</code>,
+      MCP — поле <code>clientReference</code>. Повтор запроса возвращает тот же заказ:
+      <strong>один clientReference → один orderId на любом транспорте</strong>. Одна и та же
+      операция через REST и MCP даёт одни и те же доменные объекты, поэтому агент может
+      свободно смешивать транспорты, не рискуя создать второй заказ.
+    </p>
+    <p class="section-note">
+      Конфликт — отдельная ошибка протокола (<code>IDEMPOTENCY_CONFLICT</code>): тот же ключ
+      идемпотентности пришёл с другими параметрами, и агент получает отказ явно, а не молча
+      другой заказ.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Деньги: прямо провайдеру, без посредника</h2>
+    <p class="section-lede">
+      Требования к оплате в заказе называют адрес выплат самого провайдера — агент платит ему
+      напрямую, по схеме x402. Гейтвей маршрутизирует, котирует и измеряет качество — это
+      ПО, а не сторона сделки: без балансов, без хранения средств, без «мерчанта записи».
+      Расчёты сегодня проверяются на USDC Base Sepolia (testnet); mainnet USDC на Base
+      пока не включён.
+    </p>
+    <p class="section-note">
+      Суммы в протоколе — десятичные строки в целых микро-единицах, никогда float: агент
+      не теряет копейки на округлении и может считать деньги в целых числах.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Ошибки, которые агент обрабатывает</h2>
+    <p class="section-lede">
+      Коды ошибок канонические и одинаковые на обоих транспортах — агент обрабатывает их
+      как перечисление, а не парсит тексты:
+      <code>VALIDATION_FAILED</code>, <code>NOT_FOUND</code>, <code>SERVICE_UNAVAILABLE</code>,
+      <code>QUOTE_EXPIRED</code>, <code>QUOTE_MISMATCH</code>, <code>PAYMENT_REQUIRED</code>,
+      <code>SETTLEMENT_PENDING</code>, <code>SUBMISSION_UNKNOWN</code>,
+      <code>PROVIDER_REJECTED</code>, <code>POLICY_DENIED</code>, <code>IDEMPOTENCY_CONFLICT</code>,
+      <code>REFUND_REQUIRED</code>, <code>INTERNAL</code>.
+    </p>
+    <p class="section-note">
+      Частые случаи: <code>QUOTE_EXPIRED</code> — котировка истекла, запросите новую;
+      <code>PAYMENT_REQUIRED</code> — нормальный шаг заказа, оплата ещё не подтверждена;
+      <code>SUBMISSION_UNKNOWN</code> — результат отправки заказа провайдеру неизвестен
+      (таймаут): слепой повтор запрещён, исход уточняется сверкой.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Где агент берёт услуги</h2>
+    <p class="section-lede">
+      Публичный каталог на сайте — демонстрационный снапшот mock-узла: каждая услуга помечена
+      <code>"synthetic": true</code>, это fixtures, а не продаваемое предложение. Реальные
+      заказы агент создаёт на узле, к которому подключён поставщик — SMM-панель или другой
+      узел поставок. Поставщика нет — узел отдаёт mock-каталог: на нём удобно прогнать агента
+      от поиска до статуса end-to-end, не сделав ни одного реального заказа.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Последний шаг: поднять свой узел</h2>
+    <p class="section-lede">
+      Чтобы опробовать агента на живом протоколе, поднимите узел гейтвея: один процесс отдаёт
+      REST <code>/v0</code> и MCP <code>/mcp</code> на одном порту, без ключей и внешних
+      сервисов. Нужен Node.js ≥ 22.18 — и ничего больше.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Поднять свой узел</a>
+    </div>
+    <p class="section-note">
+      Пошаговая инструкция запуска, проверка узла и отчёт о узле в сеть — на странице
+      <a href="/node/">«Запустить узел»</a>.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
+      <a href="/node/">Запустить узел</a>
+      <a href="/panels/">Для панелей</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>
