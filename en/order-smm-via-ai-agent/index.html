@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order SMM services through an AI agent — the OpenSMM protocol</title>
+<meta name="description" content="How an AI agent orders SMM services on the OpenSMM protocol: search, quote, order with an HTTP 402 payment step, USDC paid straight to the provider, two independent statuses. One clientReference → one orderId on any transport.">
+<meta property="og:title" content="Order SMM services through an AI agent — the OpenSMM protocol">
+<meta property="og:description" content="Search, quote, order with an HTTP 402 payment step, USDC straight to the provider. Protocol idempotency: one clientReference → one orderId on any transport.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/en/order-smm-via-ai-agent/">
+<link rel="canonical" href="https://opensmm.dev/en/order-smm-via-ai-agent/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/order-smm-via-ai-agent/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/order-smm-via-ai-agent/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/order-smm-via-ai-agent/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>Order via an AI agent</span>
+    </nav>
+    <h1>Order SMM services through an AI agent</h1>
+    <p class="section-lede">
+      OpenSMM is an open protocol through which an AI agent discovers social growth
+      services, requests a quote, creates an order and pays the executor directly. The
+      agent works through MCP tools or plain HTTP: the step order and the objects are the
+      same either way.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>How an order goes</h2>
+    <ol class="deal-list">
+      <li><strong>Search.</strong> <code>search_services</code> finds offers by platform and goal across all connected nodes, with prices per thousand.</li>
+      <li><strong>Quote.</strong> <code>get_quote</code> pins the service, quantity, price and validity window. A quote is required before an order and is spent exactly once.</li>
+      <li><strong>Order.</strong> <code>create_order</code> is idempotent by <code>clientReference</code> and replies with HTTP 402 carrying payment requirements.</li>
+      <li><strong>Payment.</strong> The agent pays USDC on Base Sepolia (testnet) via the x402 scheme — straight to the provider address named in the requirements. The gateway holds no money.</li>
+      <li><strong>Tracking.</strong> <code>get_order_status</code> polls two independent statuses — payment and execution — until <code>COMPLETED</code>.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>One clientReference → one orderId</h2>
+    <p class="section-lede">
+      Idempotency lives at the protocol level. REST carries an <code>Idempotency-Key</code>
+      header, MCP a <code>clientReference</code> field. Repeating a request returns the same
+      order: <strong>one clientReference → one orderId on any transport</strong>. The same
+      operation via REST and via MCP yields the same domain objects, so an agent can mix
+      transports freely without risking a second order.
+    </p>
+    <p class="section-note">
+      A conflict is a distinct protocol error (<code>IDEMPOTENCY_CONFLICT</code>): the same
+      idempotency key arrived with different parameters, and the agent gets an explicit
+      refusal instead of a silently different order.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Money: straight to the provider, no middleman</h2>
+    <p class="section-lede">
+      The payment requirements in an order name the provider's own payout address — the
+      agent pays it directly, via the x402 scheme. The gateway routes, quotes and measures
+      quality — it is software, not a party to the deal: no balances, no custody of funds,
+      no “merchant of record”. Settlements are validated today on USDC Base Sepolia
+      (testnet); mainnet USDC on Base is not enabled yet.
+    </p>
+    <p class="section-note">
+      Amounts in the protocol are decimal strings in integer micro-units, never floats: the
+      agent loses nothing to rounding and can count money in integers.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Errors an agent handles</h2>
+    <p class="section-lede">
+      The error codes are canonical and identical on both transports — the agent handles
+      them as an enumeration instead of parsing texts:
+      <code>VALIDATION_FAILED</code>, <code>NOT_FOUND</code>, <code>SERVICE_UNAVAILABLE</code>,
+      <code>QUOTE_EXPIRED</code>, <code>QUOTE_MISMATCH</code>, <code>PAYMENT_REQUIRED</code>,
+      <code>SETTLEMENT_PENDING</code>, <code>SUBMISSION_UNKNOWN</code>,
+      <code>PROVIDER_REJECTED</code>, <code>POLICY_DENIED</code>, <code>IDEMPOTENCY_CONFLICT</code>,
+      <code>REFUND_REQUIRED</code>, <code>INTERNAL</code>.
+    </p>
+    <p class="section-note">
+      Common cases: <code>QUOTE_EXPIRED</code> — the quote expired, request a new one;
+      <code>PAYMENT_REQUIRED</code> — a normal step of an order, payment is not confirmed
+      yet; <code>SUBMISSION_UNKNOWN</code> — the outcome of submitting the order to the
+      provider is unknown (timeout): a blind retry is forbidden, reconcile to learn the
+      outcome.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Where an agent gets services</h2>
+    <p class="section-lede">
+      The public catalog on the site is a demo snapshot of a mock node: every service is
+      marked <code>"synthetic": true</code> — fixtures, not a sellable offer. An agent
+      creates real orders on a node with a connected provider — an SMM panel or another
+      supply node. Without a provider the node serves the mock catalog: a convenient way to
+      run the agent end-to-end from search to status without making a single real order.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>The last step: run your own node</h2>
+    <p class="section-lede">
+      To try the agent against a live protocol, run a gateway node: one process serves
+      REST <code>/v0</code> and MCP <code>/mcp</code> on one port, with no keys and no
+      external services. You need Node.js ≥ 22.18 — and nothing else.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+    <p class="section-note">
+      The step-by-step launch guide, node verification and reporting your node to the
+      network live on the <a href="/node/">“Run a node”</a> page.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
