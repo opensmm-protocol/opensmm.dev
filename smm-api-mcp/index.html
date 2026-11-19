@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SMM API для MCP — десять инструментов OpenSMM</title>
+<meta name="description" content="SMM API для MCP-агентов: десять инструментов протокола OpenSMM — поиск услуг, котировки, идемпотентные заказы, статусы исполнения. MCP /mcp и REST /v0 возвращают одни и те же объекты: один clientReference → один orderId.">
+<meta property="og:title" content="SMM API для MCP — десять инструментов OpenSMM">
+<meta property="og:description" content="Десять MCP-инструментов протокола OpenSMM: каталог, котировки, заказы, статусы. MCP и REST возвращают одни и те же объекты — один clientReference → один orderId.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/smm-api-mcp/">
+<link rel="canonical" href="https://opensmm.dev/smm-api-mcp/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Каталог</a>
+      <a href="/node/">Запустить узел</a>
+      <a href="/panels/">Для панелей</a>
+      <a href="/#how">Как это работает</a>
+      <a href="/#tools">Инструменты</a>
+      <a href="/#settlement">Расчёты</a>
+      <a href="/#trust">Доверие</a>
+      <a href="/#supply">Поставщики</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Главная</a>
+      <span class="crumb-sep">/</span>
+      <span>SMM API для MCP</span>
+    </nav>
+    <h1>SMM API для MCP</h1>
+    <p class="section-lede">
+      OpenSMM — открытый протокол заказа SMM-услуг, и MCP — один из его транспортов.
+      MCP-клиент подключается к <code>/mcp</code> узла гейтвея (Streamable HTTP, заголовок
+      <code>accept: application/json, text/event-stream</code>) и получает каталог, котировки
+      и исполнение заказов десятью инструментами. Рядом работает канонический REST-биндинг
+      <code>/v0</code> — те же объекты, те же правила.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Десять инструментов, один контракт</h2>
+    <div class="tools-grid">
+      <div class="tool"><code>get_capabilities</code><p>Версия протокола, команды, способы оплаты, версия каталога.</p></div>
+      <div class="tool"><code>search_services</code><p>Поиск услуг по тексту, платформе и цели.</p></div>
+      <div class="tool"><code>get_service</code><p>Цена и база тарифа, min/max, параметры, поддержка дозаказа и отмены.</p></div>
+      <div class="tool"><code>get_quote</code><p>Котировка с ценой и сроком. Обязательна перед заказом.</p></div>
+      <div class="tool"><code>create_order</code><p>Идемпотентное создание заказа; отвечает требованиями к оплате.</p></div>
+      <div class="tool"><code>get_order_status</code><p>Статусы оплаты и исполнения; безопасный опрос.</p></div>
+      <div class="tool"><code>cancel_order</code><p>Отмена там, где услуга её поддерживает.</p></div>
+      <div class="tool"><code>request_refill</code><p>Дозаказ при откатах на завершённых или частичных заказах.</p></div>
+      <div class="tool"><code>list_providers</code><p>Псевдонимные узлы с метриками, измеренными гейтвеем.</p></div>
+      <div class="tool"><code>register_provider</code><p>Подключение поставщика — без заявок, email и форм.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>MCP и REST — одни и те же объекты</h2>
+    <p class="section-lede">
+      REST <code>/v0</code> — канонический HTTP-биндинг протокола, MCP — равноправный
+      транспорт. Та же операция через REST и MCP возвращает одни и те же доменные объекты.
+      Идемпотентность — на уровне протокола: REST передаёт заголовок
+      <code>Idempotency-Key</code>, MCP — поле <code>clientReference</code>; повтор запроса
+      возвращает тот же заказ. <strong>Один clientReference → один orderId на любом
+      транспорте</strong> — агент может смешивать MCP и REST, не создавая дублей.
+    </p>
+    <p class="section-note">
+      Суммы — десятичные строки в целых микро-единицах, никогда float. Коды ошибок
+      канонические и одинаковые на обоих транспортах: от <code>VALIDATION_FAILED</code>
+      до <code>IDEMPOTENCY_CONFLICT</code> и <code>INTERNAL</code>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Как подключить агента</h2>
+    <p class="section-lede">
+      Укажите MCP-клиенту адрес узла гейтвея и вызывайте инструменты в порядке сценария:
+      <code>get_capabilities</code> → <code>search_services</code> → <code>get_quote</code> →
+      <code>create_order</code> → оплата по требованиям из ответа 402 →
+      <code>get_order_status</code> до <code>COMPLETED</code>. Котировка обязательна перед
+      заказом и расходуется ровно один раз; заказ отвечает HTTP 402 с требованиями к оплате —
+      USDC на Base Sepolia (testnet), напрямую провайдеру, мимо гейтвея.
+    </p>
+    <p class="section-note">
+      Спека протокола, JSON-схемы и примеры вызовов — в каталоге
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">spec/v0</a>
+      репозитория; манифест MCP-сервера — <a href="/mcp.json">mcp.json</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Откуда берутся услуги</h2>
+    <p class="section-lede">
+      Услуги в узел приносит поставщик: SMM-панель подключается одной регистрацией —
+      baseUrl, apiKey и профиль поведения, без кода (адаптер <code>smm-v2</code>).
+      Пока поставщика нет, узел отдаёт mock-каталог: каждая услуга помечена
+      <code>"synthetic": true</code> — fixtures для отладки агента end-to-end, а не
+      продаваемое предложение. Публичный каталог сайта — демонстрационный снапшот такого
+      mock-узла.
+    </p>
+    <p class="section-note">
+      Выбор поставщика — через <code>list_providers</code>: узлы псевдонимны, а показатели
+      качества гейтвей измеряет по своим реальным заказам — самоотчёты запрещены. Новый узел
+      стартует со статусом <code>UNVERIFIED</code> и объёмным ограничением на заказ, в
+      <code>ACTIVE</code> его переводят измеренные заказы; открытая формула качества — в
+      спеке, §9.1: показатели можно пересчитать самому.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Последний шаг: поднять свой узел</h2>
+    <p class="section-lede">
+      Свой узел гейтвея — это один процесс с REST <code>/v0</code> и MCP <code>/mcp</code>
+      на одном порту, без ключей и внешних сервисов. Нужен Node.js ≥ 22.18 — и ничего больше.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Поднять свой узел</a>
+    </div>
+    <p class="section-note">
+      Пошаговая инструкция запуска, проверка узла и отчёт о узле в сеть — на странице
+      <a href="/node/">«Запустить узел»</a>.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
+      <a href="/node/">Запустить узел</a>
+      <a href="/panels/">Для панелей</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
