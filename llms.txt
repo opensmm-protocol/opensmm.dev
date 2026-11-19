@@ -108,3 +108,12 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - Deployment (TLS, public endpoint): https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - For SMM panels (deal, three steps, limits): https://opensmm.dev/panels/
 - MCP server manifest: https://opensmm.dev/mcp.json
+
+## Guides (RU / EN)
+
+- Подключить SMM-панель к AI-агентам: https://opensmm.dev/connect-smm-panel/ — подключение SMM-панели к AI-агентам: baseUrl, apiKey и профиль без кода.
+- Заказ SMM-услуг через ИИ-агента: https://opensmm.dev/order-smm-via-ai-agent/ — как ИИ-агент заказывает SMM-услуги: поиск, котировка, заказ, оплата, статусы.
+- SMM API для MCP: https://opensmm.dev/smm-api-mcp/ — десять инструментов протокола для MCP-агентов; MCP и REST дают одни объекты.
+- EN: https://opensmm.dev/en/connect-smm-panel/ — connect an SMM panel to AI agents: baseUrl, apiKey and a profile, no code.
+- EN: https://opensmm.dev/en/order-smm-via-ai-agent/ — how an AI agent orders SMM services: search, quote, order, payment, status.
+- EN: https://opensmm.dev/en/smm-api-mcp/ — the ten protocol tools for MCP agents; MCP and REST return the same objects.
