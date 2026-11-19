@@ -3,16 +3,24 @@
 > Open, provider-neutral protocol for ordering and executing social media
 > growth services by AI agents. MCP is one transport; REST /v0 is the
 > canonical HTTP binding. Gateways route and measure — with direct settlement
-> (x402, USDC on Base) money flows agent → provider and never transits the
-> gateway.
+> (x402, USDC on Base Sepolia testnet for now) money flows agent → provider and
+> never transits the gateway.
 
 Site: https://opensmm.dev
-Catalog: https://opensmm.dev/catalog/ (live, human-readable mirror of /v0/services)
+Catalog: https://opensmm.dev/catalog/ (demo snapshot of a gateway node's mock
+/v0/services; ordering becomes possible after a provider connects — see
+"Run your own node" below)
 Source: https://github.com/opensmm-protocol/mcp-server (MIT)
 
 ## Key facts for agents
 
 - Protocol version: 0.1.0, URL prefix /v0.
+- The catalog on the website is a demo catalog: a snapshot of one gateway
+  node's mock fixtures (`"synthetic": true`), not sellable supply. Ordering
+  becomes possible after a provider (an SMM panel or another supply node) is
+  connected to that gateway.
+- Settlement is tested with USDC on Base Sepolia (testnet); mainnet USDC is
+  not enabled yet.
 - One rule: the same operation via REST and MCP yields the same domain
   objects. Same clientReference → same orderId on any transport.
 - Money is decimal strings on integer micro-units. Never floats.
@@ -27,8 +35,8 @@ Source: https://github.com/opensmm-protocol/mcp-server (MIT)
 ## Acceptance flow
 
 search → quote → create order (HTTP 402 + payment requirements) → settle
-(x402 proof, USDC on Base) → execution → poll status → completion. A quote
-is mandatory before ordering and is consumed exactly once.
+(x402 proof, USDC on Base Sepolia testnet) → execution → poll status →
+completion. A quote is mandatory before ordering and is consumed exactly once.
 
 ## Commands (REST / MCP tool)
 
@@ -59,8 +67,10 @@ with no keys and no external services. From a checkout (Node.js >= 22.18):
 git clone https://github.com/opensmm-protocol/mcp-server.git
 cd mcp-server
 npm ci
-PORT=8080 OPENSMM_STATE_FILE=./opensmm-state.json npm run gateway
+npm run gateway
 ```
+
+The node reports its port on stderr: `OpenSMM 0.1.0 gateway listening on http://localhost:8080 (REST /v0, MCP /mcp; provider: mock, mock catalog — not real supply)`.
 
 What you get: GET /v0/services serves the mock catalog, where every service
 has `"synthetic": true` and `providerRef: "provider-alpha"` — fixtures, not
@@ -76,7 +86,11 @@ clients connect to http://localhost:8080/mcp (Streamable HTTP: send
 ```bash
 curl -s http://localhost:8080/v0/services   # mock catalog, synthetic: true
 curl -s http://localhost:8080/v0/providers  # nodes and measured metrics
+node scripts/node-census.mjs --url http://127.0.0.1:8080   # "status": "up"
 ```
+
+Node definition and the census command (weekly node count):
+https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md
 
 The node has no TLS and no authentication, and `npm run gateway` binds all
 interfaces, not loopback: keep the port closed with a firewall (under Docker
@@ -90,4 +104,7 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - JSON Schemas: https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0/schemas
 - Runnable examples: https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0/examples
 - Provider onboarding (incl. a copy-paste AI prompt): https://github.com/opensmm-protocol/mcp-server/blob/main/docs/PROVIDER_ONBOARDING.md
+- Node census (definition of a node, weekly count): https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md
+- Deployment (TLS, public endpoint): https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
+- For SMM panels (deal, three steps, limits): https://opensmm.dev/panels/
 - MCP server manifest: https://opensmm.dev/mcp.json

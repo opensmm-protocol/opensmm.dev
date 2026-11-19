@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For SMM panels — sell your services to AI agents | OpenSMM</title>
+<meta name="description" content="Put your SMM panel in front of AI agents with your own OpenSMM node. USDC goes straight to your wallet. Three steps, honest limits, no hosting from us.">
+<meta property="og:title" content="OpenSMM for SMM panels — your own node, paid in USDC">
+<meta property="og:description" content="Run your own OpenSMM node, list your services for AI agents, get paid in USDC directly. Three steps and six honest limits.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/panels/">
+<link rel="canonical" href="https://opensmm.dev/panels/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How an SMM panel connects to OpenSMM with its own node",
+  "description": "Start a gateway node, check the panel API with the doctor, register the panel as a provider and verify the node.",
+  "totalTime": "PT30M",
+  "tool": [
+    { "@type": "HowToTool", "name": "VPS with Node.js 22.18+ or Docker" },
+    { "@type": "HowToTool", "name": "Panel API key" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>For panels</span>
+    </nav>
+    <h1>Sell your panel's services to AI agents</h1>
+    <p class="section-lede">
+      You run your own OpenSMM node in front of your panel. AI agents find your services in the
+      catalog and order them through the protocol. Payment arrives in USDC at the wallet you set;
+      no intermediary holds your money.
+    </p>
+    <p class="section-note">Setup takes about half an hour if your panel already has an API key.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>The deal</h2>
+    <ul class="deal-list">
+      <li>Your panel keeps selling what it sells. The node adds a second buyer: agents calling REST <code>/v0</code> or MCP <code>/mcp</code>.</li>
+      <li>Agents see your services in the catalog, with prices and measured delivery quality.</li>
+      <li>Orders are paid in USDC (x402) straight to your payout address.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>What you need</h2>
+    <ul class="deal-list">
+      <li>A VPS with Node.js 22.18 or newer, or Docker.</li>
+      <li>A panel API key that can read the service list and place orders (<code>smm-v2</code> dialect).</li>
+      <li>A USDC address on Base for payouts.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Three steps</h2>
+    <h3>1. Start the node</h3>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span><button class="copy" data-copy="p-step1" aria-label="Copy start commands">Copy</button></div>
+<pre id="p-step1">git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci
+npm run gateway</pre>
+    </div>
+    <h3>2. Check your panel's API</h3>
+    <p class="section-lede">
+      Read-only. Nothing is registered, and the key is never printed. The report suggests the
+      behavior profile to use in step 3.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span><button class="copy" data-copy="p-step2" aria-label="Copy doctor command">Copy</button></div>
+<pre id="p-step2">OPENSMM_PANEL_KEY="&lt;your api key&gt;" npm run doctor -- --url https://your-panel.example/api/v2</pre>
+    </div>
+    <h3>3. Register the panel and verify the node</h3>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span><button class="copy" data-copy="p-step3" aria-label="Copy register and verify commands">Copy</button></div>
+<pre id="p-step3">curl -X POST http://localhost:8080/v0/providers \
+  -H 'content-type: application/json' \
+  -d '{
+    "adapter": "smm-v2",
+    "endpoint": "https://your-panel.example/api/v2",
+    "apiKey": "&lt;your api key&gt;",
+    "payoutAddress": "0xYourUsdcAddressOnBase"
+  }'
+
+npm run verify:node -- &lt;your node URL&gt;   # exit 0 = the census counts this node</pre>
+    </div>
+    <p class="section-note">
+      The node has no TLS and no authentication of its own. Put a TLS proxy in front before you
+      expose it; see <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md">docs/DEPLOY.md</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>What we do not promise</h2>
+    <ol class="deal-list">
+      <li>No traffic guarantee. We cannot say when or whether agents will order from you.</li>
+      <li>No SLA. The protocol is version 0.1.</li>
+      <li>No hosting. You run and secure your own node.</li>
+      <li>The npm package is not published yet. Install from a checkout, as above.</li>
+      <li>x402 payments are verified on Base Sepolia (testnet) only.</li>
+      <li>The public catalog is a demonstration until a panel connects.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Tell us your node is up</h2>
+    <p class="section-lede">
+      Opened the node to the public? File a node report: your URL, source or Docker, and an
+      optional contact. Reported nodes go into the weekly census.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="https://github.com/opensmm-protocol/mcp-server/issues/new?template=node-report.md">Report your node on GitHub</a>
+    </div>
+    <p class="section-note">
+      Details:
+      <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/PROVIDER_ONBOARDING.md">provider onboarding</a>,
+      <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md">node census rules</a>,
+      <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/TROUBLESHOOTING.md">troubleshooting</a>,
+      <a href="https://github.com/opensmm-protocol/mcp-server#run-a-node-from-source-in-5-minutes">README: run a node from source</a>.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — MIT licensed open software</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js"></script>
+</body>
+</html>
