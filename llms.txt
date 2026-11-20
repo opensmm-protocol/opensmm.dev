@@ -136,3 +136,9 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - EN: https://opensmm.dev/en/smm-node-launch-checklist/ — node launch checklist: Node.js ≥ 22.18, start, verify:node, public URL, payout address, node report.
 - Реестр узлов OpenSMM: перепись и MCP Registry: https://opensmm.dev/smm-node-registry/ — как протокол считает узлы: две проверки, verify:node, заявка узла; статус в MCP Registry.
 - EN: https://opensmm.dev/en/smm-node-registry/ — how the protocol counts nodes: two checks, verify:node, node reporting; MCP Registry status.
+- Заказ SMM-услуги из n8n: https://opensmm.dev/smm-order-n8n/ — импорт workflow, mock-узел, каталог → котировка → заказ → повтор.
+- EN: https://opensmm.dev/en/smm-order-n8n/ — import the workflow on a mock node: catalog, quote, order, replay.
+- OpenSMM или прямой API панели: https://opensmm.dev/opensmm-vs-direct-smm-api/ — котировка, идемпотентность по clientReference, два статуса; когда хватит прямого API.
+- EN: https://opensmm.dev/en/opensmm-vs-direct-smm-api/ — quote, clientReference idempotency, two statuses; when the direct API is enough.
+- FAQ протокола OpenSMM: https://opensmm.dev/opensmm-protocol-faq/ — MCP и REST, котировка, HTTP 402, оплата x402, что считается узлом.
+- EN: https://opensmm.dev/en/opensmm-protocol-faq/ — MCP vs REST, quote, HTTP 402, x402 payment, what counts as a node.

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order an SMM service from n8n: import a workflow on a mock node</title>
+<meta name="description" content="How to order an SMM service from n8n: start a local OpenSMM node, import the workflow, walk through catalog, quote, order and replay. Mock catalog, no keys, no money.">
+<meta property="og:title" content="Order an SMM service from n8n: import a workflow on a mock node">
+<meta property="og:description" content="How to order an SMM service from n8n: start a local OpenSMM node, import the workflow, walk through catalog, quote, order and replay. Mock catalog, no keys, no money.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/en/smm-order-n8n/">
+<link rel="canonical" href="https://opensmm.dev/en/smm-order-n8n/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-n8n/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-n8n/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-n8n/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>n8n</span>
+    </nav>
+    <h1>Order an SMM service from n8n</h1>
+    <p class="section-lede">
+      A ready workflow for n8n 1.x: HTTP Request nodes walk the REST <code>/v0</code> API of a local node — catalog, quote, order, replay and poll. Everything runs on the mock catalog (<code>synthetic: true</code>); orders stay <code>REQUIRES_PAYMENT</code>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. Start the node</h2>
+    <p class="section-lede">
+      Node.js ≥ 22.18 is required. No key, account or money: the node serves a mock catalog.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci
+npm run gateway</pre>
+    </div>
+    <p class="section-note">
+      If the port is taken or startup fails, see <a href="/en/smm-node-troubleshooting/">node startup failures</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>2. Import the workflow</h2>
+    <p class="section-lede">
+      In n8n: <strong>Workflows → Import from File → <code>examples/n8n/workflow.json</code></strong>, open the workflow and press <strong>Execute Workflow</strong>. The file is pinned to n8n 1.x and the HTTP Request node <code>typeVersion: 4.2</code>.
+    </p>
+    <p class="section-note">
+      To point it at another node, edit only <code>baseUrl</code> in the Config node.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>3. What the workflow nodes do</h2>
+    <ul class="deal-list">
+      <li><code>Config</code> — baseUrl, quantity: 100, link, fresh clientReference (n8n-demo-…)</li>
+      <li><code>GET catalog</code> — <code>GET /v0/services</code> → the mock catalog</li>
+      <li><code>Guard: mock only</code> — refuses to continue unless the first service is <code>synthetic: true</code></li>
+      <li><code>Create quote</code> — <code>POST /v0/quotes</code> → osmm_quote_...</li>
+      <li><code>Create order</code> — <code>POST /v0/orders</code> → osmm_order_..., REQUIRES_PAYMENT</li>
+      <li><code>Replay order</code> — <code>POST /v0/orders</code> → the <strong>same</strong> <code>orderId</code></li>
+      <li><code>Verify idempotency</code> — fails if the two order IDs differ</li>
+      <li><code>Poll order</code> — <code>GET /v0/orders/:id</code> → the stored order</li>
+    </ul>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>4. What to expect</h2>
+    <ul class="deal-list">
+      <li><code>Create order</code> and <code>Replay order</code> return HTTP 402 while the order is unpaid; the “Never Error” option passes the order body on. That is expected, not a failure.</li>
+      <li>The replay returns the same order: one <code>clientReference</code>, one <code>orderId</code>. Nothing is paid and nothing is executed.</li>
+      <li>The Guard node stops the workflow if the catalog holds a non-mock service, so the demo cannot place an order with a real supplier.</li>
+    </ul>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limits</h2>
+    <ol class="deal-list">
+      <li>This page summarises <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; exact versions and configs live there.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): there are no real services, prices or orders here, and rates in examples are test values.</li>
+      <li>This is a demo workflow on a mock node; payment and a real supplier are not involved (x402 runs on a testnet, see <a href="/en/smm-agent-payments-x402/">paying over x402</a>).</li>
+    </ol>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>Next: run your own node</h2>
+    <p class="section-lede">
+      The example runs on a local node. To be counted in the census, start a node and report its address.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+    <p class="section-note">
+      Step-by-step instructions, the <code>verify:node</code> check and the node report are on the <a href="/node/">“Run a node”</a> page.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenSMM vs a direct SMM panel API: how ordering differs</title>
+<meta name="description" content="How ordering through an OpenSMM node differs from a panel’s direct API: quote, clientReference idempotency, two statuses, SUBMISSION_UNKNOWN. When the direct API is enough.">
+<meta property="og:title" content="OpenSMM vs a direct SMM panel API: how ordering differs">
+<meta property="og:description" content="How ordering through an OpenSMM node differs from a panel’s direct API: quote, clientReference idempotency, two statuses, SUBMISSION_UNKNOWN. When the direct API is enough.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/en/opensmm-vs-direct-smm-api/">
+<link rel="canonical" href="https://opensmm.dev/en/opensmm-vs-direct-smm-api/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/opensmm-vs-direct-smm-api/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/opensmm-vs-direct-smm-api/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/opensmm-vs-direct-smm-api/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>OpenSMM vs direct API</span>
+    </nav>
+    <h1>OpenSMM vs a direct panel API</h1>
+    <p class="section-lede">
+      An agent can order a service straight from a panel or through an OpenSMM node. Here is what changes for an agent developer — per the v0 spec, with no ratings of specific panels.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Two different questions</h2>
+    <p class="section-lede">
+      A panel’s direct API is how <em>one</em> panel accepts an order: <code>POST {endpoint}</code> with <code>key</code> and <code>action</code> (<code>services</code>, <code>add</code>, <code>status</code> and so on), as described in <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/PROVIDER_ONBOARDING.md">PROVIDER_ONBOARDING.md</a>. OpenSMM is a protocol on top of such panels: the agent talks to a node, and the node talks to the panel through an adapter (<code>smm-v2</code>, <code>rest-v1</code>).
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>Side by side</h2>
+    <ul class="deal-list">
+      <li><strong>Who the agent talks to.</strong> Direct API: One specific panel: its own endpoint and key each. OpenSMM: An OpenSMM node: the same <code>/v0</code> commands and MCP tools for any supplier.</li>
+      <li><strong>Order.</strong> Direct API: An order is a call to the panel. OpenSMM: A quote first (expires, consumed once), then an order by <code>quoteId</code>.</li>
+      <li><strong>Repeating a request.</strong> Direct API: The panel defines the contract — check yours. OpenSMM: <code>clientReference</code> / <code>Idempotency-Key</code>: a replay returns the same <code>orderId</code>; different parameters give <code>IDEMPOTENCY_CONFLICT</code>.</li>
+      <li><strong>Statuses.</strong> Direct API: The panel defines the status format. OpenSMM: Two separate state machines: <code>paymentStatus</code> and <code>executionStatus</code>.</li>
+      <li><strong>Ambiguous submission.</strong> Direct API: Left to your agent’s code. OpenSMM: <code>SUBMISSION_UNKNOWN</code>: waits for reconciliation, no blind retries to the supplier.</li>
+      <li><strong>Transport.</strong> Direct API: The panel’s HTTP. OpenSMM: REST <code>/v0</code> and MCP <code>/mcp</code>: the same objects.</li>
+      <li><strong>Money.</strong> Direct API: Each panel has its own format. OpenSMM: Decimal strings on integer micro-units, never floats.</li>
+    </ul>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>When the direct API is enough</h2>
+    <ul class="deal-list">
+      <li>You use one panel and its contract suits you — you do not need a node.</li>
+      <li>You are building an agent that must switch suppliers without rewriting code, or you want uniform idempotency and statuses — use the protocol.</li>
+      <li>You own a panel: connecting is <code>baseUrl</code> + <code>apiKey</code> + a profile, no code, see <a href="/en/connect-smm-panel/">connect a panel</a>.</li>
+    </ul>
+    <p class="section-note">
+      MCP versus REST inside the protocol is covered in <a href="/en/mcp-vs-rest-smm-orders/">MCP or REST</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>Try it yourself</h2>
+    <p class="section-lede">
+      A local node and mock catalog, no keys, no money. Node.js ≥ 22.18 is required.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci
+npm run gateway
+curl -s http://127.0.0.1:8080/v0/services | head -30</pre>
+    </div>
+    <p class="section-note">
+      Every service has <code>"synthetic": true</code>. The full walkthrough is the <a href="/en/smm-agent-quickstart/">agent quickstart</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limits</h2>
+    <ol class="deal-list">
+      <li>This page summarises <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; exact versions and configs live there.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): there are no real services, prices or orders here, and rates in examples are test values.</li>
+      <li>The comparison rests on the v0 spec and repository docs; each panel behaves in its own way and we do not rate any of them.</li>
+      <li>The protocol is version 0.1, with no SLA.</li>
+    </ol>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>Next: run your own node</h2>
+    <p class="section-lede">
+      The example runs on a local node. To be counted in the census, start a node and report its address.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+    <p class="section-note">
+      Step-by-step instructions, the <code>verify:node</code> check and the node report are on the <a href="/node/">“Run a node”</a> page.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>

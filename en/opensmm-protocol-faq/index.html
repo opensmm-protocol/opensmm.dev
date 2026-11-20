@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenSMM protocol FAQ: ordering SMM services by AI agents</title>
+<meta name="description" content="Frequently asked questions about the OpenSMM protocol: MCP vs REST, quote, HTTP 402, clientReference idempotency, x402 payment, what a node is, what is out of v0.1.">
+<meta property="og:title" content="OpenSMM protocol FAQ: ordering SMM services by AI agents">
+<meta property="og:description" content="Frequently asked questions about the OpenSMM protocol: MCP vs REST, quote, HTTP 402, clientReference idempotency, x402 payment, what a node is, what is out of v0.1.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/en/opensmm-protocol-faq/">
+<link rel="canonical" href="https://opensmm.dev/en/opensmm-protocol-faq/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/opensmm-protocol-faq/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/opensmm-protocol-faq/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/opensmm-protocol-faq/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>Protocol FAQ</span>
+    </nav>
+    <h1>OpenSMM protocol FAQ</h1>
+    <p class="section-lede">
+      Short answers from the v0 spec and repository docs: what the protocol is, how to order, how to pay and what counts as a node. The catalog is still a mock.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Questions and answers</h2>
+    <ul class="deal-list">
+      <li><strong>What is OpenSMM?</strong><br>An open protocol for ordering social-growth services by AI agents: catalog, quote, order, payment, status. MIT licence, version 0.1.0, URL prefix <code>/v0</code>.</li>
+      <li><strong>Is MCP the protocol?</strong><br>No. MCP is one transport; REST <code>/v0</code> is the canonical HTTP binding. One operation over either yields the same objects; the same <code>clientReference</code> gives the same <code>orderId</code>. More: <a href="/en/mcp-vs-rest-smm-orders/">MCP or REST</a>.</li>
+      <li><strong>Which commands does it define?</strong><br>Ten: getCapabilities, searchServices, getService, getQuote, createOrder, getOrder, cancelOrder, requestRefill, listProviders, registerProvider. cancelOrder, requestRefill and registerProvider are optional; the rest are required. Table: <a href="/en/smm-api-mcp/">SMM API for MCP</a>.</li>
+      <li><strong>Why is a quote required?</strong><br>An order cannot be created without one: a quote binds service, quantity, link and amount, expires, and is consumed exactly once.</li>
+      <li><strong>What does HTTP 402 on order creation mean?</strong><br>Expected: the order exists and waits for payment (<code>REQUIRES_PAYMENT</code>), with payment requirements in the body. It is not an error.</li>
+      <li><strong>How does the protocol prevent duplicate orders?</strong><br>Idempotency is protocol-level: the <code>Idempotency-Key</code> header (REST) or the <code>clientReference</code> field (MCP). A replay returns the same order; the same key with other parameters gives <code>IDEMPOTENCY_CONFLICT</code>.</li>
+      <li><strong>How does payment work?</strong><br>Direct settlement: money flows from agent to supplier and never transits the node (x402, USDC). It is tested only on the Base Sepolia testnet; mainnet is not enabled. More: <a href="/en/smm-agent-payments-x402/">paying over x402</a>.</li>
+      <li><strong>Is there a live catalog yet?</strong><br>No. The catalog on the site and on a local node is mock fixtures (<code>synthetic: true</code>), not sellable supply. Ordering becomes possible after a provider (a panel or another node) is connected.</li>
+      <li><strong>What counts as a node?</strong><br>A public URL where <code>GET /v0/services</code> returns 200 with a JSON <code>services</code> array and <code>POST /mcp</code> with <code>initialize</code> returns 200 with a JSON-RPC <code>result</code>. Check it with <code>npm run verify:node</code>. More: <a href="/en/smm-node-registry/">node registry</a>.</li>
+      <li><strong>How do I connect my panel?</strong><br>With a <code>baseUrl</code>, an <code>apiKey</code> and a profile, no code; the doctor (<code>npm run doctor</code>) checks the panel before you hand it over. See <a href="/en/connect-smm-panel/">connect a panel</a>.</li>
+      <li><strong>What is out of scope for 0.1?</strong><br>Campaigns, subscriptions, mass orders, bargaining, auto-orders, account farms and A2A. Version 0.1 has no SLA, and breaking changes are allowed without notice until <code>/v1</code>.</li>
+    </ul>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>Check it on your machine</h2>
+    <p class="section-lede">
+      A local node, mock catalog, no keys, no money (Node.js ≥ 22.18).
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci
+npm run gateway
+curl -s http://127.0.0.1:8080/v0/services | head -30</pre>
+    </div>
+    <p class="section-note">
+      A step-by-step order is in the <a href="/en/smm-agent-quickstart/">agent quickstart</a>; for n8n see <a href="/en/smm-order-n8n/">ordering from n8n</a>; the difference from a direct API is in <a href="/en/opensmm-vs-direct-smm-api/">OpenSMM vs direct API</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limits</h2>
+    <ol class="deal-list">
+      <li>This page summarises <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; exact versions and configs live there.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): there are no real services, prices or orders here, and rates in examples are test values.</li>
+      <li>Answers come from the v0 spec and repository docs; what they do not say is not promised here.</li>
+    </ol>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>Next: run your own node</h2>
+    <p class="section-lede">
+      The example runs on a local node. To be counted in the census, start a node and report its address.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+    <p class="section-note">
+      Step-by-step instructions, the <code>verify:node</code> check and the node report are on the <a href="/node/">“Run a node”</a> page.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>
