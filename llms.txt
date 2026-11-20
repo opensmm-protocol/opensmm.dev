@@ -103,6 +103,7 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - Protocol spec: https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0
 - JSON Schemas: https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0/schemas
 - Runnable examples: https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0/examples
+- Agent quickstart — order an SMM service from an agent in 5 minutes (Claude Desktop, Cursor, LangChain, n8n): https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md
 - Provider onboarding (incl. a copy-paste AI prompt): https://github.com/opensmm-protocol/mcp-server/blob/main/docs/PROVIDER_ONBOARDING.md
 - Node census (definition of a node, weekly count): https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md
 - Deployment (TLS, public endpoint): https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md

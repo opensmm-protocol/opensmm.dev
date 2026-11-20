@@ -238,6 +238,42 @@ npm run gateway</pre>
   </div>
 </section>
 
+<section id="agent-quickstart" class="section">
+  <div class="wrap">
+    <h2>Connect from an agent in 5 minutes</h2>
+    <p class="section-lede">
+      Ready-made examples wire an OpenSMM node into Claude Desktop, Cursor, LangChain and
+      n8n. Start the node, pick your stack and place a mock order — the same
+      <code>search → quote → order → replay</code> flow over MCP or REST <code>/v0</code>.
+    </p>
+    <div class="tools-grid">
+      <div class="tool">
+        <code><a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md" data-node-cta>5-minute guide</a></code>
+        <p>End-to-end walkthrough: start the node, choose a stack, place a mock order.</p>
+      </div>
+      <div class="tool">
+        <code><a href="https://github.com/opensmm-protocol/mcp-server/tree/develop/examples/claude-desktop" data-node-cta>Claude Desktop</a></code>
+        <p>stdio MCP config (<code>npm run mcp</code>) with a copy-paste example.</p>
+      </div>
+      <div class="tool">
+        <code><a href="https://github.com/opensmm-protocol/mcp-server/tree/develop/examples/cursor" data-node-cta>Cursor</a></code>
+        <p>HTTP MCP config pointing <code>POST /mcp</code> at a local gateway.</p>
+      </div>
+      <div class="tool">
+        <code><a href="https://github.com/opensmm-protocol/mcp-server/tree/develop/examples/langchain" data-node-cta>LangChain</a></code>
+        <p>Runnable script: catalog → quote → order → idempotent replay.</p>
+      </div>
+      <div class="tool">
+        <code><a href="https://github.com/opensmm-protocol/mcp-server/tree/develop/examples/n8n" data-node-cta>n8n</a></code>
+        <p>Importable workflow: quote → order → poll over HTTP.</p>
+      </div>
+    </div>
+    <p class="section-note">
+      Examples run against the mock catalog (<code>"synthetic": true</code>): no keys, no payments, no real supply.
+    </p>
+  </div>
+</section>
+
 <section id="supply" class="section">
   <div class="wrap">
     <h2>Run a supply node</h2>
