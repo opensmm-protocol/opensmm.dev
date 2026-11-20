@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenSMM node registry: node census and MCP Registry status</title>
+<meta name="description" content="How the OpenSMM protocol counts external nodes: the two census checks, npm run verify:node, reporting a node via the issue template, and the honest status in the official MCP Registry.">
+<meta property="og:title" content="OpenSMM node registry: node census and MCP Registry status">
+<meta property="og:description" content="How the OpenSMM protocol counts external nodes: the two census checks, npm run verify:node, reporting a node via the issue template, and the honest status in the official MCP Registry.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/en/smm-node-registry/">
+<link rel="canonical" href="https://opensmm.dev/en/smm-node-registry/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-registry/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-node-registry/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-registry/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>Node registry</span>
+    </nav>
+    <h1>OpenSMM node registry</h1>
+    <p class="section-lede">
+      How the protocol counts external nodes: the definition of a node, checking your own node, reporting it to the weekly census — and the honest status of OpenSMM in the official MCP Registry.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>What counts as a protocol node</h2>
+    <p class="section-lede">
+      A public URL is a node when both checks pass (redirects are not followed):
+    </p>
+    <ul class="deal-list">
+      <li><code>GET &lt;url&gt;/v0/services</code> — 200 with a JSON <code>services</code> array;</li>
+      <li><code>POST &lt;url&gt;/mcp</code> with <code>initialize</code> (JSON-RPC) — 200 with a JSON-RPC <code>result</code>.</li>
+    </ul>
+    <p class="section-note">
+      <code>GET &lt;url&gt;/v0/providers</code> is informational: it never decides the verdict. The node definition and the census live in <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md">docs/NODES.md</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Check your own node before reporting</h2>
+    <p class="section-lede">
+      Before the weekly census, run the same two checks locally. The script prints PASS/FAIL per check and a verdict: exit code <code>0</code> — the census counts the node, <code>1</code> — it does not.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>npm run verify:node -- http://127.0.0.1:8080</pre>
+    </div>
+    <div class="code-block">
+      <div class="code-head"><span>output</span></div>
+<pre>PASS  GET /v0/services — 6 services in the catalog
+PASS  POST /mcp initialize — 2025-06-18, server opensmm
+PASS  GET /v0/providers — 1 provider registered   (informational, not counted)
+
+PASS — the census counts this node: 2/2 required checks passed in 1315 ms</pre>
+    </div>
+    <p class="section-note">
+      The script imports the same probes as the census: one definition of a node, so a local PASS means the census sees the same node. For a node behind a proxy or on a public host, pass the URL the census will call (redirects are not followed — use the final URL).
+    </p>
+    <p class="section-lede">
+      Machine-readable output for monitoring: <code>--json</code> prints the same result as JSON on stdout — for a cron job or a CI step that alerts on a down node.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>npm --silent run verify:node -- --json http://127.0.0.1:8080 | jq .entry.status
+node scripts/verify-node.mjs --json http://127.0.0.1:8080 | jq .entry.status</pre>
+    </div>
+    <p class="section-note">
+      In the JSON, <code>entry.status</code> is <code>"up"</code> or <code>"down"</code>, and <code>checks</code> is the per-check report where <code>required: false</code> marks a check that never decides the verdict. A daily cron check that alerts through its exit code:
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>npm --silent run verify:node -- --json https://mcp.example.org > /var/log/opensmm-verify.json \
+  || echo "OpenSMM node is down" >&2</pre>
+    </div>
+    <p class="section-note">
+      <code>--timeout &lt;ms&gt;</code> is one budget for all three probes of a node: default 5000&nbsp;ms, allowed range 1000–30000&nbsp;ms. On a slow network raise it, so a reachable node is not reported as down.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Report your node to the weekly census</h2>
+    <p class="section-lede">
+      Once your node passes locally and is publicly accessible, submit its URL for the weekly census via the issue template: <a href="https://github.com/opensmm-protocol/mcp-server/issues/new?template=node-report.md">issues/new?template=node-report.md</a>.
+    </p>
+    <p class="section-lede">
+      The census itself runs over a list of URLs with one command:
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>npm run census -- --url http://127.0.0.1:8080 --url https://mcp.opensmm.dev
+npm run census -- --file nodes.txt   # one URL per line, "#" starts a comment</pre>
+    </div>
+    <p class="section-note">
+      The limit is 20 URLs per run. JSON goes to stdout, the summary to stderr. An unreachable node is data, not a failure: <code>status: "down"</code>, exit 0. Exit 1 means broken arguments. The weekly result is one line like <code>2026-11-09 — 1 node up of 3 checked: …</code> with the JSON below it.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>A public URL without a custom domain</h2>
+    <p class="section-lede">
+      The census counts only publicly reachable HTTPS/HTTP URLs. If you do not have a custom domain or a TLS reverse proxy yet, you can expose your local gateway through a free Cloudflare quick tunnel without creating an account.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>npm run gateway                                          # node on port 8080
+cloudflared tunnel --url http://127.0.0.1:8080           # in a second terminal
+npm run verify:node -- https://…trycloudflare.com        # check the public address</pre>
+    </div>
+    <p class="section-note">
+      The tunnel prints a temporary <code>*.trycloudflare.com</code> URL: it changes every time the tunnel process restarts. For a permanent node, set up TLS on your own domain with Caddy — <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md">docs/DEPLOY.md</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Status in the official MCP Registry</h2>
+    <p class="section-lede">
+      OpenSMM is not listed in the official MCP Registry, and that is the expected result: <code>GET https://registry.modelcontextprotocol.io/v0/servers?search=opensmm</code> answers <code>{"servers":[],"metadata":{"count":0}}</code>.
+    </p>
+    <p class="section-lede">
+      Schema <code>2025-12-11</code> accepts a server only with a published package (<code>packages[]</code> carrying <code>registryType</code> and <code>identifier</code>) or with <code>remotes</code> pointing at a public hosted endpoint. OpenSMM has neither: no package is published, the container image stays private, and there is no public hosted MCP endpoint. Inventing <code>packages</code> or <code>remotes</code> is not allowed.
+    </p>
+    <p class="section-note">
+      A published package or a public hosted MCP endpoint would change this. Until then the node is installed from source — <a href="https://github.com/opensmm-protocol/mcp-server#run-a-node-from-source-in-5-minutes">“Run a node from source in 5 minutes”</a> in the README.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limits</h2>
+    <ol class="deal-list">
+      <li>No MCP Registry entry yet: without a published package or a public hosted endpoint the registry does not accept a server, and inventing <code>packages</code> or <code>remotes</code> is not allowed.</li>
+      <li>A local node serves a mock catalog (<code>synthetic: true</code>), not real supply.</li>
+      <li>The census counts only publicly reachable URLs: a localhost node is checked locally but never enters the census.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Next step: run your own node</h2>
+    <p class="section-lede">
+      A node is a single process serving REST <code>/v0</code> and MCP <code>/mcp</code> on one port. You need Node.js ≥ 22.18.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+    <p class="section-note">
+      The step-by-step guide, node verification and reporting your node live on the <a href="/node/">“Run a node”</a> page.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>
