@@ -480,4 +480,58 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-registry/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-registry/"/>
   </url>
+  <url>
+    <loc>https://opensmm.dev/smm-order-n8n/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-n8n/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-n8n/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-n8n/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/smm-order-n8n/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-n8n/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-n8n/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-n8n/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/opensmm-vs-direct-smm-api/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/opensmm-vs-direct-smm-api/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/opensmm-vs-direct-smm-api/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/opensmm-vs-direct-smm-api/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/opensmm-vs-direct-smm-api/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/opensmm-vs-direct-smm-api/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/opensmm-vs-direct-smm-api/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/opensmm-vs-direct-smm-api/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/opensmm-protocol-faq/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/opensmm-protocol-faq/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/opensmm-protocol-faq/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/opensmm-protocol-faq/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/opensmm-protocol-faq/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/opensmm-protocol-faq/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/opensmm-protocol-faq/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/opensmm-protocol-faq/"/>
+  </url>
 </urlset>
