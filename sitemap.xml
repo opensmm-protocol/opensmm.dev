@@ -534,4 +534,58 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/opensmm-protocol-faq/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/opensmm-protocol-faq/"/>
   </url>
+  <url>
+    <loc>https://opensmm.dev/smm-order-claude-desktop/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-claude-desktop/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-claude-desktop/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-claude-desktop/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/smm-order-claude-desktop/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-claude-desktop/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-claude-desktop/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-claude-desktop/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/smm-order-cursor/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-cursor/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-cursor/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-cursor/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/smm-order-cursor/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-cursor/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-cursor/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-cursor/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/smm-order-langchain/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-langchain/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-langchain/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-langchain/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/smm-order-langchain/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-langchain/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-langchain/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-langchain/"/>
+  </url>
 </urlset>
