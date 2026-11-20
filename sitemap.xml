@@ -318,4 +318,58 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-api-mcp/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-api-mcp/"/>
   </url>
+  <url>
+    <loc>https://opensmm.dev/smm-provider-profile/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-provider-profile/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-provider-profile/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-provider-profile/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/smm-provider-profile/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-provider-profile/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-provider-profile/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-provider-profile/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/mcp-vs-rest-smm-orders/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/mcp-vs-rest-smm-orders/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/mcp-vs-rest-smm-orders/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/mcp-vs-rest-smm-orders/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/mcp-vs-rest-smm-orders/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/mcp-vs-rest-smm-orders/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/mcp-vs-rest-smm-orders/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/mcp-vs-rest-smm-orders/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/smm-panel-doctor-check/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-panel-doctor-check/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-panel-doctor-check/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-panel-doctor-check/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/smm-panel-doctor-check/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-panel-doctor-check/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-panel-doctor-check/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-panel-doctor-check/"/>
+  </url>
 </urlset>
