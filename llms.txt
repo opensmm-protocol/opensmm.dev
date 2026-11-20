@@ -115,6 +115,12 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - Подключить SMM-панель к AI-агентам: https://opensmm.dev/connect-smm-panel/ — подключение SMM-панели к AI-агентам: baseUrl, apiKey и профиль без кода.
 - Заказ SMM-услуг через ИИ-агента: https://opensmm.dev/order-smm-via-ai-agent/ — как ИИ-агент заказывает SMM-услуги: поиск, котировка, заказ, оплата, статусы.
 - SMM API для MCP: https://opensmm.dev/smm-api-mcp/ — десять инструментов протокола для MCP-агентов; MCP и REST дают одни объекты.
+- Профиль подключения SMM-панели: https://opensmm.dev/smm-provider-profile/ — baseUrl, apiKey, профиль и payoutAddress; доктор предлагает готовый профиль.
+- MCP или REST для заказа SMM-услуг: https://opensmm.dev/mcp-vs-rest-smm-orders/ — один clientReference → один orderId на любом транспорте.
+- Проверка SMM-панели и узла (doctor): https://opensmm.dev/smm-panel-doctor-check/ — npm run doctor и npm run verify:node, без регистрации.
 - EN: https://opensmm.dev/en/connect-smm-panel/ — connect an SMM panel to AI agents: baseUrl, apiKey and a profile, no code.
 - EN: https://opensmm.dev/en/order-smm-via-ai-agent/ — how an AI agent orders SMM services: search, quote, order, payment, status.
 - EN: https://opensmm.dev/en/smm-api-mcp/ — the ten protocol tools for MCP agents; MCP and REST return the same objects.
+- EN: https://opensmm.dev/en/smm-provider-profile/ — baseUrl, apiKey, profile and payoutAddress; the doctor suggests a ready profile.
+- EN: https://opensmm.dev/en/mcp-vs-rest-smm-orders/ — one clientReference → one orderId on any transport.
+- EN: https://opensmm.dev/en/smm-panel-doctor-check/ — npm run doctor and npm run verify:node, nothing registered.

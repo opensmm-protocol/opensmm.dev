@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Проверка SMM-панели и узла: npm run doctor и verify:node — OpenSMM</title>
+<meta name="description" content="Как проверить SMM-панель и узел OpenSMM: npm run doctor проверяет API панели только на чтение, npm run verify:node — что перепись засчитает узел. Без регистрации, ключ не печатается.">
+<meta property="og:title" content="Проверка SMM-панели и узла: npm run doctor и verify:node — OpenSMM">
+<meta property="og:description" content="Как проверить SMM-панель и узел OpenSMM: npm run doctor проверяет API панели только на чтение, npm run verify:node — что перепись засчитает узел. Без регистрации, ключ не печатается.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/smm-panel-doctor-check/">
+<link rel="canonical" href="https://opensmm.dev/smm-panel-doctor-check/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-panel-doctor-check/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-panel-doctor-check/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-panel-doctor-check/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Каталог</a>
+      <a href="/node/">Запустить узел</a>
+      <a href="/panels/">Для панелей</a>
+      <a href="/#how">Как это работает</a>
+      <a href="/#tools">Инструменты</a>
+      <a href="/#settlement">Расчёты</a>
+      <a href="/#trust">Доверие</a>
+      <a href="/#supply">Поставщики</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Главная</a>
+      <span class="crumb-sep">/</span>
+      <span>Проверка панели и узла</span>
+    </nav>
+    <h1>Проверка SMM-панели и узла: doctor</h1>
+    <p class="section-lede">
+      Две проверки до подключения: <code>npm run doctor</code> смотрит API панели, <code>npm run verify:node</code> — ваш узел. Обе безопасны: ничего не регистрируется.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. Доктор: API панели</h2>
+    <p class="section-lede">
+      Только чтение, диалект <code>smm-v2</code>. Ключ берётся из <code>OPENSMM_PANEL_KEY</code>, а не из аргументов, и никогда не печатается.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>OPENSMM_PANEL_KEY="&lt;panel api key&gt;" npm run doctor -- --url https://your-panel.example/api/v2</pre>
+    </div>
+    <ul class="deal-list">
+      <li>HTTPS и JSON против HTML/Cloudflare;</li>
+      <li><code>action=balance</code> — баланс и валюта;</li>
+      <li><code>action=services</code> — непустой каталог и его размер;</li>
+      <li>конверт ответа и псевдонимы полей;</li>
+      <li>предложенное имя профиля и готовый сниппет подключения.</li>
+    </ul>
+    <p class="section-note">
+      Код выхода <code>0</code> — все проверки прошли; <code>1</code> — отчёт называет проваленную проверку.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>2. Узел: verify:node</h2>
+    <p class="section-lede">
+      Те же две пробы, что использует перепись узлов, — PASS/FAIL по каждой и вердикт. Код выхода <code>0</code>, если перепись засчитает узел.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>npm run verify:node -- http://127.0.0.1:8080</pre>
+    </div>
+    <ul class="deal-list">
+      <li><code>GET /v0/services</code> — 200 и JSON-массив <code>services</code>;</li>
+      <li><code>POST /mcp</code> с <code>initialize</code> — 200 и JSON-RPC <code>result</code>;</li>
+      <li><code>GET /v0/providers</code> — справочно, на вердикт не влияет.</li>
+    </ul>
+    <p class="section-note">
+      Для узла за прокси передайте URL, который будет вызывать перепись: редиректы не отслеживаются. Определение узла — <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md">docs/NODES.md</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Если что-то не так</h2>
+    <p class="section-lede">
+      Типичные сбои запуска — Node.js ниже 22.18, занятый порт — разобраны в <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/TROUBLESHOOTING.md">TROUBLESHOOTING.md</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Честные ограничения</h2>
+    <ol class="deal-list">
+      <li>Доктор не проверяет создание заказов — только чтение.</li>
+      <li>Пакет npm ещё не опубликован: команды запускаются из чекаута репозитория.</li>
+      <li>Локальный узел отдаёт mock-каталог (<code>synthetic: true</code>), а не реальное предложение.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Последний шаг: поднять свой узел</h2>
+    <p class="section-lede">
+      Узел — один процесс, отдающий REST <code>/v0</code> и MCP <code>/mcp</code> на одном порту. Нужен Node.js ≥ 22.18.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Поднять свой узел</a>
+    </div>
+    <p class="section-note">
+      Пошаговая инструкция, проверка узла и отчёт о нём — на странице <a href="/node/">«Запустить узел»</a>.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
+      <a href="/node/">Запустить узел</a>
+      <a href="/panels/">Для панелей</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>
