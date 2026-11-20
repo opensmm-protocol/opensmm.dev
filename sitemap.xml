@@ -462,4 +462,22 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-launch-checklist/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-launch-checklist/"/>
   </url>
+  <url>
+    <loc>https://opensmm.dev/smm-node-registry/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-node-registry/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-registry/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-registry/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/smm-node-registry/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-node-registry/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-registry/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-registry/"/>
+  </url>
 </urlset>
