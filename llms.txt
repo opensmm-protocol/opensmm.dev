@@ -128,3 +128,7 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - Развёртывание узла OpenSMM: https://opensmm.dev/smm-node-deploy-guide/ — из исходников и docker compose, verify:node, TLS за прокси.
 - EN: https://opensmm.dev/en/smm-agent-payments-x402/ — paying for orders from an agent over x402: wallet, test USDC, facilitator; Base Sepolia testnet only.
 - EN: https://opensmm.dev/en/smm-node-deploy-guide/ — deploy a node from source or Docker Compose, verify:node, TLS behind a proxy.
+- Сбои запуска узла OpenSMM: https://opensmm.dev/smm-node-troubleshooting/ — Node.js < 22.18, EADDRINUSE, EACCES, npm ci без сети, mock-каталог: вывод, причина, проверка, решение.
+- Заказ SMM-услуги из агента за 5 минут: https://opensmm.dev/smm-agent-quickstart/ — локальный узел, mock-каталог, каталог → котировка → заказ → повтор; Claude Desktop, Cursor, LangChain, n8n.
+- EN: https://opensmm.dev/en/smm-node-troubleshooting/ — node startup failures: Node.js < 22.18, EADDRINUSE, EACCES, npm ci offline, mock catalog: output, cause, check, fix.
+- EN: https://opensmm.dev/en/smm-agent-quickstart/ — order an SMM service from an agent in 5 minutes on a local mock node; Claude Desktop, Cursor, LangChain, n8n.
