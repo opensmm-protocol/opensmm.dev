@@ -132,3 +132,5 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - Заказ SMM-услуги из агента за 5 минут: https://opensmm.dev/smm-agent-quickstart/ — локальный узел, mock-каталог, каталог → котировка → заказ → повтор; Claude Desktop, Cursor, LangChain, n8n.
 - EN: https://opensmm.dev/en/smm-node-troubleshooting/ — node startup failures: Node.js < 22.18, EADDRINUSE, EACCES, npm ci offline, mock catalog: output, cause, check, fix.
 - EN: https://opensmm.dev/en/smm-agent-quickstart/ — order an SMM service from an agent in 5 minutes on a local mock node; Claude Desktop, Cursor, LangChain, n8n.
+- Чек-лист запуска узла OpenSMM: https://opensmm.dev/smm-node-launch-checklist/ — Node.js ≥ 22.18, запуск, verify:node, публичный адрес, адрес выплат, отчёт о узле.
+- EN: https://opensmm.dev/en/smm-node-launch-checklist/ — node launch checklist: Node.js ≥ 22.18, start, verify:node, public URL, payout address, node report.
