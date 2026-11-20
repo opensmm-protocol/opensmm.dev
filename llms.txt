@@ -142,3 +142,9 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - EN: https://opensmm.dev/en/opensmm-vs-direct-smm-api/ — quote, clientReference idempotency, two statuses; when the direct API is enough.
 - FAQ протокола OpenSMM: https://opensmm.dev/opensmm-protocol-faq/ — MCP и REST, котировка, HTTP 402, оплата x402, что считается узлом.
 - EN: https://opensmm.dev/en/opensmm-protocol-faq/ — MCP vs REST, quote, HTTP 402, x402 payment, what counts as a node.
+- Заказ SMM-услуги из Claude Desktop: https://opensmm.dev/smm-order-claude-desktop/ — claude_desktop_config.json запускает npm run mcp по stdio, без порта и ключей; каталог → котировка → заказ → повтор на mock-каталоге.
+- EN: https://opensmm.dev/en/smm-order-claude-desktop/ — claude_desktop_config.json launches npm run mcp over stdio, no port, no keys; catalog → quote → order → replay on the mock catalog.
+- Заказ SMM-услуги из Cursor: https://opensmm.dev/smm-order-cursor/ — .cursor/mcp.json указывает на POST /mcp запущенного npm run gateway; каталог → котировка → заказ → повтор на mock-каталоге.
+- EN: https://opensmm.dev/en/smm-order-cursor/ — .cursor/mcp.json points at POST /mcp of a running npm run gateway; catalog → quote → order → replay on the mock catalog.
+- Заказ SMM-услуги из агента на LangChain: https://opensmm.dev/smm-order-langchain/ — tool-calling агент на POST /mcp: search_services, get_quote, create_order; без LLM-ключа и @langchain/*.
+- EN: https://opensmm.dev/en/smm-order-langchain/ — a tool-calling agent over POST /mcp: search_services, get_quote, create_order; no LLM key, no @langchain/*.

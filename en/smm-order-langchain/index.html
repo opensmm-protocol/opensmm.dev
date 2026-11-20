@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order SMM services from a LangChain agent: tool calls on a mock node</title>
+<meta name="description" content="Run a tool-calling agent against an OpenSMM node: search_services, get_quote, create_order over POST /mcp. No LLM key, no @langchain/* install. Order and replay by clientReference on the mock catalog.">
+<meta property="og:title" content="Order SMM services from a LangChain agent: tool calls on a mock node">
+<meta property="og:description" content="Run a tool-calling agent against an OpenSMM node: search_services, get_quote, create_order over POST /mcp. No LLM key, no @langchain/* install. Order and replay by clientReference on the mock catalog.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/en/smm-order-langchain/">
+<link rel="canonical" href="https://opensmm.dev/en/smm-order-langchain/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-langchain/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-langchain/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-langchain/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>LangChain-style agent</span>
+    </nav>
+    <h1>Order SMM services from a LangChain agent</h1>
+    <p class="section-lede">
+      A runnable tool-calling agent against a local OpenSMM node: <code>search_services</code>, <code>get_quote</code>, <code>create_order</code> — the same tools an MCP-equipped LangChain agent gets from <code>@langchain/mcp-adapters</code>. The example calls them directly over <code>POST /mcp</code>: no LLM key, no <code>@langchain/*</code> install, no money. Node.js ≥ 22.18 is enough.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. Start the node (about 2 minutes)</h2>
+    <p class="section-lede">
+      
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci
+npm run gateway</pre>
+    </div>
+    <p class="section-note">
+      The node prints a line like <code>gateway listening on http://localhost:8080 (REST /v0, MCP /mcp; provider: mock, mock catalog — not real supply)</code> on stderr. Port taken? <code>PORT=8081 npm run gateway</code>. Other startup fixes: <a href="/en/smm-node-troubleshooting/">node startup failures</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>2. Run the agent (a second terminal)</h2>
+    <p class="section-lede">
+      
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>node examples/langchain/agent.mjs http://127.0.0.1:8080 --client-reference my-first-order</pre>
+    </div>
+    <div class="code-block">
+      <div class="code-head"><span>text</span></div>
+<pre>node:      http://127.0.0.1:8080
+transport: MCP tools over POST /mcp (LangChain-style tool calls)
+tools:     search_services, get_quote, create_order
+tool:      search_services({})
+catalog:   MOCK — every service is marked synthetic: not real supply, no real money
+service:   osmm_svc_tg_members_std — Telegram Channel Members — Standard
+tool:      get_quote({"serviceId":"osmm_svc_tg_members_std","quantity":100,"link":"https://t.me/opensmm_example"})
+quote:     osmm_quote_... — 0.241200 USDC for 100 (mock rate)
+tool:      create_order({"quoteId":"osmm_quote_...","link":"https://t.me/opensmm_example","clientReference":"my-first-order"})
+order:     osmm_order_... — REQUIRES_PAYMENT, clientReference "my-first-order"
+tool:      create_order({"quoteId":"osmm_quote_...","link":"https://t.me/opensmm_example","clientReference":"my-first-order"})
+replay:    osmm_order_... — same orderId, no second order created
+done:      LangChain-style agent OK</pre>
+    </div>
+    <p class="section-note">
+      Options: <code>[base-url]</code> (default <code>http://127.0.0.1:8080</code>), <code>--client-reference &lt;ref&gt;</code>, <code>--quote &lt;quote-id&gt;</code> to reuse a quote printed by another run, <code>--help</code>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>3. The protocol invariant</h2>
+    <p class="section-lede">
+      
+    </p>
+    <ul class="deal-list">
+      <li>That is the whole scenario: catalog → quote → order → replay. The <code>order:</code> and <code>replay:</code> lines are the same <code>orderId</code>: one <code>clientReference</code> yields one order on any transport.</li>
+      <li>The order stays <code>REQUIRES_PAYMENT</code> — the example never pays and nothing is executed.</li>
+      <li>A quote is consumed once: each order needs its own; <code>--quote</code> reuses one issued earlier.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>4. Use it with a real LangChain agent</h2>
+    <p class="section-lede">
+      Keep the three tool names and argument shapes printed by <code>TOOLS</code> in <code>agent.mjs</code>, expose them through LangChain's MCP adapter pointed at <code>http://127.0.0.1:8080/mcp</code>, and let the model emit the same calls.
+    </p>
+    <ul class="deal-list">
+      <li><code>search_services</code> — find a service; on the mock node every service is <code>synthetic</code>;</li>
+      <li><code>get_quote</code> — requires <code>serviceId</code>, <code>quantity</code>, <code>link</code>;</li>
+      <li><code>create_order</code> — requires <code>quoteId</code>, <code>link</code>, <code>clientReference</code>.</li>
+    </ul>
+    <p class="section-note">
+      REST equivalents of the same operations: <code>GET /v0/services</code>, <code>POST /v0/quotes</code>, <code>POST /v0/orders</code> — see <code>examples/rest-client.mjs</code>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>5. The mock-only guard</h2>
+    <p class="section-lede">
+      
+    </p>
+    <ul class="deal-list">
+      <li>The script reads the <strong>first service</strong> the node returns — it invents no service ID — and stops immediately if that service is not marked <code>synthetic: true</code>.</li>
+      <li>The error message: <code>refusing to place a demo order: ... is not marked synthetic. This example orders only on the mock catalog — see examples/README.md.</code></li>
+      <li>That makes it safe against a node that has a live provider connected: the demo order cannot reach real supply.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limits</h2>
+    <ol class="deal-list">
+      <li>This page retells <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/langchain/README.md">examples/langchain/README.md</a>; the exact script output and options are there.</li>
+      <li>The scenario for all stacks at once: <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): no real services, prices or orders here; the rate in the example is a test one, nothing is paid.</li>
+      <li>Other stacks: <a href="/en/smm-agent-quickstart/">agent quickstart</a>, <a href="/en/smm-order-claude-desktop/">ordering from Claude Desktop</a>, <a href="/en/smm-order-cursor/">ordering from Cursor</a>.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Next: your own node</h2>
+    <p class="section-lede">
+      The example runs on a local node. To be counted in the census, run a node and report its address.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+    <p class="section-note">
+      The step-by-step guide, verification and reporting your node are on the <a href="/node/">“Run a node”</a> page.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>
