@@ -408,4 +408,40 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-deploy-guide/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-deploy-guide/"/>
   </url>
+  <url>
+    <loc>https://opensmm.dev/smm-node-troubleshooting/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-node-troubleshooting/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-troubleshooting/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-troubleshooting/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/smm-node-troubleshooting/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-node-troubleshooting/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-troubleshooting/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-troubleshooting/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/smm-agent-quickstart/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-agent-quickstart/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-agent-quickstart/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-agent-quickstart/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/smm-agent-quickstart/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-agent-quickstart/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-agent-quickstart/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-agent-quickstart/"/>
+  </url>
 </urlset>
