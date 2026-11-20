@@ -124,3 +124,7 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - EN: https://opensmm.dev/en/smm-provider-profile/ — baseUrl, apiKey, profile and payoutAddress; the doctor suggests a ready profile.
 - EN: https://opensmm.dev/en/mcp-vs-rest-smm-orders/ — one clientReference → one orderId on any transport.
 - EN: https://opensmm.dev/en/smm-panel-doctor-check/ — npm run doctor and npm run verify:node, nothing registered.
+- Оплата SMM-заказов агентом по x402 (testnet): https://opensmm.dev/smm-agent-payments-x402/ — кошелёк, тестовые USDC, фасилитатор, npm run x402:testnet; только Base Sepolia.
+- Развёртывание узла OpenSMM: https://opensmm.dev/smm-node-deploy-guide/ — из исходников и docker compose, verify:node, TLS за прокси.
+- EN: https://opensmm.dev/en/smm-agent-payments-x402/ — paying for orders from an agent over x402: wallet, test USDC, facilitator; Base Sepolia testnet only.
+- EN: https://opensmm.dev/en/smm-node-deploy-guide/ — deploy a node from source or Docker Compose, verify:node, TLS behind a proxy.
