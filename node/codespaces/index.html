@@ -16,10 +16,10 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Run an OpenSMM Node in GitHub Codespaces | OpenSMM</title>
-<meta name="description" content="Run an OpenSMM gateway node from GitHub Codespaces in five steps: no server, no Docker, no domain. Open the repo, run the gateway, forward port 8080, go public.">
-<meta property="og:title" content="Run an OpenSMM Node in GitHub Codespaces">
-<meta property="og:description" content="Run an OpenSMM gateway node from GitHub Codespaces in five steps: no server, no Docker, no domain.">
+<title>Run an OpenSMM Node in Codespaces — No Server Needed</title>
+<meta name="description" content="Launch an OpenSMM node from GitHub Codespaces: open the repo, forward port 8080, verify REST /v0 and MCP /mcp. The service catalog is demo mock data.">
+<meta property="og:title" content="Run an OpenSMM Node in Codespaces — No Server Needed">
+<meta property="og:description" content="Launch an OpenSMM node from GitHub Codespaces: open the repo, forward port 8080, verify REST /v0 and MCP /mcp. The service catalog is demo mock data.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/node/codespaces/">
 <link rel="canonical" href="https://opensmm.dev/node/codespaces/">
@@ -72,7 +72,7 @@
       <span class="crumb-sep">/</span>
       <span>Codespaces</span>
     </nav>
-    <h1>Run a node in GitHub Codespaces</h1>
+    <h1>Run an OpenSMM Node in GitHub Codespaces</h1>
     <p class="section-lede">
       No server of your own, no Docker, no domain. A GitHub Codespace is a ready
       Linux machine in the browser: open the protocol repository, start the gateway,
@@ -92,7 +92,7 @@
       <code>Create codespace on main</code>. The first launch takes a minute while the container
       is built. The repository ships a devcontainer configuration, so the codespace comes with
       the right Node.js (≥ 22.18) out of the box — the full walkthrough lives in
-      <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/CODESPACES.md">docs/CODESPACES.md</a>.
+      <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/CODESPACES.md">docs/CODESPACES.md</a>.
       A free GitHub account is enough; Codespaces runs within its free monthly allowance
       (current limits are in GitHub's own docs).
     </p>
@@ -166,13 +166,14 @@
   <div class="wrap">
     <h2>5. Verify the node (REST and MCP)</h2>
     <p class="section-lede">
-      Check that your node answers on both transports over the public URL. Check
+      Check that your node answers over the public URL. Check <code>GET /health</code>,
       <code>GET /v0/services</code> to inspect the catalog and <code>POST /mcp</code> for
       JSON-RPC MCP initialization.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span><button class="copy" data-copy="step5-cmds" aria-label="Copy verification commands">Copy</button></div>
-<pre id="step5-cmds">curl -s -o /dev/null -w '%{http_code}\n' https://&lt;codespace-name&gt;-8080.app.github.dev/v0/services   # 200
+<pre id="step5-cmds">curl -s -o /dev/null -w '%{http_code}\n' https://&lt;codespace-name&gt;-8080.app.github.dev/health   # 200
+curl -s -o /dev/null -w '%{http_code}\n' https://&lt;codespace-name&gt;-8080.app.github.dev/v0/services   # 200
 curl -s https://&lt;codespace-name&gt;-8080.app.github.dev/v0/services | head -30   # every service has "synthetic": true
 curl -s -X POST https://&lt;codespace-name&gt;-8080.app.github.dev/mcp \
   -H 'content-type: application/json' -H 'accept: application/json, text/event-stream' \
