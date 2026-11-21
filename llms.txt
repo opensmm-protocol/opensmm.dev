@@ -98,6 +98,11 @@ map it to loopback with `-p 127.0.0.1:8080:8080`) and put a TLS proxy in
 front before you expose it. Full instructions, including the public endpoint
 setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 
+No server of your own? Run the node in GitHub Codespaces instead — five
+steps from opening the repo to a public URL (port 8080 forwarded as
+Public), no Docker and no domain:
+https://opensmm.dev/node/codespaces/
+
 ## Docs
 
 - Protocol spec: https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0
