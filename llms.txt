@@ -148,3 +148,7 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - EN: https://opensmm.dev/en/smm-order-cursor/ — .cursor/mcp.json points at POST /mcp of a running npm run gateway; catalog → quote → order → replay on the mock catalog.
 - Заказ SMM-услуги из агента на LangChain: https://opensmm.dev/smm-order-langchain/ — tool-calling агент на POST /mcp: search_services, get_quote, create_order; без LLM-ключа и @langchain/*.
 - EN: https://opensmm.dev/en/smm-order-langchain/ — a tool-calling agent over POST /mcp: search_services, get_quote, create_order; no LLM key, no @langchain/*.
+- Заказ SMM-услуги из Python-агента: https://opensmm.dev/smm-order-python/ — REST-клиент на stdlib Python: capabilities, каталог, котировка, заказ, повтор; без pip install, на mock-каталоге.
+- EN: https://opensmm.dev/en/smm-order-python/ — a REST client on the Python standard library: capabilities, catalog, quote, order, replay; no pip install, on the mock catalog.
+- Заказ SMM-услуги из Node.js-агента: https://opensmm.dev/smm-order-nodejs/ — MCP-клиент без SDK на POST /mcp: initialize, search_services, get_quote, create_order; один clientReference даёт один orderId на любом транспорте.
+- EN: https://opensmm.dev/en/smm-order-nodejs/ — an SDK-free MCP client over POST /mcp: initialize, search_services, get_quote, create_order; one clientReference gives one orderId on any transport.
