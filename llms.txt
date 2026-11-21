@@ -98,6 +98,8 @@ map it to loopback with `-p 127.0.0.1:8080:8080`) and put a TLS proxy in
 front before you expose it. Full instructions, including the public endpoint
 setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 
+- Запуск узла OpenSMM в GitHub Codespaces: https://opensmm.dev/node/codespaces/ — пошаговый гайд: открыть репозиторий, Forward port 8080 → Public, проверить REST /v0 и MCP /mcp; каталог услуг демонстрационный (mock).
+
 ## Docs
 
 - Protocol spec: https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0

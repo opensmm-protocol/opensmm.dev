@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run an OpenSMM Node in Codespaces — No Server Needed</title>
+<meta name="description" content="Launch an OpenSMM node from GitHub Codespaces: open the repo, forward port 8080, verify REST /v0 and MCP /mcp. The service catalog is demo mock data.">
+<meta property="og:title" content="Run an OpenSMM Node in Codespaces — No Server Needed">
+<meta property="og:description" content="Launch an OpenSMM node from GitHub Codespaces: open the repo, forward port 8080, verify REST /v0 and MCP /mcp. The service catalog is demo mock data.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/node/codespaces/">
+<link rel="canonical" href="https://opensmm.dev/node/codespaces/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to run an OpenSMM gateway node in GitHub Codespaces",
+  "description": "Five steps to launch an OpenSMM gateway node from GitHub Codespaces and expose it on a public URL without your own server.",
+  "totalTime": "PT5M",
+  "tool": [
+    { "@type": "HowToTool", "name": "GitHub account with Codespaces" },
+    { "@type": "HowToTool", "name": "Node.js (>= 22.18)" },
+    { "@type": "HowToTool", "name": "Git" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <a href="/node/">Run a node</a>
+      <span class="crumb-sep">/</span>
+      <span>Codespaces</span>
+    </nav>
+    <h1>Run an OpenSMM Node in GitHub Codespaces</h1>
+    <p class="section-lede">
+      No server of your own, no Docker, no domain. A GitHub Codespace is a ready
+      Linux machine in the browser: open the protocol repository, start the gateway,
+      and expose it on a public URL through port forwarding. The node serves REST
+      <code>/v0</code> and MCP <code>/mcp</code> on one port — and its catalog is the
+      demo mock catalog until you connect a real provider.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. Open the repository in Codespaces</h2>
+    <p class="section-lede">
+      Open <a href="https://github.com/opensmm-protocol/mcp-server">opensmm-protocol/mcp-server</a>
+      on GitHub, press <code>Code</code>, switch to the <code>Codespaces</code> tab and click
+      <code>Create codespace on main</code>. The first launch takes a minute while the container
+      is built. The repository ships a devcontainer configuration, so the codespace comes with
+      the right Node.js (≥ 22.18) out of the box — the full walkthrough lives in
+      <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/CODESPACES.md">docs/CODESPACES.md</a>.
+      A free GitHub account is enough; Codespaces runs within its free monthly allowance
+      (current limits are in GitHub's own docs).
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="https://github.com/opensmm-protocol/mcp-server">Open the repo on GitHub</a>
+    </div>
+    <p class="section-note">
+      If you reuse an existing codespace, run <code>node -v</code> first — the gateway needs
+      Node.js ≥ 22.18 (native TypeScript type stripping without flags).
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>2. Install dependencies</h2>
+    <p class="section-lede">
+      In the codespace terminal, install the dependencies with <code>npm ci</code>.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span><button class="copy" data-copy="step2-cmds" aria-label="Copy install command">Copy</button></div>
+<pre id="step2-cmds">npm ci</pre>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>3. Start the gateway node</h2>
+    <p class="section-lede">
+      Launch the gateway on port 8080. By default it boots against the built-in MockProvider
+      catalog — no keys and no external services.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span><button class="copy" data-copy="step3-cmds" aria-label="Copy gateway command">Copy</button></div>
+<pre id="step3-cmds">PORT=8080 npm run gateway</pre>
+    </div>
+    <p class="section-note">
+      The node reports its listening port on stderr:
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>stderr</span><button class="copy" data-copy="step3-output" aria-label="Copy stderr output">Copy</button></div>
+<pre id="step3-output">OpenSMM 0.1.0 gateway listening on http://localhost:8080 (REST /v0, MCP /mcp; provider: mock, mock catalog — not real supply)</pre>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>4. Forward port 8080 and make it public</h2>
+    <p class="section-lede">
+      When the gateway starts listening, Codespaces forwards port 8080 automatically.
+      Open the <code>Ports</code> panel in the codespace, find port 8080 and switch its
+      visibility to <code>Public</code>. Codespaces gives the forwarded port a stable public URL
+      of the form:
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>url</span><button class="copy" data-copy="step4-url" aria-label="Copy forwarded URL pattern">Copy</button></div>
+<pre id="step4-url">https://&lt;codespace-name&gt;-8080.app.github.dev</pre>
+    </div>
+    <p class="section-note">
+      That URL is all you need to point agents and MCP clients at your node. It stays live
+      while the codespace runs and goes down when the codespace stops — Codespaces is the
+      five-minute path; a permanent deployment is covered in
+      <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md">docs/DEPLOY.md</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>5. Verify the node (REST and MCP)</h2>
+    <p class="section-lede">
+      Check that your node answers over the public URL. Check <code>GET /health</code>,
+      <code>GET /v0/services</code> to inspect the catalog and <code>POST /mcp</code> for
+      JSON-RPC MCP initialization.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span><button class="copy" data-copy="step5-cmds" aria-label="Copy verification commands">Copy</button></div>
+<pre id="step5-cmds">curl -s -o /dev/null -w '%{http_code}\n' https://&lt;codespace-name&gt;-8080.app.github.dev/health   # 200
+curl -s -o /dev/null -w '%{http_code}\n' https://&lt;codespace-name&gt;-8080.app.github.dev/v0/services   # 200
+curl -s https://&lt;codespace-name&gt;-8080.app.github.dev/v0/services | head -30   # every service has "synthetic": true
+curl -s -X POST https://&lt;codespace-name&gt;-8080.app.github.dev/mcp \
+  -H 'content-type: application/json' -H 'accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"qa","version":"1"}}}'   # serverInfo.name = "opensmm"</pre>
+    </div>
+    <p class="section-note">
+      The catalog you see is the <strong>demo mock catalog</strong>, not real supply: the gateway
+      runs without a provider key, so every service carries <code>"synthetic": true</code> —
+      these are fixtures to exercise the protocol end to end, with no real orders and no real
+      balances. Services and prices on it are samples, not sellable supply. The live catalog
+      appears only when you connect a real provider (an SMM panel) to the gateway via
+      <code>OPENSMM_REST_V1_*</code>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Your node is live</h2>
+    <p class="section-lede">
+      Both checks return 200 — your node is on the air. The full guide covers the node
+      definition, the census that counts it, and node reporting to the network.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/" data-node-cta="node_cta_click">Open the full Run a node guide</a>
+    </div>
+    <p class="section-note">
+      Подробнее: <a href="/smm-node-deploy-guide/">развёртывание узла OpenSMM</a>,
+      <a href="/smm-node-troubleshooting/">сбои запуска узла</a>,
+      <a href="/smm-node-launch-checklist/">чек-лист запуска узла</a>,
+      <a href="/smm-node-registry/">реестр узлов протокола: перепись и MCP Registry</a>.
+      English: <a href="/en/smm-node-deploy-guide/">deploy a node</a>,
+      <a href="/en/smm-node-troubleshooting/">node startup failures</a>,
+      <a href="/en/smm-node-launch-checklist/">node launch checklist</a>,
+      <a href="/en/smm-node-registry/">node registry: census and MCP Registry</a>.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — MIT licensed open software</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js"></script>
+</body>
+</html>
