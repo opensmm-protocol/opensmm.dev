@@ -166,3 +166,4 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - EN: https://opensmm.dev/en/smm-order-claude-code/ — no ready example for this stack; working MCP config from examples/README.md and the walkthrough in docs/AGENT_QUICKSTART.md, mock catalog.
 - Заказ SMM-услуги из OpenAI Agents SDK: https://opensmm.dev/smm-order-openai-agents/ — готового примера под стек нет; SDK-независимый MCP-клиент examples/mcp-client.mjs и docs/AGENT_QUICKSTART.md, mock-каталог.
 - EN: https://opensmm.dev/en/smm-order-openai-agents/ — no ready example for this stack; the SDK-free examples/mcp-client.mjs and docs/AGENT_QUICKSTART.md, mock catalog.
+- Перепродажа SMM-услуг через API: https://opensmm.dev/smm-resale-via-api/ — две топологии оплаты (прямой расчёт и gateway-as-merchant), идемпотентность по clientReference, подключение панели; маржа — решение оператора, цен нет.
