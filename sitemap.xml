@@ -631,6 +631,42 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-nodejs/"/>
   </url>
   <url>
+    <loc>https://opensmm.dev/open-smm-protocol/</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/open-smm-protocol/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/open-smm-protocol/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/open-smm-protocol/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/open-smm-protocol/</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/open-smm-protocol/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/open-smm-protocol/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/open-smm-protocol/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/mcp-for-smm-panels/</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/mcp-for-smm-panels/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/mcp-for-smm-panels/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/mcp-for-smm-panels/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/mcp-for-smm-panels/</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/mcp-for-smm-panels/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/mcp-for-smm-panels/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/mcp-for-smm-panels/"/>
+  </url>
+  <url>
     <loc>https://opensmm.dev/smm-order-claude-code/</loc>
     <lastmod>2026-11-22</lastmod>
     <changefreq>monthly</changefreq>

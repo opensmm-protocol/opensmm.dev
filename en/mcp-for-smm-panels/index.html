@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCP for SMM panels: connect your panel to AI agents, no code</title>
+<meta name="description" content="MCP as an OpenSMM transport for SMM panels: smm-v2 and rest-v1 dialects, MCP tools with REST equivalents, zero-code panel connection via endpoint and apiKey, one clientReference to one orderId.">
+<meta property="og:title" content="MCP for SMM panels: connect your panel to AI agents, no code">
+<meta property="og:description" content="smm-v2 and rest-v1 dialects, MCP tools with REST equivalents, zero-code panel connection, one clientReference to one orderId — from spec/v0 and the docs.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/en/mcp-for-smm-panels/">
+<link rel="canonical" href="https://opensmm.dev/en/mcp-for-smm-panels/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/mcp-for-smm-panels/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/mcp-for-smm-panels/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/mcp-for-smm-panels/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>MCP for panels</span>
+    </nav>
+    <h1>MCP for SMM panels</h1>
+    <p class="section-lede">
+      MCP is one inbound transport of OpenSMM; REST <code>/v0</code> is the canonical HTTP binding. For an SMM panel this means: your API speaks one of the supported dialects, and joining a gateway is a single <code>registerProvider</code> call — no code.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. MCP tools and their REST equivalents</h2>
+    <p class="section-lede">
+      The same operation over MCP and REST produces the same domain objects. The full 0.1 toolset:
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>MCP tool / REST</span></div>
+<pre>get_capabilities    GET  /v0/capabilities
+search_services     GET  /v0/services
+get_service         GET  /v0/services/{id}
+get_quote           POST /v0/quotes
+create_order        POST /v0/orders
+get_order_status    GET  /v0/orders/{id}
+list_providers      GET  /v0/providers
+register_provider   POST /v0/providers     — optional
+cancel_order        POST /v0/orders/{id}/cancel — optional
+request_refill      POST /v0/orders/{id}/refill — optional</pre>
+    </div>
+    <p class="section-note">
+      Idempotency in MCP is the <code>clientReference</code> field of <code>create_order</code>; in REST it is the <code>Idempotency-Key</code> header. One <code>clientReference</code> gives one <code>orderId</code> on any transport. See <a href="/en/mcp-vs-rest-smm-orders/">MCP vs REST</a> and <a href="/en/smm-api-mcp/">SMM API for MCP</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>2. Supported panel dialects</h2>
+    <ul class="deal-list">
+      <li><code>smm-v2</code> — classic panel API: <code>POST {endpoint}</code> with <code>key</code> and <code>action</code> (<code>services</code>, <code>add</code>, <code>status</code>); behavior profiles handle panel deviations.</li>
+      <li><code>rest-v1</code> — reseller-style REST: <code>GET {endpoint}/services</code>, <code>POST {endpoint}/orders</code>, <code>GET {endpoint}/orders/:id</code>, Bearer auth.</li>
+    </ul>
+    <p class="section-note">
+      Neither dialect requires you to write code: the gateway builds the adapter and syncs the catalog itself.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>3. Check the panel before connecting</h2>
+    <p class="section-lede">
+      The doctor runs read-only Level-0 diagnostics: HTTPS and JSON instead of HTML/Cloudflare, <code>action=balance</code> and <code>action=services</code> with catalog size, envelope and field aliases, then a suggested profile and a ready connection snippet. Nothing is registered and the key is never printed.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>OPENSMM_PANEL_KEY="&lt;your api key&gt;" npm run doctor -- --url https://your-panel.example/api/v2</pre>
+    </div>
+    <p class="section-note">
+      Exit code <code>0</code> — every check passed; <code>1</code> — the report names the failed check; use the suggested <code>profile</code> when registering. The doctor speaks <code>smm-v2</code> only; for <code>rest-v1</code> the gateway healthcheck plays that role. See <a href="/en/smm-panel-doctor-check/">panel and node check</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>4. Register the panel</h2>
+    <p class="section-lede">
+      One <code>register_provider</code> (MCP) or <code>POST /v0/providers</code> (REST) call with the adapter, endpoint, <code>apiKey</code> and (optionally) a payout address. The <code>apiKey</code> is used only to call your API; it is never returned by the protocol, logged or shown in listings.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>curl -X POST https://&lt;gateway&gt;/v0/providers \
+  -H 'content-type: application/json' \
+  -d '{"adapter":"smm-v2","endpoint":"https://your-panel.example/api/v2","apiKey":"&lt;your api key&gt;"}'</pre>
+    </div>
+    <p class="section-note">
+      Re-registering the same endpoint is idempotent — the same <code>providerKey</code> comes back. Publicly your panel is the pseudonym <code>provider-beta</code>; <code>displayName</code> is published only if you explicitly set <code>publiclyListed</code>. New nodes start <code>UNVERIFIED</code> with <code>sampleSize: 0</code>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>5. What happens under the hood</h2>
+    <ol class="deal-list">
+      <li><strong>SSRF guard</strong> — the endpoint must be a public <code>https://</code> URL with no embedded credentials; loopback and private ranges are rejected.</li>
+      <li><strong>Healthcheck</strong> — the gateway lists your offers once, proving reachability, auth and catalog in one call.</li>
+      <li><strong>Catalog sync</strong> — offers appear in <code>search_services</code> under normalized IDs; <code>catalogVersion</code> changes on sync.</li>
+      <li><strong>Reputation</strong> — metrics are measured by the gateway from its own orders, never self-reported; the quality formula is open (spec/v0 §9.1).</li>
+    </ol>
+    <p class="section-note">
+      With a payout address set, agents pay your panel directly (x402, USDC on Base) and money never transits the gateway. See <a href="/en/connect-smm-panel/">connect an SMM panel</a> and the <a href="/en/smm-provider-profile/">connection profile</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limits</h2>
+    <ol class="deal-list">
+      <li>This page retells <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/PROVIDER_ONBOARDING.md">docs/PROVIDER_ONBOARDING.md</a>, <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a> and <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">spec/v0</a>; exact fields and versions are there.</li>
+      <li>The site and local node catalogs are mock (<code>synthetic: true</code>): no real services, prices or orders here; keys and addresses in examples are placeholders.</li>
+      <li>x402 payment is tested on the Base Sepolia testnet only; mainnet USDC is not enabled.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Next: run your own node</h2>
+    <p class="section-lede">
+      Want to see MCP in action? Start a local node and walk the “catalog → quote → order → replay” path on the mock catalog — no keys, no money.
+    </p>
+    <p class="section-note">
+      Guide: <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; setup and verification are on the <a href="/node/">“Run a node”</a> page.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>
