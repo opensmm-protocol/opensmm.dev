@@ -702,4 +702,22 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-openai-agents/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-openai-agents/"/>
   </url>
+  <url>
+    <loc>https://opensmm.dev/check/</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/check/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/check/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/check/"/>
+  </url>
+  <url>
+    <loc>https://opensmm.dev/en/check/</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://opensmm.dev/check/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/en/check/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/check/"/>
+  </url>
 </urlset>

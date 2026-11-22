@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check your OpenSMM node online: /health, server.json, /v0/services, /mcp — OpenSMM</title>
+<meta name="description" content="Online OpenSMM node check from your browser: /health, server.json, /v0/services and MCP initialize. Pass/fail per check and a README badge. No sign-up, the URL is not stored.">
+<meta property="og:title" content="Check your OpenSMM node online: /health, server.json, /v0/services, /mcp — OpenSMM">
+<meta property="og:description" content="Online OpenSMM node check from your browser: /health, server.json, /v0/services and MCP initialize. Pass/fail per check and a README badge. No sign-up, the URL is not stored.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/en/check/">
+<meta property="og:image" content="https://opensmm.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenSMM — SMM ordering for AI agents over MCP/REST">
+<link rel="canonical" href="https://opensmm.dev/en/check/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/check/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/check/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/check/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<style>
+.chk-form{margin-top:28px;max-width:680px;display:flex;gap:10px;flex-wrap:wrap}
+.chk-form label{flex-basis:100%;font-size:14px;color:var(--muted)}
+.chk-form input{flex:1 1 280px;font:inherit;font-family:var(--mono);font-size:14px;padding:12px 14px;border:1px solid var(--rule);border-radius:8px;background:#fff;color:var(--ink)}
+.chk-form button.btn{border:0;cursor:pointer}
+.chk-msg{margin-top:14px;max-width:680px;font-size:15px}
+.chk-msg.err{color:#B3261E}
+.chk-list{list-style:none;margin:24px 0 0;padding:0;max-width:680px}
+.chk-list li{border:1px solid var(--rule);border-radius:8px;padding:12px 14px;margin-top:10px;background:#fff}
+.chk-name{font-family:var(--mono);font-size:14px}
+.chk-st{float:right;font-family:var(--mono);font-size:13px;font-weight:500}
+.chk-st.pass{color:#1F8A63}.chk-st.fail{color:#B3261E}.chk-st.cors{color:#9A6B00}
+.chk-det{margin-top:6px;font-size:14px;color:var(--muted)}
+.chk-cors{margin-top:18px;max-width:680px;border-left:3px solid var(--warn);padding:8px 14px;font-size:15px;color:var(--ink)}
+.chk-sum{margin-top:18px;font-weight:700}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/en/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>Node check</span>
+    </nav>
+    <h1>Check your OpenSMM node online</h1>
+    <p class="section-lede">Enter the https address of your node — the page runs 4 checks from your browser and shows pass/fail for each. Nothing is registered or stored.</p>
+    <form class="chk-form" id="chk-form" novalidate>
+      <label for="chk-url">Node URL</label>
+      <input id="chk-url" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://node.example.org">
+      <button class="btn" id="chk-btn" type="submit">Check node</button>
+    </form>
+    <p class="chk-msg" id="chk-msg" role="alert"></p>
+    <ul class="chk-list" id="chk-list" aria-live="polite"></ul>
+    <div id="chk-result"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>CORS: how to enable it</h2>
+    <p class="section-lede">If the check says "blocked by CORS", the node is alive but the browser got no permission. Add the header <code>Access-Control-Allow-Origin: https://opensmm.dev</code> on the node (and answer the <code>OPTIONS</code> preflight for <code>/mcp</code>), or check the node from a terminal:</p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>npm run verify:node -- https://node.example.org</pre>
+    </div>
+    <p class="section-note">If a check fails, see <a href="/en/smm-node-troubleshooting/">node startup failures</a> · <a href="/en/smm-node-registry/">node registry</a>.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>What this check does not do</h2>
+    <ol class="deal-list">
+      <li>The check runs from your browser: the node must be reachable over https from the internet and send CORS headers.</li>
+      <li>The badge is operator self-reported: the OpenSMM registry does not verify or confirm it.</li>
+      <li>No orders are created — only reads and MCP <code>initialize</code>.</li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+<script>
+(function(){
+var T={"running": "Checking…", "pass_": "pass", "fail": "fail", "cors": "blocked by CORS", "skip": "—", "http": "An https:// address is required — http:// is not accepted: browsers block mixed content and a census node must be reachable over TLS.", "bad": "Not a valid URL. Example: https://node.example.org", "corsmsg": "The node responds, but the browser blocked the response because of CORS. This is not \"node unreachable\": enable Access-Control-Allow-Origin (and the OPTIONS preflight for /mcp) or run npm run verify:node -- URL from a terminal.", "down": "No response from the node: host unreachable, timeout or TLS error.", "status": "HTTP response ", "sj_bad": "server.json is invalid: name, version and a transports list (remotes, transports or packages) are required.", "sj_json": "server.json is not JSON.", "mcp_bad": "The response does not look like a JSON-RPC initialize result.", "hint": "Hint: ", "hints": {"health": "GET /health must return 200.", "sj": "Serve /.well-known/mcp/server.json with name, version and transports.", "svc": "GET /v0/services must return 200 with JSON.", "mcp": "POST /mcp with JSON-RPC initialize must return 200."}, "allpass": "All 4 checks passed.", "somefail": "Not all checks passed.", "badge_h": "README badge", "badge_t": "Operator self-report: the badge does not mean the OpenSMM registry verified the node. Copy the markdown:", "copy": "Copy", "copied": "Copied", "names": {"health": "GET /health → 200", "sj": "GET /.well-known/mcp/server.json is valid", "svc": "GET /v0/services → 200", "mcp": "POST /mcp initialize → 200"}, "trouble": "/en/smm-node-troubleshooting/", "troubleT": "node startup failures"};
+var form=document.getElementById('chk-form'),inp=document.getElementById('chk-url'),msg=document.getElementById('chk-msg'),list=document.getElementById('chk-list'),res=document.getElementById('chk-result'),btn=document.getElementById('chk-btn');
+function goal(n){try{if(window.ym)ym(114382488,'reachGoal',n);}catch(e){}}
+function parse(v){v=(v||'').trim();if(!v)return {e:T.bad};if(/^http:\/\//i.test(v))return {e:T.http};
+ if(!/^https:\/\//i.test(v))v=/^[a-z][a-z0-9+.-]*:/i.test(v)?v:'https://'+v;
+ var u;try{u=new URL(v);}catch(e){return {e:T.bad};}
+ if(u.protocol!=='https:')return {e:T.http};
+ if(!u.hostname||u.hostname.indexOf('.')<0&&u.hostname!=='localhost')return {e:T.bad};
+ return {base:u.origin};}
+function req(url,opt){var c=new AbortController(),t=setTimeout(function(){c.abort();},10000);
+ opt=opt||{};opt.signal=c.signal;opt.cache='no-store';opt.credentials='omit';opt.redirect='follow';
+ return fetch(url,opt).then(function(r){clearTimeout(t);return r;},function(e){clearTimeout(t);throw e;});}
+function reach(base){return req(base+'/health',{mode:'no-cors'}).then(function(){return true;},function(){return false;});}
+var checks=[
+ {k:'health',run:function(b){return req(b+'/health').then(function(r){return r.status===200?{ok:true}:{ok:false,d:T.status+r.status};});}},
+ {k:'sj',run:function(b){return req(b+'/.well-known/mcp/server.json').then(function(r){
+   if(r.status!==200)return {ok:false,d:T.status+r.status};
+   return r.json().then(function(j){
+    var tr=j&&(Array.isArray(j.remotes)||Array.isArray(j.transports)||Array.isArray(j.packages));
+    var ok=j&&typeof j.name==='string'&&j.name&&typeof j.version==='string'&&j.version&&tr;
+    return ok?{ok:true}:{ok:false,d:T.sj_bad};
+   },function(){return {ok:false,d:T.sj_json};});});}},
+ {k:'svc',run:function(b){return req(b+'/v0/services').then(function(r){return r.status===200?{ok:true}:{ok:false,d:T.status+r.status};});}},
+ {k:'mcp',run:function(b){return req(b+'/mcp',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json, text/event-stream'},
+   body:JSON.stringify({jsonrpc:'2.0',id:1,method:'initialize',params:{protocolVersion:'2025-03-26',capabilities:{},clientInfo:{name:'opensmm-check',version:'0'}}})}).then(function(r){
+   if(r.status!==200)return {ok:false,d:T.status+r.status};
+   return r.text().then(function(t){var ok=/"result"\s*:/.test(t);return ok?{ok:true}:{ok:false,d:T.mcp_bad};});});}}
+];
+function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;}
+function run(base){
+ list.textContent='';res.textContent='';msg.textContent='';btn.disabled=true;
+ goal('check_started');
+ var rows=checks.map(function(c){var li=el('li'),n=el('span','chk-name',T.names[c.k]),s=el('span','chk-st',T.running);li.appendChild(s);li.appendChild(n);list.appendChild(li);return {li:li,s:s};});
+ var reachable=null,corsHit=false,passed=0;
+ var jobs=checks.map(function(c,i){
+  return c.run(base).then(function(r){return r;},function(){
+   return (reachable===null?(reachable=reach(base)):Promise.resolve(reachable)).then(function(v){reachable=v;return v?{ok:false,cors:true}:{ok:false,down:true};});
+  }).then(function(r){
+   var row=rows[i];
+   if(r.ok){passed++;row.s.className='chk-st pass';row.s.textContent=T.pass_;}
+   else if(r.cors){corsHit=true;row.s.className='chk-st cors';row.s.textContent=T.cors;}
+   else{row.s.className='chk-st fail';row.s.textContent=T.fail;row.li.appendChild(el('div','chk-det',r.down?T.down:(r.d||'')));}
+   if(!r.ok&&!r.cors)row.li.appendChild(el('div','chk-det',T.hint+T.hints[c.k]));
+   if(!r.ok){var a=el('a',null,T.troubleT);a.href=T.trouble;var d=el('div','chk-det');d.appendChild(a);row.li.appendChild(d);}
+  });});
+ Promise.all(jobs).then(function(){
+  btn.disabled=false;
+  if(corsHit)res.appendChild(el('div','chk-cors',T.corsmsg));
+  if(passed===checks.length){
+   goal('check_pass');
+   res.appendChild(el('p','chk-sum',T.allpass));
+   res.appendChild(el('h2',null,T.badge_h));res.appendChild(el('p','section-note',T.badge_t));
+   var md='[![OpenSMM Node Verified](https://img.shields.io/badge/OpenSMM-Node%20Verified-0052FF)](https://opensmm.dev/check/)';
+   var box=el('div','code-block'),hd=el('div','code-head'),pre=el('pre');hd.appendChild(el('span',null,'markdown'));
+   var cb=el('button','copy',T.copy);cb.type='button';cb.onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(md).then(function(){cb.textContent=T.copied;});}};hd.appendChild(cb);
+   pre.textContent=md;box.appendChild(hd);box.appendChild(pre);res.appendChild(box);
+  }else res.appendChild(el('p','chk-sum',T.somefail));
+ });
+}
+form.addEventListener('submit',function(e){e.preventDefault();var p=parse(inp.value);list.textContent='';res.textContent='';
+ if(p.e){msg.className='chk-msg err';msg.textContent=p.e;return;}
+ msg.className='chk-msg';run(p.base);});
+})();
+</script>
+</body>
+</html>
