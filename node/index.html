@@ -79,6 +79,69 @@
   </div>
 </section>
 
+<section class="section" id="comparison">
+  <div class="wrap">
+    <h2>Choose your launch method</h2>
+    <p class="section-lede">
+      Compare options to launch an OpenSMM gateway node: cloud browser instance, single-command container, or native checkout from source.
+    </p>
+
+    <div class="comparison-wrap table-scroll">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th scope="col">Method</th>
+            <th scope="col">Time</th>
+            <th scope="col">Cost</th>
+            <th scope="col">Environment</th>
+            <th scope="col">Launch command</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="comparison-row comparison-featured">
+            <td data-label="Method">
+              <strong>GitHub Codespaces</strong>
+              <span class="badge badge-accent">Fastest</span>
+            </td>
+            <td data-label="Time"><span class="badge badge-ok">5 min (5 минут)</span></td>
+            <td data-label="Cost"><span class="badge">0 ₽ (Free)</span></td>
+            <td data-label="Environment">In-browser · прямо в браузере</td>
+            <td data-label="Launch command">Open repo &rarr; Forward 8080 Public</td>
+            <td data-label="Action">
+              <a class="btn btn-sm" href="/node/codespaces/" data-node-cta="node_cta_click" node_cta_click>Launch in Codespaces</a>
+            </td>
+          </tr>
+          <tr class="comparison-row">
+            <td data-label="Method">
+              <strong>Docker Compose</strong>
+            </td>
+            <td data-label="Time"><span class="badge">2 min</span></td>
+            <td data-label="Cost"><span class="badge">0 ₽</span></td>
+            <td data-label="Environment">Local Docker · локальный запуск</td>
+            <td data-label="Launch command"><code>docker compose up</code> (одной командой)</td>
+            <td data-label="Action">
+              <a href="https://github.com/opensmm-protocol/mcp-server#docker-compose" class="action-link">Docker guide</a>
+            </td>
+          </tr>
+          <tr class="comparison-row">
+            <td data-label="Method">
+              <strong>From source (из исходников)</strong>
+            </td>
+            <td data-label="Time"><span class="badge">5 min (5 минут)</span></td>
+            <td data-label="Cost"><span class="badge">0 ₽</span></td>
+            <td data-label="Environment">Node.js &ge; 22.18 · для Node.js окружения</td>
+            <td data-label="Launch command"><code>npm ci &amp;&amp; npm run gateway</code></td>
+            <td data-label="Action">
+              <a href="#step1-cmds" class="action-link">Step-by-step &darr;</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
 <section class="section">
   <div class="wrap">
     <h2>1. Clone and install</h2>
@@ -173,9 +236,15 @@ node scripts/node-census.mjs --url http://127.0.0.1:8080   # "status": "up"</pre
       Use the GitHub issue template:
       <a href="https://github.com/opensmm-protocol/mcp-server/issues/new?template=node-report.md">issues/new?template=node-report.md</a>
       to submit your node URL, run type (source or Docker), and optional contact info.
+      No server of your own?
+      <a href="/node/codespaces/">Run a node in GitHub Codespaces without your own server</a> —
+      five steps from opening the repo to a public URL.
     </p>
     <p class="section-note">
-      Подробнее: <a href="/connect-smm-panel/">подключить SMM-панель к AI-агентам</a>, <a href="/order-smm-via-ai-agent/">заказ SMM-услуг через ИИ-агента</a>, <a href="/smm-api-mcp/">SMM API для MCP</a>.
+      Подробнее: <a href="/connect-smm-panel/">подключить SMM-панель к AI-агентам</a>, <a href="/order-smm-via-ai-agent/">заказ SMM-услуг через ИИ-агента</a>, <a href="/smm-api-mcp/">SMM API для MCP</a>, <a href="/smm-provider-profile/">профиль подключения SMM-панели</a>, <a href="/mcp-vs-rest-smm-orders/">MCP или REST для заказа SMM-услуг</a>, <a href="/smm-panel-doctor-check/">проверка SMM-панели и узла: doctor</a>, <a href="/smm-node-troubleshooting/">сбои запуска узла</a>, <a href="/smm-agent-quickstart/">заказ SMM-услуги из агента за 5 минут</a>, <a href="/smm-node-launch-checklist/">чек-лист запуска узла</a>, <a href="/smm-node-registry/">реестр узлов протокола: перепись и MCP Registry</a>.
+    </p>
+    <p class="section-note">
+      English: <a href="/en/smm-provider-profile/">SMM panel connection profile</a>, <a href="/en/mcp-vs-rest-smm-orders/">MCP vs REST for ordering SMM services</a>, <a href="/en/smm-panel-doctor-check/">SMM panel and node check: doctor</a>, <a href="/en/smm-node-troubleshooting/">node startup failures</a>, <a href="/en/smm-agent-quickstart/">order an SMM service from an agent in 5 minutes</a>, <a href="/en/smm-node-launch-checklist/">node launch checklist</a>, <a href="/en/smm-node-registry/">node registry: census and MCP Registry</a>.
     </p>
   </div>
 </section>

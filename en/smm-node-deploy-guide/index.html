@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deploying an OpenSMM node: from source and Docker Compose</title>
+<meta name="description" content="How to deploy an OpenSMM node: run from source, docker compose, verify:node check, TLS behind a proxy and safety. The node serves REST /v0 and MCP /mcp on one port.">
+<meta property="og:title" content="Deploying an OpenSMM node: from source and Docker Compose">
+<meta property="og:description" content="How to deploy an OpenSMM node: run from source, docker compose, verify:node check, TLS behind a proxy and safety. The node serves REST /v0 and MCP /mcp on one port.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/en/smm-node-deploy-guide/">
+<link rel="canonical" href="https://opensmm.dev/en/smm-node-deploy-guide/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-deploy-guide/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-node-deploy-guide/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-deploy-guide/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>Node deployment</span>
+    </nav>
+    <h1>Deploying an OpenSMM node</h1>
+    <p class="section-lede">
+      Run a node from source or with Docker Compose, check it and expose it to the public behind a proxy.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. From source</h2>
+    <p class="section-lede">
+      A node is one process: REST <code>/v0</code> and MCP <code>/mcp</code> on one port (default 8080). You need Node.js ≥ 22.18. No keys and no external services: the node boots on the built-in mock catalog.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci
+PORT=8080 OPENSMM_STATE_FILE=./opensmm-state.json npm run gateway</pre>
+    </div>
+    <p class="section-note">
+      State (orders, metrics, self-registered nodes) lives in a single JSON snapshot; with <code>OPENSMM_STATE_FILE</code> on a volume the node survives restarts. Without it the state is in memory only.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>2. Docker Compose</h2>
+    <p class="section-lede">
+      The image is built locally from the checkout: there is no public image and no npm package. Compose mounts the <code>opensmm-data</code> volume for state and binds the port to loopback.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>docker compose up --build -d
+docker compose ps   # STATUS column shows "healthy"</pre>
+    </div>
+    <p class="section-note">
+      The healthcheck polls <code>GET /v0/services</code> inside the container, so <code>healthy</code> means “ready to take an order”. Without Compose: <code>docker build -t opensmm-gateway .</code> and <code>docker run -d --name opensmm -p 127.0.0.1:8080:8080 -v opensmm-data:/data opensmm-gateway</code>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>3. Check the node</h2>
+    <p class="section-lede">
+      Process liveness is <code>/health</code>; the full check (catalog and MCP <code>initialize</code>) runs the same two probes the census uses.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>curl -s http://127.0.0.1:8080/health
+npm run verify:node -- http://127.0.0.1:8080</pre>
+    </div>
+    <p class="section-note">
+      Exit code <code>0</code> means the census would count the node. The node definition and the census: <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md">docs/NODES.md</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>4. A public address: TLS and safety</h2>
+    <p class="section-lede">
+      The node has no TLS and no authentication of its own, so expose it only behind a proxy.
+    </p>
+    <ul class="deal-list">
+      <li>keep the port on loopback only; inbound is 80/443 through a reverse proxy (for example Caddy: <code>reverse_proxy 127.0.0.1:8080</code>);</li>
+      <li><code>OPENSMM_TRUST_PROXY=1</code> only when the proxy overwrites <code>x-forwarded-for</code>;</li>
+      <li>keep state on a persistent volume; the state file holds provider credentials, mode <code>0600</code>, back it up like a secret;</li>
+      <li>leave <code>OPENSMM_ALLOW_PRIVATE_ENDPOINTS</code> unset — it is the dev SSRF escape hatch.</li>
+    </ul>
+    <p class="section-note">
+      Without a permanent domain a free Cloudflare quick tunnel is enough to test (<code>cloudflared tunnel --url http://127.0.0.1:8080</code>), but its URL is temporary. Full details: <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md">docs/DEPLOY.md</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limits</h2>
+    <ol class="deal-list">
+      <li>The npm package and a public image are not published: the node is built from a repository checkout.</li>
+      <li>A local node serves a mock catalog (<code>synthetic: true</code>), not real supply.</li>
+      <li>A live provider is connected through <code>OPENSMM_REST_V1_*</code>, a separate step.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Next step: run your own node</h2>
+    <p class="section-lede">
+      A node is a single process serving REST <code>/v0</code> and MCP <code>/mcp</code> on one port. You need Node.js ≥ 22.18.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+    <p class="section-note">
+      The step-by-step guide, node verification and reporting your node live on the <a href="/node/">“Run a node”</a> page.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>

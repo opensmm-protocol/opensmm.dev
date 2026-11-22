@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Чек-лист запуска узла OpenSMM: от git clone до отчёта о узле</title>
+<meta name="description" content="Чек-лист запуска узла OpenSMM: Node.js ≥ 22.18, старт из исходников, проверка verify:node, публичный адрес, адрес выплат, отчёт о узле для переписи. Без ключей, mock-каталог.">
+<meta property="og:title" content="Чек-лист запуска узла OpenSMM: от git clone до отчёта о узле">
+<meta property="og:description" content="Чек-лист запуска узла OpenSMM: Node.js ≥ 22.18, старт из исходников, проверка verify:node, публичный адрес, адрес выплат, отчёт о узле для переписи. Без ключей, mock-каталог.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/smm-node-launch-checklist/">
+<link rel="canonical" href="https://opensmm.dev/smm-node-launch-checklist/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-launch-checklist/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-node-launch-checklist/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-launch-checklist/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Каталог</a>
+      <a href="/node/">Запустить узел</a>
+      <a href="/panels/">Для панелей</a>
+      <a href="/#how">Как это работает</a>
+      <a href="/#tools">Инструменты</a>
+      <a href="/#settlement">Расчёты</a>
+      <a href="/#trust">Доверие</a>
+      <a href="/#supply">Поставщики</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Главная</a>
+      <span class="crumb-sep">/</span>
+      <span>Чек-лист запуска узла</span>
+    </nav>
+    <h1>Чек-лист запуска узла OpenSMM</h1>
+    <p class="section-lede">
+      Шесть шагов от чекаута до узла, который засчитает перепись. Каждый шаг можно проверить командой.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. Подготовка</h2>
+    <p class="section-lede">
+      Нужен Node.js ≥ 22.18 и git. Ключей и внешних сервисов не нужно: узел стартует на встроенном mock-каталоге.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>node --version   # v22.18 или новее
+git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci</pre>
+    </div>
+    <p class="section-note">
+      Пакета npm и публичного образа нет: установка — это чекаут репозитория.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>2. Запуск</h2>
+    <p class="section-lede">
+      Один процесс: REST <code>/v0</code> и MCP <code>/mcp</code> на одном порту (по умолчанию 8080).
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>PORT=8080 OPENSMM_STATE_FILE=./opensmm-state.json npm run gateway</pre>
+    </div>
+    <p class="section-note">
+      С <code>OPENSMM_STATE_FILE</code> заказы, метрики и зарегистрированные узлы переживают рестарт. Порт узел пишет в stderr при старте.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>3. Проверка локально</h2>
+    <p class="section-lede">
+      Перед отчётом прогоните те же две пробы, что использует перепись: <code>GET /v0/services</code> и MCP <code>initialize</code>.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>curl -s http://127.0.0.1:8080/health
+npm run verify:node -- http://127.0.0.1:8080</pre>
+    </div>
+    <p class="section-note">
+      Код выхода <code>0</code> и вердикт PASS — перепись засчитает узел. Определение узла: <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md">docs/NODES.md</a>. Сбои запуска — на странице <a href="/smm-node-troubleshooting/">сбои запуска узла</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>4. Публичный адрес</h2>
+    <p class="section-lede">
+      Перепись считает только публично доступные URL. У узла нет TLS и собственной авторизации, поэтому наружу его выставляют за прокси.
+    </p>
+    <ul class="deal-list">
+      <li>постоянный узел — свой домен и TLS через обратный прокси (например Caddy: <code>reverse_proxy 127.0.0.1:8080</code>), порт узла только на loopback;</li>
+      <li>быстрая проверка без домена — бесплатный туннель Cloudflare: <code>cloudflared tunnel --url http://127.0.0.1:8080</code>, адрес временный и меняется при каждом перезапуске;</li>
+      <li><code>OPENSMM_TRUST_PROXY=1</code> — только если прокси перезаписывает <code>x-forwarded-for</code>.</li>
+    </ul>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>npm run verify:node -- https://ваш-адрес</pre>
+    </div>
+    <p class="section-note">
+      Редиректы перепись не проходит — указывайте конечный URL. Разбор TLS: <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md">docs/DEPLOY.md</a>, <a href="/smm-node-deploy-guide/">развёртывание узла</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>5. Адрес выплат</h2>
+    <p class="section-lede">
+      Чтобы заказы узла несли ваш адрес выплат, задайте <code>OPENSMM_PROVIDER_PAYOUT</code> до публикации узла.
+    </p>
+    <p class="section-note">
+      Прямой расчёт — канон протокола: заказ несёт платёжные требования x402 с адресом провайдера как <code>payTo</code>, шлюз средств не держит. Оплата — только в testnet, см. <a href="/smm-agent-payments-x402/">оплата агентом по x402</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>6. Отчёт об узле</h2>
+    <p class="section-lede">
+      Узел, прошедший проверку по публичному адресу, сообщают через шаблон задачи в репозитории.
+    </p>
+    <ul class="deal-list">
+      <li><a href="https://github.com/opensmm-protocol/mcp-server/issues/new?template=node-report.md">issues/new?template=node-report.md</a> — один URL узла;</li>
+      <li>раз в неделю перепись проверяет заявленные URL теми же двумя пробами;</li>
+      <li>для мониторинга: <code>npm --silent run verify:node -- --json &lt;url&gt;</code> печатает JSON, код выхода 1 — узел не засчитан.</li>
+    </ul>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>Честные ограничения</h2>
+    <p class="section-lede">
+      
+    </p>
+    <ol class="deal-list">
+      <li>Пакет npm и публичный образ не опубликованы: узел собирается из чекаута.</li>
+      <li>Локальный узел отдаёт mock-каталог (<code>synthetic: true</code>) — это фикстуры, не реальное предложение и не продаваемые услуги.</li>
+      <li>Живой провайдер подключается отдельным шагом через <code>OPENSMM_REST_V1_*</code>.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Следующий шаг: поднять свой узел</h2>
+    <p class="section-lede">
+      Узел — один процесс, отдающий REST <code>/v0</code> и MCP <code>/mcp</code> на одном порту. Нужен Node.js ≥ 22.18.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Поднять свой узел</a>
+    </div>
+    <p class="section-note">
+      Пошаговая инструкция, проверка узла и отчёт о нём — на странице <a href="/node/">«Запустить узел»</a>.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
+      <a href="/node/">Запустить узел</a>
+      <a href="/panels/">Для панелей</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>

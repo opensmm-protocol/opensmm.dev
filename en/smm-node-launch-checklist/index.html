@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenSMM node launch checklist: from git clone to a node report</title>
+<meta name="description" content="OpenSMM node launch checklist: Node.js ≥ 22.18, start from source, verify:node check, public URL, payout address, node report for the census. No keys, mock catalog.">
+<meta property="og:title" content="OpenSMM node launch checklist: from git clone to a node report">
+<meta property="og:description" content="OpenSMM node launch checklist: Node.js ≥ 22.18, start from source, verify:node check, public URL, payout address, node report for the census. No keys, mock catalog.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/en/smm-node-launch-checklist/">
+<link rel="canonical" href="https://opensmm.dev/en/smm-node-launch-checklist/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-launch-checklist/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-node-launch-checklist/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-launch-checklist/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>Node launch checklist</span>
+    </nav>
+    <h1>OpenSMM node launch checklist</h1>
+    <p class="section-lede">
+      Six steps from a checkout to a node the census will count. Every step can be checked with a command.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. Prepare</h2>
+    <p class="section-lede">
+      You need Node.js ≥ 22.18 and git. No keys and no external services: the node boots on the built-in mock catalog.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>node --version   # v22.18 or newer
+git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci</pre>
+    </div>
+    <p class="section-note">
+      There is no npm package and no public image: a repository checkout is the install.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>2. Start</h2>
+    <p class="section-lede">
+      One process: REST <code>/v0</code> and MCP <code>/mcp</code> on one port (default 8080).
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>PORT=8080 OPENSMM_STATE_FILE=./opensmm-state.json npm run gateway</pre>
+    </div>
+    <p class="section-note">
+      With <code>OPENSMM_STATE_FILE</code> orders, metrics and registered nodes survive a restart. The node prints its port on stderr at start.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>3. Check locally</h2>
+    <p class="section-lede">
+      Before reporting, run the same two probes the census uses: <code>GET /v0/services</code> and MCP <code>initialize</code>.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>curl -s http://127.0.0.1:8080/health
+npm run verify:node -- http://127.0.0.1:8080</pre>
+    </div>
+    <p class="section-note">
+      Exit code <code>0</code> and a PASS verdict mean the census would count the node. Node definition: <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md">docs/NODES.md</a>. Startup failures: <a href="/en/smm-node-troubleshooting/">node startup failures</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>4. Public URL</h2>
+    <p class="section-lede">
+      The census counts only publicly reachable URLs. The node has no TLS and no authentication of its own, so expose it behind a proxy.
+    </p>
+    <ul class="deal-list">
+      <li>a permanent node — your own domain and TLS through a reverse proxy (for example Caddy: <code>reverse_proxy 127.0.0.1:8080</code>), node port on loopback only;</li>
+      <li>a quick test without a domain — a free Cloudflare quick tunnel: <code>cloudflared tunnel --url http://127.0.0.1:8080</code>; the URL is temporary and changes on every restart;</li>
+      <li><code>OPENSMM_TRUST_PROXY=1</code> only when the proxy overwrites <code>x-forwarded-for</code>.</li>
+    </ul>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>npm run verify:node -- https://your-url</pre>
+    </div>
+    <p class="section-note">
+      The census does not follow redirects — use the final URL. TLS details: <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md">docs/DEPLOY.md</a>, <a href="/en/smm-node-deploy-guide/">deploying a node</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>5. Payout address</h2>
+    <p class="section-lede">
+      So that the orders of your node carry your payout address, set <code>OPENSMM_PROVIDER_PAYOUT</code> before you publish the node.
+    </p>
+    <p class="section-note">
+      Direct settlement is canonical: an order carries x402 payment requirements with the provider's address as <code>payTo</code>; the gateway never holds funds. Payment is testnet only, see <a href="/en/smm-agent-payments-x402/">paying over x402</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>6. Report the node</h2>
+    <p class="section-lede">
+      A node that passes the check on a public URL is reported through an issue template in the repository.
+    </p>
+    <ul class="deal-list">
+      <li><a href="https://github.com/opensmm-protocol/mcp-server/issues/new?template=node-report.md">issues/new?template=node-report.md</a> — one node URL;</li>
+      <li>once a week the census checks reported URLs with the same two probes;</li>
+      <li>for monitoring: <code>npm --silent run verify:node -- --json &lt;url&gt;</code> prints JSON, exit code 1 means the node is not counted.</li>
+    </ul>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limits</h2>
+    <p class="section-lede">
+      
+    </p>
+    <ol class="deal-list">
+      <li>The npm package and a public image are not published: the node is built from a checkout.</li>
+      <li>A local node serves a mock catalog (<code>synthetic: true</code>) — fixtures, not real supply and not sellable services.</li>
+      <li>A live provider is connected as a separate step through <code>OPENSMM_REST_V1_*</code>.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Next step: run your own node</h2>
+    <p class="section-lede">
+      A node is a single process serving REST <code>/v0</code> and MCP <code>/mcp</code> on one port. You need Node.js ≥ 22.18.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+    <p class="section-note">
+      The step-by-step guide, node verification and reporting your node live on the <a href="/node/">“Run a node”</a> page.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Заказ SMM-услуги из агента за 5 минут: быстрый старт на mock-узле</title>
+<meta name="description" content="Быстрый старт для разработчика агента: поднять локальный узел OpenSMM и пройти каталог, котировку, заказ и повтор по clientReference. Claude Desktop, Cursor, LangChain, n8n. Mock-каталог, без ключей и денег.">
+<meta property="og:title" content="Заказ SMM-услуги из агента за 5 минут: быстрый старт на mock-узле">
+<meta property="og:description" content="Быстрый старт для разработчика агента: поднять локальный узел OpenSMM и пройти каталог, котировку, заказ и повтор по clientReference. Claude Desktop, Cursor, LangChain, n8n. Mock-каталог, без ключей и денег.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/smm-agent-quickstart/">
+<link rel="canonical" href="https://opensmm.dev/smm-agent-quickstart/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-agent-quickstart/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-agent-quickstart/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-agent-quickstart/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Каталог</a>
+      <a href="/node/">Запустить узел</a>
+      <a href="/panels/">Для панелей</a>
+      <a href="/#how">Как это работает</a>
+      <a href="/#tools">Инструменты</a>
+      <a href="/#settlement">Расчёты</a>
+      <a href="/#trust">Доверие</a>
+      <a href="/#supply">Поставщики</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Главная</a>
+      <span class="crumb-sep">/</span>
+      <span>Быстрый старт агента</span>
+    </nav>
+    <h1>Заказ SMM-услуги из агента за 5 минут</h1>
+    <p class="section-lede">
+      Короткий гайд для разработчика агента. Всё идёт на локальном узле и его mock-каталоге: каждая услуга помечена <code>synthetic: true</code>, реальный заказ не исполняется, ключ, аккаунт и деньги не нужны. Заказы остаются в статусе <code>REQUIRES_PAYMENT</code> и не оплачиваются.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. Поднять узел (около 2 минут)</h2>
+    <p class="section-lede">
+      Нужен Node.js ≥ 22.18.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci
+npm run gateway</pre>
+    </div>
+    <p class="section-note">
+      Узел печатает в stderr строку вида <code>gateway listening on http://localhost:8080 (REST /v0, MCP /mcp; provider: mock, mock catalog — not real supply)</code>. Проверка из другого терминала: <code>curl -s http://127.0.0.1:8080/v0/services | head -30</code> — у каждой услуги <code>"synthetic": true</code>. Порт занят? <code>PORT=8081 npm run gateway</code>. Другие сбои запуска — <a href="/smm-node-troubleshooting/">сбои запуска узла</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>2. Выбрать стек</h2>
+    <p class="section-lede">
+      Для каждого стека в репозитории лежит готовый конфиг или скрипт, у каждого каталога свой README с точными шагами и ожидаемым выводом.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>text</span></div>
+<pre>Claude Desktop      examples/claude-desktop/claude_desktop_config.json   stdio, npm run mcp, порт не нужен
+Cursor              examples/cursor/.cursor/mcp.json                    HTTP POST /mcp на узле из шага 1
+LangChain-стиль     examples/langchain/agent.mjs                        терминал, ключ LLM не нужен
+n8n                 examples/n8n/workflow.json                          импорт workflow, кнопка Execute</pre>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>3. Запустить один пример (около 2 минут)</h2>
+    <p class="section-lede">
+      Быстрее всего — вызов инструментов в стиле LangChain: сторонние приложения не нужны.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>node examples/langchain/agent.mjs http://127.0.0.1:8080 --client-reference my-first-order</pre>
+    </div>
+    <div class="code-block">
+      <div class="code-head"><span>text</span></div>
+<pre>node:      http://127.0.0.1:8080
+transport: MCP tools over POST /mcp (LangChain-style tool calls)
+tools:     search_services, get_quote, create_order
+tool:      search_services({})
+catalog:   MOCK — every service is marked synthetic: not real supply, no real money
+service:   osmm_svc_tg_members_std — Telegram Channel Members — Standard
+quote:     osmm_quote_... — 0.241200 USDC for 100 (mock rate)
+order:     osmm_order_... — REQUIRES_PAYMENT, clientReference "my-first-order"
+replay:    osmm_order_... — same orderId, no second order created
+done:      LangChain-style agent OK</pre>
+    </div>
+    <p class="section-note">
+      Сценарий целиком: каталог → котировка → заказ → повтор. Строки <code>order:</code> и <code>replay:</code> — один и тот же <code>orderId</code>: один <code>clientReference</code> даёт один заказ на любом транспорте.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>4. Что на самом деле вызвал агент</h2>
+    <p class="section-lede">
+      
+    </p>
+    <ol class="deal-list">
+      <li><code>search_services</code> — читает каталог; у каждой записи <code>synthetic: true</code>, примеры отказываются продолжать, если услуга не помечена как mock.</li>
+      <li><code>get_quote</code> — цена одной услуги для количества 100 и ссылки. Котировка расходуется один раз, под каждый заказ нужна своя.</li>
+      <li><code>create_order</code> — неоплаченный заказ (по REST — HTTP 402 с телом заказа). Ничего не оплачивается и не исполняется.</li>
+      <li><code>create_order</code> ещё раз с тем же <code>clientReference</code> — повтор возвращает сохранённый заказ, а не создаёт второй.</li>
+    </ol>
+    <p class="section-note">
+      REST-эквиваленты: <code>GET /v0/services</code>, <code>POST /v0/quotes</code>, <code>POST /v0/orders</code>, опрос — <code>GET /v0/orders/:id</code>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>5. Если что-то выглядит неправильно</h2>
+    <p class="section-lede">
+      
+    </p>
+    <ul class="deal-list">
+      <li><code>is not marked synthetic</code> — узел не на mock-каталоге; остановитесь и не заказывайте. Перезапустите узел без настроенного провайдера.</li>
+      <li><code>ECONNREFUSED</code> — узел из шага 1 не запущен или слушает другой порт.</li>
+      <li><code>IDEMPOTENCY_CONFLICT</code> — этот <code>clientReference</code> уже принадлежит заказу из другой котировки: передайте исходную через <code>--quote</code> или возьмите новый референс.</li>
+      <li>HTTP 402 на <code>POST /v0/orders</code> — ожидаемый ответ, а не сбой.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Честные ограничения</h2>
+    <ol class="deal-list">
+      <li>Страница пересказывает <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; версии клиентов и точные конфиги — там.</li>
+      <li>Каталог — mock (<code>synthetic: true</code>): реальных услуг, цен и заказов здесь нет, курс в примере — тестовый.</li>
+      <li>Оплата заказа в этом гайде не проходит; про x402 на тестовой сети — <a href="/smm-agent-payments-x402/">оплата агентом по x402</a>.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Дальше: свой узел</h2>
+    <p class="section-lede">
+      Пример идёт на локальном узле. Чтобы вас учли в переписи, поднимите узел и сообщите его адрес.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Поднять свой узел</a>
+    </div>
+    <p class="section-note">
+      Пошаговая инструкция, проверка и отчёт об узле — на странице <a href="/node/">«Запустить узел»</a>.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
+      <a href="/node/">Запустить узел</a>
+      <a href="/panels/">Для панелей</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>

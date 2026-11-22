@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order SMM services from Claude Desktop: connect a node over stdio</title>
+<meta name="description" content="Connect an OpenSMM node to Claude Desktop: claude_desktop_config.json launches npm run mcp over stdio, no port, no keys. Catalog → quote → order → replay by clientReference on the mock catalog.">
+<meta property="og:title" content="Order SMM services from Claude Desktop: connect a node over stdio">
+<meta property="og:description" content="Connect an OpenSMM node to Claude Desktop: claude_desktop_config.json launches npm run mcp over stdio, no port, no keys. Catalog → quote → order → replay by clientReference on the mock catalog.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/en/smm-order-claude-desktop/">
+<link rel="canonical" href="https://opensmm.dev/en/smm-order-claude-desktop/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-claude-desktop/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-claude-desktop/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-claude-desktop/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>Ordering from Claude Desktop</span>
+    </nav>
+    <h1>Order SMM services from Claude Desktop</h1>
+    <p class="section-lede">
+      Claude Desktop talks to an OpenSMM node over stdio: the <code>claude_desktop_config.json</code> config launches the MCP server as a local child process (<code>npm run mcp</code>). No port, no keys, no credentials. Everything runs on the mock catalog: every service is marked <code>synthetic: true</code>, orders stay <code>REQUIRES_PAYMENT</code> and are never paid.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. Install the node (about 2 minutes)</h2>
+    <p class="section-lede">
+      You need Node.js ≥ 22.18 and a Claude Desktop build with MCP support: the <code>mcpServers</code> config shape, MCP protocol <code>2025-06-18</code>.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci</pre>
+    </div>
+    <p class="section-note">
+      A separate <code>npm run gateway</code> is not needed: the Claude Desktop config starts the MCP server over stdio by itself — the same server that <code>mcp.json</code> in the repo root registers.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>2. Copy the config and restart Claude Desktop</h2>
+    <p class="section-lede">
+      Copy <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/claude-desktop/claude_desktop_config.json"><code>claude_desktop_config.json</code></a> from <code>examples/claude-desktop/</code> into your Claude Desktop config.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>json</span></div>
+<pre>{
+  "mcpServers": {
+    "opensmm": {
+      "command": "npm",
+      "args": ["run", "mcp"],
+      "cwd": "/path/to/mcp-server"
+    }
+  }
+}</pre>
+    </div>
+    <p class="section-note">
+      Where it goes: macOS — <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>, Windows — <code>%APPDATA%\Claude\claude_desktop_config.json</code>. Replace <code>"cwd": "/path/to/mcp-server"</code> with the absolute path of your checkout, then fully restart Claude Desktop. The <code>mcp</code> script exists in the checkout's <code>package.json</code> by default.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>3. What to ask the agent</h2>
+    <p class="section-lede">
+      Open a new chat and ask Claude to run the whole scenario in one prompt:
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>text</span></div>
+<pre>Using the opensmm tools, call search_services and confirm every service
+is synthetic. Then call get_quote for the first service with quantity 100
+and link https://t.me/opensmm_example, call create_order with that quote
+and clientReference claude-demo-1, then call create_order again with the
+same quote and reference. Report both order IDs.</pre>
+    </div>
+    <p class="section-lede">
+      Expected result:
+    </p>
+    <ul class="deal-list">
+      <li><code>search_services</code> → a catalog whose services all carry <code>synthetic: true</code> — the mock catalog, not real supply;</li>
+      <li><code>get_quote</code> → <code>osmm_quote_...</code>, amount in USDC, quantity 100;</li>
+      <li>first <code>create_order</code> → <code>osmm_order_...</code>, <code>paymentStatus: REQUIRES_PAYMENT</code>;</li>
+      <li>second <code>create_order</code> → <strong>the same</strong> <code>orderId</code>, no second order created.</li>
+    </ul>
+    <p class="section-note">
+      The replay is the main protocol check: one <code>clientReference</code> yields one order on any transport, stdio included.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>If something looks wrong</h2>
+    <p class="section-lede">
+      
+    </p>
+    <ul class="deal-list">
+      <li>A service is not marked <code>synthetic</code> — stop, do not order: this demo must not order real supply. Nothing is paid, so no provider executes anything.</li>
+      <li>The <code>opensmm</code> tools did not appear — check <code>cwd</code> (it must be the absolute path of your checkout) and fully restart Claude Desktop.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limits</h2>
+    <ol class="deal-list">
+      <li>This page retells <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/claude-desktop/README.md">examples/claude-desktop/README.md</a>; the exact steps and config are there.</li>
+      <li>The scenario for all stacks at once: <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): no real services, prices or orders here; orders are not paid in this guide.</li>
+      <li>Other stacks: <a href="/en/smm-agent-quickstart/">agent quickstart</a>, <a href="/en/smm-order-cursor/">ordering from Cursor</a>, <a href="/en/smm-order-langchain/">a LangChain-style agent</a>.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Next: your own node</h2>
+    <p class="section-lede">
+      The example runs on the mock catalog of the local MCP server. To be counted in the census, run a node and report its address.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+    <p class="section-note">
+      The step-by-step guide, verification and reporting your node are on the <a href="/node/">“Run a node”</a> page.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>
