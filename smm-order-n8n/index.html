@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,20 +16,19 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Заказ SMM-услуги из n8n: импорт workflow на mock-узле</title>
-<meta name="description" content="Как заказать SMM-услугу из n8n: поднять локальный узел OpenSMM, импортировать workflow, пройти каталог, котировку, заказ и повтор. Mock-каталог, без ключей и денег.">
-<meta property="og:title" content="Заказ SMM-услуги из n8n: импорт workflow на mock-узле">
-<meta property="og:description" content="Как заказать SMM-услугу из n8n: поднять локальный узел OpenSMM, импортировать workflow, пройти каталог, котировку, заказ и повтор. Mock-каталог, без ключей и денег.">
+<title>Order an SMM service from n8n: import a workflow on a mock node</title>
+<meta name="description" content="How to order an SMM service from n8n: start a local OpenSMM node, import the workflow, walk through catalog, quote, order and replay. Mock catalog, no keys, no money.">
+<meta property="og:title" content="Order an SMM service from n8n: import a workflow on a mock node">
+<meta property="og:description" content="How to order an SMM service from n8n: start a local OpenSMM node, import the workflow, walk through catalog, quote, order and replay. Mock catalog, no keys, no money.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/smm-order-n8n/">
 <meta property="og:image" content="https://opensmm.dev/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="OpenSMM — заказ SMM-услуг для AI-агентов через MCP/REST">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/smm-order-n8n/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-n8n/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-n8n/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-n8n/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/smm-order-n8n/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/smm-order-n8n/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,14 +41,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -59,22 +58,22 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
       <span>n8n</span>
     </nav>
-    <h1>Заказ SMM-услуги из n8n</h1>
+    <h1>Order an SMM service from n8n</h1>
     <p class="section-lede">
-      Готовый workflow для n8n 1.x: узлы HTTP Request проходят REST <code>/v0</code> локального узла — каталог, котировка, заказ, повтор и опрос. Всё на mock-каталоге (<code>synthetic: true</code>), заказы остаются <code>REQUIRES_PAYMENT</code>.
+      A ready workflow for n8n 1.x: HTTP Request nodes walk the REST <code>/v0</code> API of a local node — catalog, quote, order, replay and poll. Everything runs on the mock catalog (<code>synthetic: true</code>); orders stay <code>REQUIRES_PAYMENT</code>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>1. Поднять узел</h2>
+    <h2>1. Start the node</h2>
     <p class="section-lede">
-      Нужен Node.js ≥ 22.18. Ключ, аккаунт и деньги не нужны: узел отдаёт mock-каталог.
+      Node.js ≥ 22.18 is required. No key, account or money: the node serves a mock catalog.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
@@ -84,67 +83,67 @@ npm ci
 npm run gateway</pre>
     </div>
     <p class="section-note">
-      Порт занят или узел не стартует — <a href="/smm-node-troubleshooting/">сбои запуска узла</a>.
+      If the port is taken or startup fails, see <a href="/smm-node-troubleshooting/">node startup failures</a>.
     </p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>2. Импортировать workflow</h2>
+    <h2>2. Import the workflow</h2>
     <p class="section-lede">
-      В n8n: <strong>Workflows → Import from File → <code>examples/n8n/workflow.json</code></strong>, откройте workflow и нажмите <strong>Execute Workflow</strong>. Файл привязан к n8n 1.x и узлу HTTP Request <code>typeVersion: 4.2</code>.
+      In n8n: <strong>Workflows → Import from File → <code>examples/n8n/workflow.json</code></strong>, open the workflow and press <strong>Execute Workflow</strong>. The file is pinned to n8n 1.x and the HTTP Request node <code>typeVersion: 4.2</code>.
     </p>
     <p class="section-note">
-      Чтобы направить его на другой узел, поменяйте только <code>baseUrl</code> в узле Config.
+      To point it at another node, edit only <code>baseUrl</code> in the Config node.
     </p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>3. Что делают узлы workflow</h2>
+    <h2>3. What the workflow nodes do</h2>
     <ul class="deal-list">
-      <li><code>Config</code> — baseUrl, quantity: 100, link, новый clientReference (n8n-demo-…)</li>
-      <li><code>GET catalog</code> — <code>GET /v0/services</code> → mock-каталог</li>
-      <li><code>Guard: mock only</code> — не пускает дальше, если первая услуга не <code>synthetic: true</code></li>
+      <li><code>Config</code> — baseUrl, quantity: 100, link, fresh clientReference (n8n-demo-…)</li>
+      <li><code>GET catalog</code> — <code>GET /v0/services</code> → the mock catalog</li>
+      <li><code>Guard: mock only</code> — refuses to continue unless the first service is <code>synthetic: true</code></li>
       <li><code>Create quote</code> — <code>POST /v0/quotes</code> → osmm_quote_...</li>
       <li><code>Create order</code> — <code>POST /v0/orders</code> → osmm_order_..., REQUIRES_PAYMENT</li>
-      <li><code>Replay order</code> — <code>POST /v0/orders</code> → тот же <code>orderId</code></li>
-      <li><code>Verify idempotency</code> — падает, если два orderId разные</li>
-      <li><code>Poll order</code> — <code>GET /v0/orders/:id</code> → сохранённый заказ</li>
+      <li><code>Replay order</code> — <code>POST /v0/orders</code> → the <strong>same</strong> <code>orderId</code></li>
+      <li><code>Verify idempotency</code> — fails if the two order IDs differ</li>
+      <li><code>Poll order</code> — <code>GET /v0/orders/:id</code> → the stored order</li>
     </ul>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>4. Чего ждать</h2>
+    <h2>4. What to expect</h2>
     <ul class="deal-list">
-      <li><code>Create order</code> и <code>Replay order</code> отвечают HTTP 402, пока заказ не оплачен; опция «Never Error» пропускает тело заказа дальше. Это ожидаемо, а не сбой.</li>
-      <li>Повтор возвращает тот же заказ: один <code>clientReference</code> — один <code>orderId</code>. Ничего не оплачивается и не исполняется.</li>
-      <li>Узел Guard останавливает workflow, если в каталоге есть услуга без пометки mock, — демо не может создать заказ у реального поставщика.</li>
+      <li><code>Create order</code> and <code>Replay order</code> return HTTP 402 while the order is unpaid; the “Never Error” option passes the order body on. That is expected, not a failure.</li>
+      <li>The replay returns the same order: one <code>clientReference</code>, one <code>orderId</code>. Nothing is paid and nothing is executed.</li>
+      <li>The Guard node stops the workflow if the catalog holds a non-mock service, so the demo cannot place an order with a real supplier.</li>
     </ul>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>Честные ограничения</h2>
+    <h2>Honest limits</h2>
     <ol class="deal-list">
-      <li>Страница пересказывает <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; точные версии и конфиги — там.</li>
-      <li>Каталог — mock (<code>synthetic: true</code>): реальных услуг, цен и заказов здесь нет, курс в примерах — тестовый.</li>
-      <li>Это демо-workflow на mock-узле; оплата и реальный поставщик в нём не участвуют (x402 — на тестовой сети, см. <a href="/smm-agent-payments-x402/">оплата по x402</a>).</li>
+      <li>This page summarises <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; exact versions and configs live there.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): there are no real services, prices or orders here, and rates in examples are test values.</li>
+      <li>This is a demo workflow on a mock node; payment and a real supplier are not involved (x402 runs on a testnet, see <a href="/smm-agent-payments-x402/">paying over x402</a>).</li>
     </ol>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>Дальше: поднять свой узел</h2>
+    <h2>Next: run your own node</h2>
     <p class="section-lede">
-      Пример идёт на локальном узле. Чтобы вас учли в переписи, поднимите узел и сообщите его адрес.
+      The example runs on a local node. To be counted in the census, start a node and report its address.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/node/">Поднять свой узел</a>
+      <a class="btn" href="/node/">Run your own node</a>
     </div>
     <p class="section-note">
-      Пошаговая инструкция, проверка <code>verify:node</code> и отчёт об узле — на странице <a href="/node/">«Запустить узел»</a>.
+      Step-by-step instructions, the <code>verify:node</code> check and the node report are on the <a href="/node/">“Run a node”</a> page.
     </p>
   </div>
 </section>
@@ -153,12 +152,12 @@ npm run gateway</pre>
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
-      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>

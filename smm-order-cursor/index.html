@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,20 +16,19 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Заказ SMM-услуги из Cursor: подключение узла по HTTP /mcp</title>
-<meta name="description" content="Подключить узел OpenSMM к Cursor: .cursor/mcp.json указывает на POST /mcp запущенного npm run gateway, без ключей. Каталог → котировка → заказ → повтор по clientReference на mock-каталоге.">
-<meta property="og:title" content="Заказ SMM-услуги из Cursor: подключение узла по HTTP /mcp">
-<meta property="og:description" content="Подключить узел OpenSMM к Cursor: .cursor/mcp.json указывает на POST /mcp запущенного npm run gateway, без ключей. Каталог → котировка → заказ → повтор по clientReference на mock-каталоге.">
+<title>Order SMM services from Cursor: connect a node over HTTP /mcp</title>
+<meta name="description" content="Connect an OpenSMM node to Cursor: .cursor/mcp.json points at POST /mcp of a running npm run gateway, no credentials. Catalog → quote → order → replay by clientReference on the mock catalog.">
+<meta property="og:title" content="Order SMM services from Cursor: connect a node over HTTP /mcp">
+<meta property="og:description" content="Connect an OpenSMM node to Cursor: .cursor/mcp.json points at POST /mcp of a running npm run gateway, no credentials. Catalog → quote → order → replay by clientReference on the mock catalog.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/smm-order-cursor/">
 <meta property="og:image" content="https://opensmm.dev/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="OpenSMM — заказ SMM-услуг для AI-агентов через MCP/REST">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/smm-order-cursor/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-cursor/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-cursor/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-cursor/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/smm-order-cursor/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/smm-order-cursor/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,14 +41,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -59,22 +58,22 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
-      <span>Заказ из Cursor</span>
+      <span>Ordering from Cursor</span>
     </nav>
-    <h1>Заказ SMM-услуги из Cursor</h1>
+    <h1>Order SMM services from Cursor</h1>
     <p class="section-lede">
-      Cursor подключается к запущенному узлу OpenSMM по Streamable HTTP: конфиг <code>.cursor/mcp.json</code> указывает на <code>POST /mcp</code> гейтвея. Проброс портов и учётные данные не нужны. Всё идёт на mock-каталоге: каждая услуга помечена <code>synthetic: true</code>, заказы остаются в статусе <code>REQUIRES_PAYMENT</code> и не оплачиваются.
+      Cursor connects to a running OpenSMM node over Streamable HTTP: the <code>.cursor/mcp.json</code> config points at the gateway's <code>POST /mcp</code> endpoint. No port forwarding, no credentials. Everything runs on the mock catalog: every service is marked <code>synthetic: true</code>, orders stay <code>REQUIRES_PAYMENT</code> and are never paid.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>1. Поднять узел (около 2 минут)</h2>
+    <h2>1. Start the node (about 2 minutes)</h2>
     <p class="section-lede">
-      Нужны Node.js ≥ 22.18 и сборка Cursor с поддержкой MCP: конфигурация <code>mcpServers</code> с полем <code>url</code>, протокол MCP <code>2025-06-18</code>.
+      You need Node.js ≥ 22.18 and a Cursor build with MCP support: the <code>mcpServers</code> config shape with a <code>url</code> field, MCP protocol <code>2025-06-18</code>.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
@@ -84,16 +83,16 @@ npm ci
 npm run gateway</pre>
     </div>
     <p class="section-note">
-      Узел печатает на stderr строку вида <code>gateway listening on http://localhost:8080 (REST /v0, MCP /mcp; provider: mock, mock catalog — not real supply)</code>. Порт занят? <code>PORT=8081 npm run gateway</code> и тот же адрес в <code>mcp.json</code>. Другие сбои запуска — <a href="/smm-node-troubleshooting/">сбои запуска узла</a>.
+      The node prints a line like <code>gateway listening on http://localhost:8080 (REST /v0, MCP /mcp; provider: mock, mock catalog — not real supply)</code> on stderr. Port taken? <code>PORT=8081 npm run gateway</code> and use that address in <code>mcp.json</code>. Other startup fixes: <a href="/smm-node-troubleshooting/">node startup failures</a>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>2. Подключить Cursor</h2>
+    <h2>2. Connect Cursor</h2>
     <p class="section-lede">
-      Скопируйте <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/cursor/.cursor/mcp.json"><code>.cursor/mcp.json</code></a> из <code>examples/cursor/</code> в свой проект или влейте запись <code>mcpServers.opensmm</code> в глобальный конфиг MCP Cursor.
+      Copy <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/cursor/.cursor/mcp.json"><code>.cursor/mcp.json</code></a> from <code>examples/cursor/</code> into your project, or merge its <code>mcpServers.opensmm</code> entry into your global Cursor MCP config.
     </p>
     <div class="code-block">
       <div class="code-head"><span>json</span></div>
@@ -106,75 +105,75 @@ npm run gateway</pre>
 }</pre>
     </div>
     <p class="section-note">
-      URL обязан заканчиваться на <code>/mcp</code>. Перезагрузите Cursor и убедитесь, что в списке появились инструменты <code>opensmm</code>: <code>search_services</code>, <code>get_quote</code>, <code>create_order</code>.
+      The URL must end in <code>/mcp</code>. Reload Cursor and confirm the <code>opensmm</code> tools are listed: <code>search_services</code>, <code>get_quote</code>, <code>create_order</code>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>3. Что попросить у агента</h2>
+    <h2>3. What to ask the agent</h2>
     <p class="section-lede">
-      Откройте новый чат и попросите Cursor пройти сценарий одним запросом:
+      Open a new chat and ask Cursor to run the whole scenario in one prompt:
     </p>
     <div class="code-block">
       <div class="code-head"><span>text</span></div>
-<pre>Через инструменты opensmm вызови search_services и подтверди, что каждая
-услуга помечена synthetic. Затем вызови get_quote для первой услуги с
-количеством 100 и ссылкой https://t.me/opensmm_example, вызови create_order
-с этой котировкой и clientReference cursor-demo-1, затем вызови create_order
-ещё раз с той же котировкой и тем же референсом. Покажи оба orderId.</pre>
+<pre>Using the opensmm tools, call search_services and confirm every service
+is synthetic. Then call get_quote for the first service with quantity 100
+and link https://t.me/opensmm_example, call create_order with that quote
+and clientReference cursor-demo-1, then call create_order again with the
+same quote and reference. Report both order IDs.</pre>
     </div>
     <p class="section-lede">
-      Ожидаемый результат:
+      Expected result:
     </p>
     <ul class="deal-list">
-      <li><code>search_services</code> → mock-каталог, у каждой услуги <code>synthetic: true</code>;</li>
-      <li><code>get_quote</code> → <code>osmm_quote_...</code>, количество 100;</li>
-      <li>первый <code>create_order</code> → <code>osmm_order_...</code>, <code>paymentStatus: REQUIRES_PAYMENT</code>;</li>
-      <li>второй <code>create_order</code> → <strong>тот же</strong> <code>orderId</code> — один <code>clientReference</code>, один заказ, хотя каждый вызов — отдельный <code>POST /mcp</code>.</li>
+      <li><code>search_services</code> → the mock catalog, every service <code>synthetic: true</code>;</li>
+      <li><code>get_quote</code> → <code>osmm_quote_...</code>, quantity 100;</li>
+      <li>first <code>create_order</code> → <code>osmm_order_...</code>, <code>paymentStatus: REQUIRES_PAYMENT</code>;</li>
+      <li>second <code>create_order</code> → <strong>the same</strong> <code>orderId</code> — one <code>clientReference</code>, one order, even though each call is a separate <code>POST /mcp</code>.</li>
     </ul>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Если что-то выглядит неправильно</h2>
+    <h2>If something looks wrong</h2>
     <p class="section-lede">
       
     </p>
     <ul class="deal-list">
-      <li>Услуга не помечена <code>synthetic</code> — остановитесь и не заказывайте: демо не должно заказывать реальное предложение. Заказ не оплачивается, значит ничего не исполняется.</li>
-      <li><code>ECONNREFUSED</code> — узел из шага 1 не запущен или слушает другой порт.</li>
-      <li><code>IDEMPOTENCY_CONFLICT</code> — этот <code>clientReference</code> уже принадлежит заказу из другой котировки: передайте исходную или возьмите новый референс.</li>
-      <li>HTTP 402 на <code>POST /v0/orders</code> — ожидаемый ответ, а не сбой.</li>
+      <li>A service is not marked <code>synthetic</code> — stop, do not order: this demo must not order real supply. The order is never paid, so nothing executes.</li>
+      <li><code>ECONNREFUSED</code> — the node from step 1 is not running or uses another port.</li>
+      <li><code>IDEMPOTENCY_CONFLICT</code> — that <code>clientReference</code> already belongs to an order made from a different quote: pass the original or use a new reference.</li>
+      <li>HTTP 402 on <code>POST /v0/orders</code> is expected, not a failure.</li>
     </ul>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Честные ограничения</h2>
+    <h2>Honest limits</h2>
     <ol class="deal-list">
-      <li>Страница пересказывает <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/cursor/README.md">examples/cursor/README.md</a>; точные шаги и конфиг — там.</li>
-      <li>Сценарий для всех стеков сразу: <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>.</li>
-      <li>Каталог — mock (<code>synthetic: true</code>): реальных услуг, цен и заказов здесь нет; оплата заказа в этом гайде не проходит.</li>
-      <li>Другие стеки: <a href="/smm-agent-quickstart/">быстрый старт агента</a>, <a href="/smm-order-claude-desktop/">заказ из Claude Desktop</a>, <a href="/smm-order-langchain/">агент в стиле LangChain</a>.</li>
+      <li>This page retells <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/cursor/README.md">examples/cursor/README.md</a>; the exact steps and config are there.</li>
+      <li>The scenario for all stacks at once: <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): no real services, prices or orders here; orders are not paid in this guide.</li>
+      <li>Other stacks: <a href="/smm-agent-quickstart/">agent quickstart</a>, <a href="/smm-order-claude-desktop/">ordering from Claude Desktop</a>, <a href="/smm-order-langchain/">a LangChain-style agent</a>.</li>
     </ol>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Дальше: свой узел</h2>
+    <h2>Next: your own node</h2>
     <p class="section-lede">
-      Пример идёт на локальном узле. Чтобы вас учли в переписи, поднимите узел и сообщите его адрес.
+      The example runs on a local node. To be counted in the census, run a node and report its address.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/node/">Поднять свой узел</a>
+      <a class="btn" href="/node/">Run your own node</a>
     </div>
     <p class="section-note">
-      Пошаговая инструкция, проверка и отчёт об узле — на странице <a href="/node/">«Запустить узел»</a>.
+      The step-by-step guide, verification and reporting your node are on the <a href="/node/">“Run a node”</a> page.
     </p>
   </div>
 </section>
@@ -183,12 +182,12 @@ npm run gateway</pre>
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
-      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>

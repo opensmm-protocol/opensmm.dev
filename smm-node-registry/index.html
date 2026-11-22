@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,20 +16,19 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Реестр узлов OpenSMM: перепись узлов и статус в MCP Registry</title>
-<meta name="description" content="Как протокол OpenSMM считает внешние узлы: две проверки переписи, npm run verify:node, заявка узла через issue-шаблон и честный статус в официальном MCP Registry.">
-<meta property="og:title" content="Реестр узлов OpenSMM: перепись узлов и статус в MCP Registry">
-<meta property="og:description" content="Как протокол OpenSMM считает внешние узлы: две проверки переписи, npm run verify:node, заявка узла через issue-шаблон и честный статус в официальном MCP Registry.">
+<title>OpenSMM node registry: node census and MCP Registry status</title>
+<meta name="description" content="How the OpenSMM protocol counts external nodes: the two census checks, npm run verify:node, reporting a node via the issue template, and the honest status in the official MCP Registry.">
+<meta property="og:title" content="OpenSMM node registry: node census and MCP Registry status">
+<meta property="og:description" content="How the OpenSMM protocol counts external nodes: the two census checks, npm run verify:node, reporting a node via the issue template, and the honest status in the official MCP Registry.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/smm-node-registry/">
 <meta property="og:image" content="https://opensmm.dev/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="OpenSMM — заказ SMM-услуг для AI-агентов через MCP/REST">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/smm-node-registry/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-registry/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-node-registry/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-registry/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/smm-node-registry/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/smm-node-registry/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,14 +41,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -59,45 +58,45 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
-      <span>Реестр узлов</span>
+      <span>Node registry</span>
     </nav>
-    <h1>Реестр узлов OpenSMM</h1>
+    <h1>OpenSMM node registry</h1>
     <p class="section-lede">
-      Как протокол считает внешние узлы: определение узла, проверка своего узла, заявка в недельную перепись — и честный статус OpenSMM в официальном MCP Registry.
+      How the protocol counts external nodes: the definition of a node, checking your own node, reporting it to the weekly census — and the honest status of OpenSMM in the official MCP Registry.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Что считается узлом протокола</h2>
+    <h2>What counts as a protocol node</h2>
     <p class="section-lede">
-      Публичный URL считается узлом, когда проходят обе проверки (редиректы не следуются):
+      A public URL is a node when both checks pass (redirects are not followed):
     </p>
     <ul class="deal-list">
-      <li><code>GET &lt;url&gt;/v0/services</code> — 200 с JSON-массивом <code>services</code>;</li>
-      <li><code>POST &lt;url&gt;/mcp</code> с <code>initialize</code> (JSON-RPC) — 200 с JSON-RPC <code>result</code>.</li>
+      <li><code>GET &lt;url&gt;/v0/services</code> — 200 with a JSON <code>services</code> array;</li>
+      <li><code>POST &lt;url&gt;/mcp</code> with <code>initialize</code> (JSON-RPC) — 200 with a JSON-RPC <code>result</code>.</li>
     </ul>
     <p class="section-note">
-      <code>GET &lt;url&gt;/v0/providers</code> — информационный: он никогда не решает вердикт. Определение узла и перепись — <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md">docs/NODES.md</a>.
+      <code>GET &lt;url&gt;/v0/providers</code> is informational: it never decides the verdict. The node definition and the census live in <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/NODES.md">docs/NODES.md</a>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Проверить свой узел перед заявкой</h2>
+    <h2>Check your own node before reporting</h2>
     <p class="section-lede">
-      Перед недельной переписью прогоните те же две проверки локально. Скрипт печатает PASS/FAIL по каждой проверке и вердикт: код выхода <code>0</code> — перепись засчитает узел, <code>1</code> — нет.
+      Before the weekly census, run the same two checks locally. The script prints PASS/FAIL per check and a verdict: exit code <code>0</code> — the census counts the node, <code>1</code> — it does not.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
 <pre>npm run verify:node -- http://127.0.0.1:8080</pre>
     </div>
     <div class="code-block">
-      <div class="code-head"><span>вывод</span></div>
+      <div class="code-head"><span>output</span></div>
 <pre>PASS  GET /v0/services — 6 services in the catalog
 PASS  POST /mcp initialize — 2025-06-18, server opensmm
 PASS  GET /v0/providers — 1 provider registered   (informational, not counted)
@@ -105,10 +104,10 @@ PASS  GET /v0/providers — 1 provider registered   (informational, not counted)
 PASS — the census counts this node: 2/2 required checks passed in 1315 ms</pre>
     </div>
     <p class="section-note">
-      Скрипт импортирует те же пробы, что и перепись: одна формулировка узла, поэтому локальный PASS значит, что перепись увидит тот же узел. Для узла за прокси или на публичном хосте передавайте URL, по которому перепись будет обращаться (редиректы не следуются — используйте финальный URL).
+      The script imports the same probes as the census: one definition of a node, so a local PASS means the census sees the same node. For a node behind a proxy or on a public host, pass the URL the census will call (redirects are not followed — use the final URL).
     </p>
     <p class="section-lede">
-      Для мониторинга есть машиночитаемый вывод: <code>--json</code> печатает тот же результат JSON на stdout — для cron-задачи или шага CI, который алертит на упавший узел.
+      Machine-readable output for monitoring: <code>--json</code> prints the same result as JSON on stdout — for a cron job or a CI step that alerts on a down node.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
@@ -116,7 +115,7 @@ PASS — the census counts this node: 2/2 required checks passed in 1315 ms</pre
 node scripts/verify-node.mjs --json http://127.0.0.1:8080 | jq .entry.status</pre>
     </div>
     <p class="section-note">
-      В JSON <code>entry.status</code> — <code>"up"</code> или <code>"down"</code>, <code>checks</code> — отчёт по каждой проверке, где <code>required: false</code> отмечена проверка, которая никогда не решает вердикт. Ежедневный cron-чек с алертом через код выхода:
+      In the JSON, <code>entry.status</code> is <code>"up"</code> or <code>"down"</code>, and <code>checks</code> is the per-check report where <code>required: false</code> marks a check that never decides the verdict. A daily cron check that alerts through its exit code:
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
@@ -124,98 +123,98 @@ node scripts/verify-node.mjs --json http://127.0.0.1:8080 | jq .entry.status</pr
   || echo "OpenSMM node is down" >&2</pre>
     </div>
     <p class="section-note">
-      <code>--timeout &lt;ms&gt;</code> — один бюджет на все три пробы узла: по умолчанию 5000&nbsp;мс, допустимый диапазон 1000–30000&nbsp;мс. На медленной сети поднимите его, чтобы доступный узел не был отмечен как недоступный.
+      <code>--timeout &lt;ms&gt;</code> is one budget for all three probes of a node: default 5000&nbsp;ms, allowed range 1000–30000&nbsp;ms. On a slow network raise it, so a reachable node is not reported as down.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Заявка в недельную перепись</h2>
+    <h2>Report your node to the weekly census</h2>
     <p class="section-lede">
-      Когда узел проходит проверку локально и доступен публично, подайте его URL в недельную перепись через issue-шаблон: <a href="https://github.com/opensmm-protocol/mcp-server/issues/new?template=node-report.md">issues/new?template=node-report.md</a>.
+      Once your node passes locally and is publicly accessible, submit its URL for the weekly census via the issue template: <a href="https://github.com/opensmm-protocol/mcp-server/issues/new?template=node-report.md">issues/new?template=node-report.md</a>.
     </p>
     <p class="section-lede">
-      Сама перепись запускается одной командой по списку URL:
+      The census itself runs over a list of URLs with one command:
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
 <pre>npm run census -- --url http://127.0.0.1:8080 --url https://mcp.opensmm.dev
-npm run census -- --file nodes.txt   # один URL в строке, "#" начинает комментарий</pre>
+npm run census -- --file nodes.txt   # one URL per line, "#" starts a comment</pre>
     </div>
     <p class="section-note">
-      Лимит — 20 URL за запуск. JSON печатается на stdout, сводка — на stderr. Недоступный узел — данные, а не сбой: <code>status: "down"</code>, код выхода 0. Код выхода 1 — сломанные аргументы. Итог недели — одна строка вида <code>2026-11-09 — 1 node up of 3 checked: …</code> с JSON под ней.
+      The limit is 20 URLs per run. JSON goes to stdout, the summary to stderr. An unreachable node is data, not a failure: <code>status: "down"</code>, exit 0. Exit 1 means broken arguments. The weekly result is one line like <code>2026-11-09 — 1 node up of 3 checked: …</code> with the JSON below it.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Публичный URL без своего домена</h2>
+    <h2>A public URL without a custom domain</h2>
     <p class="section-lede">
-      Перепись засчитывает только публично доступные URL по HTTPS/HTTP. Если своего домена и TLS-прокси пока нет, локальный шлюз можно выставить наружу бесплатным quick-туннелем Cloudflare без создания аккаунта.
+      The census counts only publicly reachable HTTPS/HTTP URLs. If you do not have a custom domain or a TLS reverse proxy yet, you can expose your local gateway through a free Cloudflare quick tunnel without creating an account.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
-<pre>npm run gateway                                          # узел на 8080
-cloudflared tunnel --url http://127.0.0.1:8080           # во втором терминале
-npm run verify:node -- https://…trycloudflare.com        # проверка публичного адреса</pre>
+<pre>npm run gateway                                          # node on port 8080
+cloudflared tunnel --url http://127.0.0.1:8080           # in a second terminal
+npm run verify:node -- https://…trycloudflare.com        # check the public address</pre>
     </div>
     <p class="section-note">
-      Туннель печатает временный адрес <code>*.trycloudflare.com</code>: он меняется при каждом перезапуске процесса туннеля. Для постоянного узла настройте TLS на своём домене с Caddy — <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md">docs/DEPLOY.md</a>.
+      The tunnel prints a temporary <code>*.trycloudflare.com</code> URL: it changes every time the tunnel process restarts. For a permanent node, set up TLS on your own domain with Caddy — <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md">docs/DEPLOY.md</a>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Статус в официальном MCP Registry</h2>
+    <h2>Status in the official MCP Registry</h2>
     <p class="section-lede">
-      OpenSMM не записан в официальный MCP Registry, и это ожидаемый результат: <code>GET https://registry.modelcontextprotocol.io/v0/servers?search=opensmm</code> отвечает <code>{"servers":[],"metadata":{"count":0}}</code>.
+      OpenSMM is not listed in the official MCP Registry, and that is the expected result: <code>GET https://registry.modelcontextprotocol.io/v0/servers?search=opensmm</code> answers <code>{"servers":[],"metadata":{"count":0}}</code>.
     </p>
     <p class="section-lede">
-      Схема <code>2025-12-11</code> принимает сервер только с опубликованным пакетом (<code>packages[]</code> с <code>registryType</code> и <code>identifier</code>) или с <code>remotes</code> на публичный hosted-endpoint. У OpenSMM нет ни того, ни другого: пакет не опубликован, образ контейнера приватный, публичного hosted MCP endpoint нет. Изобретать <code>packages</code> или <code>remotes</code> нельзя.
+      Schema <code>2025-12-11</code> accepts a server only with a published package (<code>packages[]</code> carrying <code>registryType</code> and <code>identifier</code>) or with <code>remotes</code> pointing at a public hosted endpoint. OpenSMM has neither: no package is published, the container image stays private, and there is no public hosted MCP endpoint. Inventing <code>packages</code> or <code>remotes</code> is not allowed.
     </p>
     <p class="section-note">
-      Ситуацию изменит опубликованный пакет или публичный hosted MCP endpoint. До тех пор узел ставится из исходников — <a href="https://github.com/opensmm-protocol/mcp-server#run-a-node-from-source-in-5-minutes">«Run a node from source in 5 minutes»</a> в README.
+      A published package or a public hosted MCP endpoint would change this. Until then the node is installed from source — <a href="https://github.com/opensmm-protocol/mcp-server#run-a-node-from-source-in-5-minutes">“Run a node from source in 5 minutes”</a> in the README.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Честные ограничения</h2>
+    <h2>Honest limits</h2>
     <ol class="deal-list">
-      <li>Пока записи в MCP Registry нет: без опубликованного пакета или публичного hosted-endpoint реестр не принимает сервер, а выдумывать <code>packages</code> или <code>remotes</code> нельзя.</li>
-      <li>Локальный узел отдаёт mock-каталог (<code>synthetic: true</code>), а не реальное предложение.</li>
-      <li>Перепись засчитывает только публично доступные URL: localhost-узел проверяют локально, но в перепись он не попадает.</li>
+      <li>No MCP Registry entry yet: without a published package or a public hosted endpoint the registry does not accept a server, and inventing <code>packages</code> or <code>remotes</code> is not allowed.</li>
+      <li>A local node serves a mock catalog (<code>synthetic: true</code>), not real supply.</li>
+      <li>The census counts only publicly reachable URLs: a localhost node is checked locally but never enters the census.</li>
     </ol>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Следующий шаг: поднять свой узел</h2>
+    <h2>Next step: run your own node</h2>
     <p class="section-lede">
-      Узел — один процесс, отдающий REST <code>/v0</code> и MCP <code>/mcp</code> на одном порту. Нужен Node.js ≥ 22.18.
+      A node is a single process serving REST <code>/v0</code> and MCP <code>/mcp</code> on one port. You need Node.js ≥ 22.18.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/node/">Поднять свой узел</a>
+      <a class="btn" href="/node/">Run your own node</a>
     </div>
     <p class="section-note">
-      Пошаговая инструкция, проверка узла и отчёт о нём — на странице <a href="/node/">«Запустить узел»</a>.
+      The step-by-step guide, node verification and reporting your node live on the <a href="/node/">“Run a node”</a> page.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Проверить узел онлайн</h2>
+    <h2>Check your node online</h2>
     <p class="section-lede">
-      Введите https-адрес узла — страница из браузера проверит <code>/health</code>, <code>server.json</code>, <code>/v0/services</code> и MCP <code>initialize</code>.
+      Enter the https address of your node — the page checks <code>/health</code>, <code>server.json</code>, <code>/v0/services</code> and MCP <code>initialize</code> from your browser.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/check/">Проверить узел</a>
+      <a class="btn" href="/check/">Check node</a>
     </div>
   </div>
 </section>
@@ -224,12 +223,12 @@ npm run verify:node -- https://…trycloudflare.com        # проверка п
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
-      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>

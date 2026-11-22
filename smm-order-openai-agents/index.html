@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,20 +16,19 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Заказ SMM-услуги из OpenAI Agents SDK: MCP-узел и пример</title>
-<meta name="description" content="Как заказывать SMM-услуги из OpenAI Agents SDK через узел OpenSMM: готового примера под стек нет, страница ведёт на рабочий MCP-клиент из examples/ и docs/AGENT_QUICKSTART.md. Mock-каталог, без ключей и денег.">
-<meta property="og:title" content="Заказ SMM-услуги из OpenAI Agents SDK: MCP-узел и пример">
-<meta property="og:description" content="Как заказывать SMM-услуги из OpenAI Agents SDK через узел OpenSMM: готового примера под стек нет, страница ведёт на рабочий MCP-клиент из examples/ и docs/AGENT_QUICKSTART.md. Mock-каталог, без ключей и денег.">
+<title>Order SMM services from OpenAI Agents SDK: MCP node example</title>
+<meta name="description" content="Ordering SMM services from OpenAI Agents SDK through an OpenSMM node: no ready example for this stack, the page leads to the SDK-free MCP client in examples/ and docs/AGENT_QUICKSTART.md. Mock catalog, no keys, no money.">
+<meta property="og:title" content="Order SMM services from OpenAI Agents SDK: MCP node example">
+<meta property="og:description" content="Ordering SMM services from OpenAI Agents SDK through an OpenSMM node: no ready example for this stack, the page leads to the SDK-free MCP client in examples/ and docs/AGENT_QUICKSTART.md. Mock catalog, no keys, no money.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/smm-order-openai-agents/">
 <meta property="og:image" content="https://opensmm.dev/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="OpenSMM — заказ SMM-услуг для AI-агентов через MCP/REST">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/smm-order-openai-agents/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-openai-agents/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-openai-agents/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-openai-agents/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/smm-order-openai-agents/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/smm-order-openai-agents/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,14 +41,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -59,22 +58,22 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
-      <span>Заказ из OpenAI Agents SDK</span>
+      <span>Ordering from OpenAI Agents SDK</span>
     </nav>
-    <h1>Заказ SMM-услуги из OpenAI Agents SDK</h1>
+    <h1>Order SMM services from OpenAI Agents SDK</h1>
     <p class="section-lede">
-      Готового примера именно под OpenAI Agents SDK в репозитории mcp-server пока нет — здесь нет выдуманного кода или обёрток инструментов. Узел OpenSMM открывает инструменты <code>search_services</code>, <code>get_quote</code> и <code>create_order</code> по MCP на <code>POST /mcp</code>; страница честно ведёт на ближайший рабочий пример — SDK-независимый MCP-клиент из <code>examples/</code> и <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>. Всё идёт на mock-каталоге: каждая услуга помечена <code>synthetic: true</code>, заказы остаются <code>REQUIRES_PAYMENT</code> и не оплачиваются — ключ, аккаунт и деньги не нужны.
+      There is no ready-made example for OpenAI Agents SDK in the mcp-server repo yet — no invented code or tool wrappers here. An OpenSMM node exposes the tools <code>search_services</code>, <code>get_quote</code> and <code>create_order</code> over MCP on <code>POST /mcp</code>; this page honestly points to the nearest working example — the SDK-free MCP client in <code>examples/</code> and <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>. Everything runs on the mock catalog: every service is marked <code>synthetic: true</code>, orders stay <code>REQUIRES_PAYMENT</code> and are never paid — no key, account or money needed.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>1. Поднять узел (около 2 минут)</h2>
+    <h2>1. Start a node (about 2 minutes)</h2>
     <p class="section-lede">
-      Нужен Node.js ≥ 22.18. Запустите узел с mock-каталогом — он слушает REST <code>/v0</code> и MCP <code>/mcp</code>.
+      You need Node.js ≥ 22.18. Start a node with the mock catalog — it serves REST <code>/v0</code> and MCP <code>/mcp</code>.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
@@ -84,19 +83,19 @@ npm ci
 npm run gateway</pre>
     </div>
     <p class="section-note">
-      Узел печатает в stderr строку вида <code>gateway listening on http://localhost:8080 (REST /v0, MCP /mcp; provider: mock, mock catalog — not real supply)</code>. Проверка из другого терминала: <code>curl -s http://127.0.0.1:8080/v0/services | head -30</code> — у каждой услуги <code>"synthetic": true</code>. Порт занят? <code>PORT=8081 npm run gateway</code>. Другие сбои — <a href="/smm-node-troubleshooting/">сбои запуска узла</a>.
+      The node prints a line like <code>gateway listening on http://localhost:8080 (REST /v0, MCP /mcp; provider: mock, mock catalog — not real supply)</code> on stderr. Check from another terminal: <code>curl -s http://127.0.0.1:8080/v0/services | head -30</code> — every service has <code>"synthetic": true</code>. Port taken? <code>PORT=8081 npm run gateway</code>. Other startup issues: <a href="/smm-node-troubleshooting/">node startup failures</a>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>2. Как подключить MCP-сервер</h2>
+    <h2>2. How to wire the MCP server</h2>
     <p class="section-lede">
-      В <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/README.md">examples/README.md</a> есть готовый блок конфигурации MCP-сервера по HTTP. Он описан как работающий с любым MCP-клиентом; точный способ обернуть MCP-инструменты в OpenAI Agents SDK — в документации этого SDK, в этом репозитории его нет.
+      <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/README.md">examples/README.md</a> ships a ready HTTP MCP server config block. It is documented as working with any MCP client; how to wrap MCP tools in the OpenAI Agents SDK is in that SDK's docs, not in this repo.
     </p>
     <div class="code-block">
-      <div class="code-head"><span>json — HTTP (POST /mcp запущенного узла)</span></div>
+      <div class="code-head"><span>json — HTTP (POST /mcp of a running node)</span></div>
 <pre>{
   "mcpServers": {
     "opensmm": {
@@ -106,23 +105,23 @@ npm run gateway</pre>
 }</pre>
     </div>
     <p class="section-note">
-      Конфигурация соответствует <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/mcp.json">mcp.json</a> в корне репозитория: сервер <code>io.github.opensmm-protocol/mcp-server</code>, пакет <code>@opensmm/mcp-server</code>, протокол MCP <code>2025-06-18</code>. Для stdio-подключения блок <code>npm run mcp</code> — в <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/README.md">examples/README.md</a>.
+      The config matches <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/mcp.json">mcp.json</a> in the repo root: server <code>io.github.opensmm-protocol/mcp-server</code>, package <code>@opensmm/mcp-server</code>, MCP protocol <code>2025-06-18</code>. The stdio <code>npm run mcp</code> block is in <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/README.md">examples/README.md</a>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>3. Ближайший рабочий пример: MCP-клиент без SDK</h2>
+    <h2>3. Nearest working example: an SDK-free MCP client</h2>
     <p class="section-lede">
-      Чтобы увидеть весь сценарий без OpenAI Agents SDK, запустите готовый <code>examples/mcp-client.mjs</code> — он говорит по JSON-RPC напрямую с <code>POST /mcp</code>: <code>initialize</code> → <code>search_services</code> → <code>get_quote</code> → <code>create_order</code> дважды. Никаких зависимостей, MCP SDK, ключей и денег.
+      To see the whole scenario without the OpenAI Agents SDK, run the ready <code>examples/mcp-client.mjs</code> — it speaks JSON-RPC directly to <code>POST /mcp</code>: <code>initialize</code> → <code>search_services</code> → <code>get_quote</code> → <code>create_order</code> twice. No dependencies, no MCP SDK, no keys, no money.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
 <pre>node examples/mcp-client.mjs http://127.0.0.1:8080 --client-reference my-first-order</pre>
     </div>
     <div class="code-block">
-      <div class="code-head"><span>text — ожидаемый вывод</span></div>
+      <div class="code-head"><span>text — expected output</span></div>
 <pre>node:      http://127.0.0.1:8080
 transport: MCP over Streamable HTTP (JSON-RPC on POST /mcp)
 catalog:   MOCK — every service is marked synthetic: not real supply, no real money
@@ -133,62 +132,62 @@ replay:    osmm_order_... — same orderId, no second order created
 done:      MCP client OK</pre>
     </div>
     <p class="section-note">
-      Строки <code>order:</code> и <code>replay:</code> — один и тот же <code>orderId</code>: один <code>clientReference</code> даёт один заказ на любом транспорте. Полный разбор — в <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>.
+      The <code>order:</code> and <code>replay:</code> lines are the same <code>orderId</code>: one <code>clientReference</code> yields one order on any transport. Full walkthrough: <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>4. Что на самом деле вызвал агент</h2>
+    <h2>4. What the agent actually called</h2>
     <ol class="deal-list">
-      <li><code>initialize</code> — клиент согласовывает протокол MCP <code>2025-06-18</code>.</li>
-      <li><code>search_services</code> — читает каталог; у каждой записи <code>synthetic: true</code>. Примеры отказываются продолжать, если услуга не помечена как mock.</li>
-      <li><code>get_quote</code> — цена одной услуги для количества 100 и ссылки <code>https://t.me/opensmm_example</code>. Котировка расходуется один раз, под каждый заказ нужна своя.</li>
-      <li><code>create_order</code> — неоплаченный заказ. По REST это HTTP 402 с телом заказа; ничего не оплачивается и не исполняется.</li>
-      <li><code>create_order</code> ещё раз с тем же <code>clientReference</code> — повтор возвращает сохранённый заказ, а не создаёт второй.</li>
+      <li><code>initialize</code> — the client negotiates MCP protocol <code>2025-06-18</code>.</li>
+      <li><code>search_services</code> — reads the catalog; every entry carries <code>synthetic: true</code>. The examples refuse to continue if a service is not marked mock.</li>
+      <li><code>get_quote</code> — price one service for quantity 100 and the link <code>https://t.me/opensmm_example</code>. A quote is consumed once, so each order needs its own.</li>
+      <li><code>create_order</code> — an unpaid order. Over REST this is HTTP 402 with the order body; nothing is paid, nothing executes.</li>
+      <li><code>create_order</code> again with the same <code>clientReference</code> — the replay returns the stored order instead of creating a second one.</li>
     </ol>
     <p class="section-note">
-      REST-эквиваленты: <code>GET /v0/services</code>, <code>POST /v0/quotes</code>, <code>POST /v0/orders</code>, опрос — <code>GET /v0/orders/:id</code>.
+      REST equivalents: <code>GET /v0/services</code>, <code>POST /v0/quotes</code>, <code>POST /v0/orders</code>, poll with <code>GET /v0/orders/:id</code>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Если что-то выглядит неправильно</h2>
+    <h2>If something looks wrong</h2>
     <ul class="deal-list">
-      <li><code>is not marked synthetic</code> — узел не на mock-каталоге; остановитесь и не заказывайте. Перезапустите узел без настроенного провайдера.</li>
-      <li><code>ECONNREFUSED</code> — узел из шага 1 не запущен или слушает другой порт.</li>
-      <li><code>IDEMPOTENCY_CONFLICT</code> — этот <code>clientReference</code> уже принадлежит заказу из другой котировки: передайте исходную через <code>--quote</code> или возьмите новый референс.</li>
-      <li>HTTP 402 на <code>POST /v0/orders</code> — ожидаемый ответ, а не сбой.</li>
+      <li><code>is not marked synthetic</code> — the node is not on its mock catalog; stop, do not order. Restart it without a provider configured.</li>
+      <li><code>ECONNREFUSED</code> — the node from step 1 is not running or uses another port.</li>
+      <li><code>IDEMPOTENCY_CONFLICT</code> — that <code>clientReference</code> already belongs to an order made from a different quote; pass the original via <code>--quote</code> or use a new reference.</li>
+      <li>HTTP 402 on <code>POST /v0/orders</code> is expected, not a failure.</li>
     </ul>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Честные ограничения</h2>
+    <h2>Honest limits</h2>
     <ol class="deal-list">
-      <li>Отдельного готового примера под OpenAI Agents SDK в репозитории нет: способ обернуть MCP-инструменты в SDK — в документации SDK, а не на этой странице.</li>
-      <li>Страница пересказывает <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/README.md">examples/README.md</a> и <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; рабочий MCP-клиент и шаги — там.</li>
-      <li>Каталог — mock (<code>synthetic: true</code>): реальных услуг, цен и заказов здесь нет, курс в примере — тестовый, оплата не проходит.</li>
-      <li>Другие стеки: <a href="/smm-agent-quickstart/">быстрый старт агента</a>, <a href="/smm-order-langchain/">агент в стиле LangChain</a>, <a href="/smm-order-claude-code/">заказ из Claude Code</a>.</li>
+      <li>There is no dedicated ready example for OpenAI Agents SDK in the repo: how to wrap the MCP tools in the SDK is in the SDK docs, not on this page.</li>
+      <li>This page retells <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/README.md">examples/README.md</a> and <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; the working MCP client and steps are there.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): no real services, prices or orders here; the rate in the example is a test rate, payment does not go through.</li>
+      <li>Other stacks: <a href="/smm-agent-quickstart/">agent quickstart</a>, <a href="/smm-order-langchain/">a LangChain-style agent</a>, <a href="/smm-order-claude-code/">ordering from Claude Code</a>.</li>
     </ol>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Дальше: свой узел</h2>
+    <h2>Next: your own node</h2>
     <p class="section-lede">
-      Пример идёт на локальном mock-узле. Чтобы вас учли в переписи, поднимите узел и сообщите его адрес.
+      The example runs on the local mock node. To be counted in the census, run a node and report its address.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/node/">Поднять свой узел</a>
+      <a class="btn" href="/node/">Run your own node</a>
     </div>
     <p class="section-note">
-      Пошаговая инструкция, проверка и отчёт об узле — на странице <a href="/node/">«Запустить узел»</a>.
+      The step-by-step guide, verification and reporting your node are on the <a href="/node/">“Run a node”</a> page.
     </p>
   </div>
 </section>
@@ -197,12 +196,12 @@ done:      MCP client OK</pre>
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
-      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>

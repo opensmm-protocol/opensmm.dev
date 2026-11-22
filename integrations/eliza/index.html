@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,20 +16,19 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Плагин OpenSMM для агента ElizaOS: поиск, котировка, заказ на mock-узле</title>
-<meta name="description" content="Подключить агента ElizaOS к узлу OpenSMM: actions search_services, get_quote, create_order по POST /mcp. Запуск за 5 минут, без ключей и денег. Каталог mock, заказ остаётся REQUIRES_PAYMENT.">
-<meta property="og:title" content="Плагин OpenSMM для агента ElizaOS: поиск, котировка, заказ на mock-узле">
-<meta property="og:description" content="Подключить агента ElizaOS к узлу OpenSMM: actions search_services, get_quote, create_order по POST /mcp. Запуск за 5 минут, без ключей и денег. Каталог mock, заказ остаётся REQUIRES_PAYMENT.">
+<title>OpenSMM plugin for ElizaOS agents: search, quote, order on a mock node</title>
+<meta name="description" content="Connect an ElizaOS agent to an OpenSMM node: search_services, get_quote, create_order actions over POST /mcp. Runs in 5 minutes, no keys, no money. Mock catalog; the order stays REQUIRES_PAYMENT.">
+<meta property="og:title" content="OpenSMM plugin for ElizaOS agents: search, quote, order on a mock node">
+<meta property="og:description" content="Connect an ElizaOS agent to an OpenSMM node: search_services, get_quote, create_order actions over POST /mcp. Runs in 5 minutes, no keys, no money. Mock catalog; the order stays REQUIRES_PAYMENT.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/integrations/eliza/">
 <meta property="og:image" content="https://opensmm.dev/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="OpenSMM — заказ SMM-услуг для AI-агентов через MCP/REST">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/integrations/eliza/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/integrations/eliza/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/integrations/eliza/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/integrations/eliza/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/integrations/eliza/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/integrations/eliza/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,14 +41,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -59,27 +58,27 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
-      <span>Плагин для ElizaOS</span>
+      <span>ElizaOS plugin</span>
     </nav>
-    <h1>Плагин OpenSMM для агента ElizaOS</h1>
+    <h1>OpenSMM plugin for ElizaOS agents</h1>
     <p class="section-lede">
-      Плагин добавляет агенту ElizaOS три action: <code>search_services</code>, <code>get_quote</code>, <code>create_order</code>. Они ходят на узел OpenSMM по <code>POST /mcp</code> (<code>initialize</code>, <code>tools/call</code>). Код лежит в репозитории как пример: копируете папку, запускаете узел и проверочный скрипт. Ключи и деньги не нужны, Node.js ≥ 22.18.
+      The plugin gives an ElizaOS agent three actions: <code>search_services</code>, <code>get_quote</code>, <code>create_order</code>. They call an OpenSMM node over <code>POST /mcp</code> (<code>initialize</code>, <code>tools/call</code>). The code is an example in the repository: copy the folder, start a node and run the smoke script. No keys, no money, Node.js ≥ 22.18.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="https://github.com/opensmm-protocol/mcp-server/tree/main/examples/eliza">Открыть пример на GitHub</a>
+      <a class="btn" href="https://github.com/opensmm-protocol/mcp-server/tree/main/examples/eliza">Open the example on GitHub</a>
     </div>
     <p class="section-note">
-      Каталог на узле mock: каждая услуга помечена <code>synthetic</code>, реальных услуг и цен нет. Заказ остаётся в статусе <code>REQUIRES_PAYMENT</code>.
+      The node's catalog is a mock: every service is marked <code>synthetic</code>, there are no real services or prices. The order stays <code>REQUIRES_PAYMENT</code>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Три шага запуска</h2>
-    <h3>1. Поднять узел</h3>
+    <h2>Three steps to run it</h2>
+    <h3>1. Start the node</h3>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
 <pre>git clone https://github.com/opensmm-protocol/mcp-server.git
@@ -88,61 +87,61 @@ npm ci
 PORT=8080 npm run gateway</pre>
     </div>
     <p class="section-note">
-      Узел пишет на stderr строку <code>gateway listening on http://localhost:8080 (...; provider: mock, mock catalog — not real supply)</code>. Сбои запуска — <a href="/smm-node-troubleshooting/">сбои запуска узла</a>.
+      The node prints <code>gateway listening on http://localhost:8080 (...; provider: mock, mock catalog — not real supply)</code> on stderr. Startup fixes: <a href="/smm-node-troubleshooting/">node startup failures</a>.
     </p>
-    <h3>2. Проверить цепочку во втором терминале</h3>
+    <h3>2. Check the chain in a second terminal</h3>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
 <pre>node examples/eliza/smoke.mjs http://127.0.0.1:8080</pre>
     </div>
     <p class="section-note">
-      Скрипт проходит поиск → котировка → заказ → повтор с тем же <code>clientReference</code>. Повтор возвращает тот же <code>orderId</code>, второй заказ не создаётся, код выхода 0.
+      The script runs search → quote → order → replay with the same <code>clientReference</code>. The replay returns the same <code>orderId</code>, no second order is created, exit code 0.
     </p>
-    <h3>3. Подключить плагин к своему агенту</h3>
+    <h3>3. Plug the plugin into your agent</h3>
     <p class="section-lede">
-      Скопируйте <code>examples/eliza/plugin.mjs</code> в проект агента, зарегистрируйте плагин в персонаже и укажите адрес узла <code>http://127.0.0.1:8080/mcp</code>. Версия ElizaOS, под которую написан пример, указана в README папки: API фреймворка меняется между версиями, плагин сделан тонким.
+      Copy <code>examples/eliza/plugin.mjs</code> into your agent project, register the plugin in the character and point it at <code>http://127.0.0.1:8080/mcp</code>. The ElizaOS version the example targets is pinned in the folder's README: the framework's API changes between versions, so the plugin is kept thin.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Что делает каждый action</h2>
+    <h2>What each action does</h2>
     <ul class="deal-list">
-      <li><code>search_services</code> — ищет услугу в каталоге узла; на mock-узле каждая услуга <code>synthetic</code>.</li>
-      <li><code>get_quote</code> — нужны <code>serviceId</code>, <code>quantity</code>, <code>link</code>.</li>
-      <li><code>create_order</code> — нужны <code>quoteId</code>, <code>link</code>, <code>clientReference</code>. Один <code>clientReference</code> даёт один заказ на любом транспорте.</li>
+      <li><code>search_services</code> — finds a service in the node's catalog; on a mock node every service is <code>synthetic</code>.</li>
+      <li><code>get_quote</code> — requires <code>serviceId</code>, <code>quantity</code>, <code>link</code>.</li>
+      <li><code>create_order</code> — requires <code>quoteId</code>, <code>link</code>, <code>clientReference</code>. One <code>clientReference</code> yields one order on any transport.</li>
     </ul>
     <p class="section-note">
-      REST-эквиваленты тех же операций: <code>GET /v0/services</code>, <code>POST /v0/quotes</code>, <code>POST /v0/orders</code>.
+      REST equivalents of the same operations: <code>GET /v0/services</code>, <code>POST /v0/quotes</code>, <code>POST /v0/orders</code>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Честные ограничения</h2>
+    <h2>Honest limits</h2>
     <ol class="deal-list">
-      <li>Каталог — mock (<code>synthetic: true</code>): реальных услуг, цен и исполнения нет, оплата не проходит.</li>
-      <li>Заказ остаётся <code>REQUIRES_PAYMENT</code>: плагин не платит и ничего не исполняется.</li>
-      <li>Это пример для копирования, не опубликованный npm-пакет и не часть репозитория ElizaOS. Зависимости <code>@elizaos/*</code> в ядре OpenSMM нет.</li>
-      <li>Точные опции и версия ElizaOS — в <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/examples/eliza">README примера</a>.</li>
-      <li>Другие стеки: <a href="/smm-agent-quickstart/">быстрый старт агента</a>, <a href="/smm-order-langchain/">LangChain</a>, <a href="/smm-order-openai-agents/">OpenAI Agents SDK</a>.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): no real services, prices or fulfilment, nothing is paid.</li>
+      <li>The order stays <code>REQUIRES_PAYMENT</code>: the plugin never pays and nothing is executed.</li>
+      <li>This is an example to copy, not a published npm package and not part of the ElizaOS repository. OpenSMM core has no <code>@elizaos/*</code> dependency.</li>
+      <li>Exact options and the ElizaOS version are in the <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/examples/eliza">example README</a>.</li>
+      <li>Other stacks: <a href="/smm-agent-quickstart/">agent quickstart</a>, <a href="/smm-order-langchain/">LangChain</a>, <a href="/smm-order-openai-agents/">OpenAI Agents SDK</a>.</li>
     </ol>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Дальше: свой узел</h2>
+    <h2>Next: your own node</h2>
     <p class="section-lede">
-      Пример идёт на локальном узле. Чтобы вас учли в переписи, поднимите узел и сообщите его адрес.
+      The example runs on a local node. To be counted in the census, run a node and report its address.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/node/">Поднять свой узел</a>
+      <a class="btn" href="/node/">Run your own node</a>
     </div>
     <p class="section-note">
-      Пошаговая инструкция, проверка и отчёт об узле — на странице <a href="/node/">«Запустить узел»</a>.
+      The step-by-step guide, verification and reporting your node are on the <a href="/node/">“Run a node”</a> page.
     </p>
   </div>
 </section>
@@ -151,12 +150,12 @@ PORT=8080 npm run gateway</pre>
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
-      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>

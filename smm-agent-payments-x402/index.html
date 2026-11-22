@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,20 +16,19 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Оплата SMM-заказов агентом по x402: testnet Base Sepolia — OpenSMM</title>
-<meta name="description" content="Как агент оплачивает заказ по x402 в OpenSMM: кошелёк, тестовые USDC, фасилитатор и npm run x402:testnet. Только testnet Base Sepolia, боевая оплата не включена.">
-<meta property="og:title" content="Оплата SMM-заказов агентом по x402: testnet Base Sepolia — OpenSMM">
-<meta property="og:description" content="Как агент оплачивает заказ по x402 в OpenSMM: кошелёк, тестовые USDC, фасилитатор и npm run x402:testnet. Только testnet Base Sepolia, боевая оплата не включена.">
+<title>Paying for SMM orders from an agent over x402: Base Sepolia testnet — OpenSMM</title>
+<meta name="description" content="How an agent pays for an order over x402 in OpenSMM: wallet, test USDC, facilitator and npm run x402:testnet. Base Sepolia testnet only, live payments are not enabled.">
+<meta property="og:title" content="Paying for SMM orders from an agent over x402: Base Sepolia testnet — OpenSMM">
+<meta property="og:description" content="How an agent pays for an order over x402 in OpenSMM: wallet, test USDC, facilitator and npm run x402:testnet. Base Sepolia testnet only, live payments are not enabled.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/smm-agent-payments-x402/">
 <meta property="og:image" content="https://opensmm.dev/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="OpenSMM — заказ SMM-услуг для AI-агентов через MCP/REST">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/smm-agent-payments-x402/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-agent-payments-x402/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-agent-payments-x402/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-agent-payments-x402/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/smm-agent-payments-x402/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/smm-agent-payments-x402/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,14 +41,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -59,35 +58,35 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
-      <span>Оплата агентом x402</span>
+      <span>Agent payments over x402</span>
     </nav>
-    <h1>Оплата SMM-заказов агентом по x402 (testnet)</h1>
+    <h1>Paying for SMM orders from an agent over x402 (testnet)</h1>
     <p class="section-lede">
-      Как агент оплачивает заказ по x402: от кошелька до тестового платежа. Только testnet — USDC в Base Sepolia, боевая оплата не включена.
+      How an agent pays for an order over x402: from a wallet to a test payment. Testnet only — USDC on Base Sepolia, live payments are not enabled.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>1. Что это и что не обещано</h2>
+    <h2>1. What it is and what is not promised</h2>
     <p class="section-lede">
-      Оплата заказа агентом идёт по x402: сервер отвечает HTTP 402 с требованием оплаты, агент подписывает перевод USDC, фасилитатор проводит расчёт. Сейчас это <strong>только testnet</strong> — USDC в сети Base Sepolia. Боевая оплата не включена.
+      An agent pays for an order over x402: the server answers HTTP 402 with a payment requirement, the agent signs a USDC transfer, a facilitator settles it. Today this is <strong>testnet only</strong> — USDC on Base Sepolia. Live payments are not enabled.
     </p>
     <ul class="deal-list">
-      <li>Без переменных окружения x402 шлюз остаётся на dev-only mock-рельсе — для локальной разработки и тестов ничего не меняется;</li>
-      <li>mainnet-USDC пока не включён, реальные деньги через этот путь не проходят;</li>
-      <li>деньги идут по прямому расчёту «агент → провайдер» и не проходят через шлюз.</li>
+      <li>Without the x402 environment variables the gateway keeps the dev-only mock rail — nothing changes for local development or tests;</li>
+      <li>mainnet USDC is not enabled yet, no real money flows through this path;</li>
+      <li>money flows directly agent → provider and never transits the gateway.</li>
     </ul>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>2. Кошелёк-получатель</h2>
+    <h2>2. The receiving wallet</h2>
     <p class="section-lede">
-      Скрипт создаёт кошелёк и дописывает в <code>.env</code> (chmod 600, в gitignore) три переменные; приватный ключ не печатается и не коммитится.
+      The script creates a wallet and appends three variables to <code>.env</code> (chmod 600, gitignored); the private key is never printed or committed.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
@@ -95,83 +94,83 @@
 
 # .env
 X402_NETWORK=eip155:84532
-X402_PAYTO_ADDRESS=0x...   # адрес получателя шлюза
-X402_PRIVATE_KEY=0x...     # не печатается и не коммитится</pre>
+X402_PAYTO_ADDRESS=0x...   # the gateway's receiving address
+X402_PRIVATE_KEY=0x...     # never printed, never committed</pre>
     </div>
     <p class="section-note">
-      Для первой пробы один кошелёк может быть и плательщиком, и получателем (перевод самому себе — валидный EIP-3009). Для реалистичного потока возьмите второй кошелёк плательщика.
+      For a first probe the same wallet can be both payer and recipient (a self-payment is a valid EIP-3009 transfer). For a realistic flow use a second wallet as the payer.
     </p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>3. Тестовые USDC и фасилитатор</h2>
+    <h2>3. Test USDC and the facilitator</h2>
     <p class="section-lede">
-      Плательщику нужны тестовые USDC в Base Sepolia — их выдаёт бесплатный кран Circle (<a href="https://faucet.circle.com">faucet.circle.com</a>). ETH плательщику не нужен: для схемы <code>exact</code> газ <code>transferWithAuthorization</code> оплачивает фасилитатор.
+      The payer needs test USDC on Base Sepolia — Circle's free faucet issues it (<a href="https://faucet.circle.com">faucet.circle.com</a>). The payer needs no ETH: for the <code>exact</code> scheme the facilitator sponsors the gas of <code>transferWithAuthorization</code>.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
 <pre>X402_FACILITATOR_URL=https://x402.org/facilitator</pre>
     </div>
     <p class="section-note">
-      Это публичный тестовый фасилитатор без авторизации. Боевые фасилитаторы (например Coinbase CDP) требуют ключ API. После запуска <code>GET /v0/capabilities</code> показывает <code>paymentMethods: ["x402"]</code>, а расчёт через <code>method: "mock"</code> в этой конфигурации отклоняется.
+      This is the public testnet facilitator, no auth. Production facilitators (for example Coinbase CDP) require an API key. After boot, <code>GET /v0/capabilities</code> reports <code>paymentMethods: ["x402"]</code>, and settling with <code>method: "mock"</code> is rejected in this configuration.
     </p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>4. Тестовый платёж</h2>
+    <h2>4. Fire a test payment</h2>
     <p class="section-lede">
-      Один скрипт проходит весь путь с реальной testnet-рельсой: котировка → заказ → 402 → расчёт → старт исполнения.
+      One script runs the whole flow on the real testnet rail: quote → order → 402 → settle → execution start.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
 <pre>npm run x402:testnet</pre>
     </div>
     <ul class="deal-list">
-      <li>котировка минимального количества у стандартной услуги mock-каталога;</li>
-      <li>заказ и чтение требования оплаты x402;</li>
-      <li>подпись EIP-3009 <code>transferWithAuthorization</code> ключом <code>X402_PRIVATE_KEY</code>;</li>
-      <li>отправка через фасилитатор: <code>/verify</code>, затем <code>/settle</code>;</li>
-      <li>печать хэша транзакции и статуса исполнения.</li>
+      <li>quotes the default service of the mock catalog at its minimum quantity;</li>
+      <li>creates the order and reads its x402 payment requirement;</li>
+      <li>signs an EIP-3009 <code>transferWithAuthorization</code> with <code>X402_PRIVATE_KEY</code>;</li>
+      <li>submits it through the facilitator: <code>/verify</code>, then <code>/settle</code>;</li>
+      <li>prints the on-chain tx hash and the execution status.</li>
     </ul>
     <p class="section-note">
-      Каталог при этом mock (<code>synthetic: true</code>), а не реальное предложение. Полная инструкция — <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/X402_TESTNET.md">docs/X402_TESTNET.md</a>.
+      The catalog here is the mock one (<code>synthetic: true</code>), not real supply. Full instructions: <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/X402_TESTNET.md">docs/X402_TESTNET.md</a>.
     </p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>Если расчёт не прошёл</h2>
+    <h2>If settlement fails</h2>
     <ul class="deal-list">
-      <li>отказ фасилитатора (плохая подпись, нехватка баланса) — <code>PAYMENT_REQUIRED</code> с причиной, заказ остаётся в <code>REQUIRES_PAYMENT</code>;</li>
-      <li><code>settlement_pending</code> — заказ переходит в <code>SETTLEMENT_PENDING</code> с хэшем транзакции: сверьте по сети и не платите повторно;</li>
-      <li>HTTP 5xx или таймаут фасилитатора — обычная ошибка, платёж можно повторить.</li>
+      <li>facilitator rejection (bad signature, insufficient balance) — <code>PAYMENT_REQUIRED</code> with the reason, the order stays in <code>REQUIRES_PAYMENT</code>;</li>
+      <li><code>settlement_pending</code> — the order moves to <code>SETTLEMENT_PENDING</code> with the tx hash: reconcile on chain, never re-pay;</li>
+      <li>facilitator HTTP 5xx or timeout — a plain error, the payment stays retryable.</li>
     </ul>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>Честные ограничения</h2>
+    <h2>Honest limits</h2>
     <ol class="deal-list">
-      <li>Это testnet: USDC в Base Sepolia, боевая оплата не включена.</li>
-      <li>Каталог — mock-фикстуры, а не реальное предложение.</li>
-      <li>Пакет npm и публичный образ не опубликованы: команды запускаются из чекаута репозитория.</li>
+      <li>This is a testnet: USDC on Base Sepolia, live payments are not enabled.</li>
+      <li>The catalog is mock fixtures, not real supply.</li>
+      <li>The npm package and a public image are not published: run the commands from a repository checkout.</li>
     </ol>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Следующий шаг: поднять свой узел</h2>
+    <h2>Next step: run your own node</h2>
     <p class="section-lede">
-      Узел — один процесс, отдающий REST <code>/v0</code> и MCP <code>/mcp</code> на одном порту. Нужен Node.js ≥ 22.18.
+      A node is a single process serving REST <code>/v0</code> and MCP <code>/mcp</code> on one port. You need Node.js ≥ 22.18.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/node/">Поднять свой узел</a>
+      <a class="btn" href="/node/">Run your own node</a>
     </div>
     <p class="section-note">
-      Пошаговая инструкция, проверка узла и отчёт о нём — на странице <a href="/node/">«Запустить узел»</a>.
+      The step-by-step guide, node verification and reporting your node live on the <a href="/node/">“Run a node”</a> page.
     </p>
   </div>
 </section>
@@ -180,12 +179,12 @@ X402_PRIVATE_KEY=0x...     # не печатается и не коммитит�
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
-      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>

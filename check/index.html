@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,20 +16,19 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Проверка узла OpenSMM онлайн: /health, server.json, /v0/services, /mcp — OpenSMM</title>
-<meta name="description" content="Онлайн-проверка узла OpenSMM из браузера: /health, server.json, /v0/services и MCP initialize. Pass/fail по каждой проверке и бейдж для README. Без регистрации, URL не сохраняется.">
-<meta property="og:title" content="Проверка узла OpenSMM онлайн: /health, server.json, /v0/services, /mcp — OpenSMM">
-<meta property="og:description" content="Онлайн-проверка узла OpenSMM из браузера: /health, server.json, /v0/services и MCP initialize. Pass/fail по каждой проверке и бейдж для README. Без регистрации, URL не сохраняется.">
+<title>Check your OpenSMM node online: /health, server.json, /v0/services, /mcp — OpenSMM</title>
+<meta name="description" content="Online OpenSMM node check from your browser: /health, server.json, /v0/services and MCP initialize. Pass/fail per check and a README badge. No sign-up, the URL is not stored.">
+<meta property="og:title" content="Check your OpenSMM node online: /health, server.json, /v0/services, /mcp — OpenSMM">
+<meta property="og:description" content="Online OpenSMM node check from your browser: /health, server.json, /v0/services and MCP initialize. Pass/fail per check and a README badge. No sign-up, the URL is not stored.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/check/">
 <meta property="og:image" content="https://opensmm.dev/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="OpenSMM — заказ SMM-услуг для AI-агентов через MCP/REST">
+<meta property="og:image:alt" content="OpenSMM — SMM ordering for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/check/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/check/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/check/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/check/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/check/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/check/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,14 +57,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -75,16 +74,16 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
-      <span>Проверка узла</span>
+      <span>Node check</span>
     </nav>
-    <h1>Проверка узла OpenSMM онлайн</h1>
-    <p class="section-lede">Введите https-адрес вашего узла — страница из браузера выполнит 4 проверки и покажет pass/fail по каждой. Ничего не регистрируется и не сохраняется.</p>
+    <h1>Check your OpenSMM node online</h1>
+    <p class="section-lede">Enter the https address of your node — the page runs 4 checks from your browser and shows pass/fail for each. Nothing is registered or stored.</p>
     <form class="chk-form" id="chk-form" novalidate>
-      <label for="chk-url">URL узла</label>
+      <label for="chk-url">Node URL</label>
       <input id="chk-url" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://node.example.org">
-      <button class="btn" id="chk-btn" type="submit">Проверить узел</button>
+      <button class="btn" id="chk-btn" type="submit">Check node</button>
     </form>
     <p class="chk-msg" id="chk-msg" role="alert"></p>
     <ul class="chk-list" id="chk-list" aria-live="polite"></ul>
@@ -94,23 +93,23 @@
 
 <section class="section">
   <div class="wrap">
-    <h2>CORS: как включить</h2>
-    <p class="section-lede">Если проверка показывает «заблокировано CORS», узел жив, но браузер не получил разрешения. Добавьте на узле заголовок <code>Access-Control-Allow-Origin: https://opensmm.dev</code> (и ответ на preflight <code>OPTIONS</code> для <code>/mcp</code>) либо проверьте узел из терминала:</p>
+    <h2>CORS: how to enable it</h2>
+    <p class="section-lede">If the check says "blocked by CORS", the node is alive but the browser got no permission. Add the header <code>Access-Control-Allow-Origin: https://opensmm.dev</code> on the node (and answer the <code>OPTIONS</code> preflight for <code>/mcp</code>), or check the node from a terminal:</p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
 <pre>npm run verify:node -- https://node.example.org</pre>
     </div>
-    <p class="section-note">Если проверка не прошла, сверьтесь со страницей <a href="/smm-node-troubleshooting/">сбои запуска узла</a> · <a href="/smm-node-registry/">реестр узлов</a>.</p>
+    <p class="section-note">If a check fails, see <a href="/smm-node-troubleshooting/">node startup failures</a> · <a href="/smm-node-registry/">node registry</a>.</p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Что эта проверка не делает</h2>
+    <h2>What this check does not do</h2>
     <ol class="deal-list">
-      <li>Проверка идёт из вашего браузера: узел должен быть доступен по https из интернета и отдавать CORS-заголовки.</li>
-      <li>Бейдж — самоотчёт оператора: реестр OpenSMM его не проверяет и не подтверждает.</li>
-      <li>Заказы не создаются — только чтение и MCP <code>initialize</code>.</li>
+      <li>The check runs from your browser: the node must be reachable over https from the internet and send CORS headers.</li>
+      <li>The badge is operator self-reported: the OpenSMM registry does not verify or confirm it.</li>
+      <li>No orders are created — only reads and MCP <code>initialize</code>.</li>
     </ol>
   </div>
 </section>
@@ -119,12 +118,12 @@
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
       <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>
@@ -134,7 +133,7 @@
 <script src="/script.js" defer></script>
 <script>
 (function(){
-var T={"running": "Проверяю…", "pass_": "pass", "fail": "fail", "cors": "заблокировано CORS", "skip": "—", "http": "Нужен адрес https:// — http:// не принимается: браузер блокирует смешанный контент, а узел для переписи должен быть доступен по TLS.", "bad": "Не похоже на URL. Пример: https://node.example.org", "corsmsg": "Узел отвечает, но браузер заблокировал ответ из-за CORS. Это не «узел недоступен»: включите заголовок Access-Control-Allow-Origin (и preflight OPTIONS для /mcp) или запустите npm run verify:node -- URL из терминала.", "down": "Нет ответа от узла: хост недоступен, таймаут или ошибка TLS.", "status": "Ответ HTTP ", "sj_bad": "server.json невалиден: нужны name, version и список транспортов (remotes, transports или packages).", "sj_json": "server.json не является JSON.", "mcp_bad": "Ответ не похож на JSON-RPC result для initialize.", "hint": "Подсказка: ", "hints": {"health": "GET /health должен отвечать 200.", "sj": "Отдайте /.well-known/mcp/server.json с полями name, version и транспортами.", "svc": "GET /v0/services должен отвечать 200 и JSON.", "mcp": "POST /mcp с JSON-RPC initialize должен отвечать 200."}, "allpass": "Все 4 проверки пройдены.", "somefail": "Не все проверки пройдены.", "badge_h": "Бейдж для README", "badge_t": "Самоотчёт оператора: бейдж не означает проверку реестром OpenSMM. Скопируйте markdown:", "copy": "Копировать", "copied": "Скопировано", "names": {"health": "GET /health → 200", "sj": "GET /.well-known/mcp/server.json валиден", "svc": "GET /v0/services → 200", "mcp": "POST /mcp initialize → 200"}, "trouble": "/smm-node-troubleshooting/", "troubleT": "сбои запуска узла"};
+var T={"running": "Checking…", "pass_": "pass", "fail": "fail", "cors": "blocked by CORS", "skip": "—", "http": "An https:// address is required — http:// is not accepted: browsers block mixed content and a census node must be reachable over TLS.", "bad": "Not a valid URL. Example: https://node.example.org", "corsmsg": "The node responds, but the browser blocked the response because of CORS. This is not \"node unreachable\": enable Access-Control-Allow-Origin (and the OPTIONS preflight for /mcp) or run npm run verify:node -- URL from a terminal.", "down": "No response from the node: host unreachable, timeout or TLS error.", "status": "HTTP response ", "sj_bad": "server.json is invalid: name, version and a transports list (remotes, transports or packages) are required.", "sj_json": "server.json is not JSON.", "mcp_bad": "The response does not look like a JSON-RPC initialize result.", "hint": "Hint: ", "hints": {"health": "GET /health must return 200.", "sj": "Serve /.well-known/mcp/server.json with name, version and transports.", "svc": "GET /v0/services must return 200 with JSON.", "mcp": "POST /mcp with JSON-RPC initialize must return 200."}, "allpass": "All 4 checks passed.", "somefail": "Not all checks passed.", "badge_h": "README badge", "badge_t": "Operator self-report: the badge does not mean the OpenSMM registry verified the node. Copy the markdown:", "copy": "Copy", "copied": "Copied", "names": {"health": "GET /health → 200", "sj": "GET /.well-known/mcp/server.json is valid", "svc": "GET /v0/services → 200", "mcp": "POST /mcp initialize → 200"}, "trouble": "/smm-node-troubleshooting/", "troubleT": "node startup failures"};
 var form=document.getElementById('chk-form'),inp=document.getElementById('chk-url'),msg=document.getElementById('chk-msg'),list=document.getElementById('chk-list'),res=document.getElementById('chk-result'),btn=document.getElementById('chk-btn');
 function goal(n){try{if(window.ym)ym(114382488,'reachGoal',n);}catch(e){}}
 function parse(v){v=(v||'').trim();if(!v)return {e:T.bad};if(/^http:\/\//i.test(v))return {e:T.http};

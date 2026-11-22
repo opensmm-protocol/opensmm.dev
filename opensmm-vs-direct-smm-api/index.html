@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,20 +16,19 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OpenSMM или прямой API SMM-панели: чем отличается заказ</title>
-<meta name="description" content="Чем заказ через узел OpenSMM отличается от прямого API панели: котировка, идемпотентность по clientReference, два статуса, SUBMISSION_UNKNOWN. Когда хватит прямого API.">
-<meta property="og:title" content="OpenSMM или прямой API SMM-панели: чем отличается заказ">
-<meta property="og:description" content="Чем заказ через узел OpenSMM отличается от прямого API панели: котировка, идемпотентность по clientReference, два статуса, SUBMISSION_UNKNOWN. Когда хватит прямого API.">
+<title>OpenSMM vs a direct SMM panel API: how ordering differs</title>
+<meta name="description" content="How ordering through an OpenSMM node differs from a panel’s direct API: quote, clientReference idempotency, two statuses, SUBMISSION_UNKNOWN. When the direct API is enough.">
+<meta property="og:title" content="OpenSMM vs a direct SMM panel API: how ordering differs">
+<meta property="og:description" content="How ordering through an OpenSMM node differs from a panel’s direct API: quote, clientReference idempotency, two statuses, SUBMISSION_UNKNOWN. When the direct API is enough.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/opensmm-vs-direct-smm-api/">
 <meta property="og:image" content="https://opensmm.dev/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="OpenSMM — заказ SMM-услуг для AI-агентов через MCP/REST">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/opensmm-vs-direct-smm-api/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/opensmm-vs-direct-smm-api/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/opensmm-vs-direct-smm-api/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/opensmm-vs-direct-smm-api/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/opensmm-vs-direct-smm-api/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/opensmm-vs-direct-smm-api/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,14 +41,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -59,57 +58,57 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
-      <span>OpenSMM или прямой API</span>
+      <span>OpenSMM vs direct API</span>
     </nav>
-    <h1>OpenSMM или прямой API панели</h1>
+    <h1>OpenSMM vs a direct panel API</h1>
     <p class="section-lede">
-      Агенту можно заказывать услугу напрямую у панели или через узел OpenSMM. Разбираем, что меняется для разработчика агента — по спеке v0, без оценок конкретных панелей.
+      An agent can order a service straight from a panel or through an OpenSMM node. Here is what changes for an agent developer — per the v0 spec, with no ratings of specific panels.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Два разных вопроса</h2>
+    <h2>Two different questions</h2>
     <p class="section-lede">
-      Прямой API панели — это способ <em>одной</em> панели принять заказ: <code>POST {endpoint}</code> с <code>key</code> и <code>action</code> (<code>services</code>, <code>add</code>, <code>status</code> и т. д.), как описано в <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/PROVIDER_ONBOARDING.md">PROVIDER_ONBOARDING.md</a>. OpenSMM — протокол поверх таких панелей: агент говорит с узлом, а узел через адаптер (<code>smm-v2</code>, <code>rest-v1</code>) говорит с панелью.
+      A panel’s direct API is how <em>one</em> panel accepts an order: <code>POST {endpoint}</code> with <code>key</code> and <code>action</code> (<code>services</code>, <code>add</code>, <code>status</code> and so on), as described in <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/PROVIDER_ONBOARDING.md">PROVIDER_ONBOARDING.md</a>. OpenSMM is a protocol on top of such panels: the agent talks to a node, and the node talks to the panel through an adapter (<code>smm-v2</code>, <code>rest-v1</code>).
     </p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>Сравнение</h2>
+    <h2>Side by side</h2>
     <ul class="deal-list">
-      <li><strong>С кем говорит агент.</strong> Прямой API: С конкретной панелью: свой endpoint и свой ключ у каждой. OpenSMM: С узлом OpenSMM: одни команды <code>/v0</code> и MCP-инструменты для любого поставщика.</li>
-      <li><strong>Заказ.</strong> Прямой API: Заказ создаётся вызовом панели. OpenSMM: Сначала котировка (истекает, расходуется один раз), затем заказ по <code>quoteId</code>.</li>
-      <li><strong>Повтор запроса.</strong> Прямой API: Контракт задаёт панель — проверьте у своей. OpenSMM: <code>clientReference</code> / <code>Idempotency-Key</code>: повтор возвращает тот же <code>orderId</code>; иной набор параметров — <code>IDEMPOTENCY_CONFLICT</code>.</li>
-      <li><strong>Статусы.</strong> Прямой API: Формат статуса задаёт панель. OpenSMM: Два отдельных автомата: <code>paymentStatus</code> и <code>executionStatus</code>.</li>
-      <li><strong>Неясный результат отправки.</strong> Прямой API: Решает код вашего агента. OpenSMM: <code>SUBMISSION_UNKNOWN</code>: ждёт сверки, слепых повторов поставщику нет.</li>
-      <li><strong>Транспорт.</strong> Прямой API: HTTP панели. OpenSMM: REST <code>/v0</code> и MCP <code>/mcp</code>: одни и те же объекты.</li>
-      <li><strong>Деньги.</strong> Прямой API: Формат у панели свой. OpenSMM: Десятичные строки на целочисленных микроединицах, не float.</li>
+      <li><strong>Who the agent talks to.</strong> Direct API: One specific panel: its own endpoint and key each. OpenSMM: An OpenSMM node: the same <code>/v0</code> commands and MCP tools for any supplier.</li>
+      <li><strong>Order.</strong> Direct API: An order is a call to the panel. OpenSMM: A quote first (expires, consumed once), then an order by <code>quoteId</code>.</li>
+      <li><strong>Repeating a request.</strong> Direct API: The panel defines the contract — check yours. OpenSMM: <code>clientReference</code> / <code>Idempotency-Key</code>: a replay returns the same <code>orderId</code>; different parameters give <code>IDEMPOTENCY_CONFLICT</code>.</li>
+      <li><strong>Statuses.</strong> Direct API: The panel defines the status format. OpenSMM: Two separate state machines: <code>paymentStatus</code> and <code>executionStatus</code>.</li>
+      <li><strong>Ambiguous submission.</strong> Direct API: Left to your agent’s code. OpenSMM: <code>SUBMISSION_UNKNOWN</code>: waits for reconciliation, no blind retries to the supplier.</li>
+      <li><strong>Transport.</strong> Direct API: The panel’s HTTP. OpenSMM: REST <code>/v0</code> and MCP <code>/mcp</code>: the same objects.</li>
+      <li><strong>Money.</strong> Direct API: Each panel has its own format. OpenSMM: Decimal strings on integer micro-units, never floats.</li>
     </ul>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>Когда хватит прямого API</h2>
+    <h2>When the direct API is enough</h2>
     <ul class="deal-list">
-      <li>Вы работаете с одной панелью и вас устраивает её контракт — узел вам не нужен.</li>
-      <li>Вы строите агента, который должен менять поставщика без переписывания кода, или хотите единую идемпотентность и статусы — берите протокол.</li>
-      <li>Вы владелец панели: подключение — <code>baseUrl</code> + <code>apiKey</code> + профиль, без кода, см. <a href="/connect-smm-panel/">подключить панель</a>.</li>
+      <li>You use one panel and its contract suits you — you do not need a node.</li>
+      <li>You are building an agent that must switch suppliers without rewriting code, or you want uniform idempotency and statuses — use the protocol.</li>
+      <li>You own a panel: connecting is <code>baseUrl</code> + <code>apiKey</code> + a profile, no code, see <a href="/connect-smm-panel/">connect a panel</a>.</li>
     </ul>
     <p class="section-note">
-      Об отличии MCP и REST внутри протокола — <a href="/mcp-vs-rest-smm-orders/">MCP или REST</a>.
+      MCP versus REST inside the protocol is covered in <a href="/mcp-vs-rest-smm-orders/">MCP or REST</a>.
     </p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>Попробовать самому</h2>
+    <h2>Try it yourself</h2>
     <p class="section-lede">
-      Локальный узел и mock-каталог, без ключей и денег. Нужен Node.js ≥ 22.18.
+      A local node and mock catalog, no keys, no money. Node.js ≥ 22.18 is required.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
@@ -120,32 +119,32 @@ npm run gateway
 curl -s http://127.0.0.1:8080/v0/services | head -30</pre>
     </div>
     <p class="section-note">
-      У каждой услуги <code>"synthetic": true</code>. Полный сценарий — <a href="/smm-agent-quickstart/">быстрый старт агента</a>.
+      Every service has <code>"synthetic": true</code>. The full walkthrough is the <a href="/smm-agent-quickstart/">agent quickstart</a>.
     </p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>Честные ограничения</h2>
+    <h2>Honest limits</h2>
     <ol class="deal-list">
-      <li>Страница пересказывает <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; точные версии и конфиги — там.</li>
-      <li>Каталог — mock (<code>synthetic: true</code>): реальных услуг, цен и заказов здесь нет, курс в примерах — тестовый.</li>
-      <li>Сравнение построено на спеке v0 и документации репозитория; поведение конкретной панели у каждой своё, мы его не оцениваем.</li>
-      <li>Протокол — версия 0.1, без SLA.</li>
+      <li>This page summarises <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; exact versions and configs live there.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): there are no real services, prices or orders here, and rates in examples are test values.</li>
+      <li>The comparison rests on the v0 spec and repository docs; each panel behaves in its own way and we do not rate any of them.</li>
+      <li>The protocol is version 0.1, with no SLA.</li>
     </ol>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>Дальше: поднять свой узел</h2>
+    <h2>Next: run your own node</h2>
     <p class="section-lede">
-      Пример идёт на локальном узле. Чтобы вас учли в переписи, поднимите узел и сообщите его адрес.
+      The example runs on a local node. To be counted in the census, start a node and report its address.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/node/">Поднять свой узел</a>
+      <a class="btn" href="/node/">Run your own node</a>
     </div>
     <p class="section-note">
-      Пошаговая инструкция, проверка <code>verify:node</code> и отчёт об узле — на странице <a href="/node/">«Запустить узел»</a>.
+      Step-by-step instructions, the <code>verify:node</code> check and the node report are on the <a href="/node/">“Run a node”</a> page.
     </p>
   </div>
 </section>
@@ -154,12 +153,12 @@ curl -s http://127.0.0.1:8080/v0/services | head -30</pre>
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
-      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>
