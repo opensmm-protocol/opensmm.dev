@@ -154,3 +154,7 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - EN: https://opensmm.dev/en/smm-order-python/ — a REST client on the Python standard library: capabilities, catalog, quote, order, replay; no pip install, on the mock catalog.
 - Заказ SMM-услуги из Node.js-агента: https://opensmm.dev/smm-order-nodejs/ — MCP-клиент без SDK на POST /mcp: initialize, search_services, get_quote, create_order; один clientReference даёт один orderId на любом транспорте.
 - EN: https://opensmm.dev/en/smm-order-nodejs/ — an SDK-free MCP client over POST /mcp: initialize, search_services, get_quote, create_order; one clientReference gives one orderId on any transport.
+- Заказ SMM-услуги из Claude Code: https://opensmm.dev/smm-order-claude-code/ — готового примера под стек нет; рабочий MCP-конфиг из examples/README.md и сценарий из docs/AGENT_QUICKSTART.md, mock-каталог.
+- EN: https://opensmm.dev/en/smm-order-claude-code/ — no ready example for this stack; working MCP config from examples/README.md and the walkthrough in docs/AGENT_QUICKSTART.md, mock catalog.
+- Заказ SMM-услуги из OpenAI Agents SDK: https://opensmm.dev/smm-order-openai-agents/ — готового примера под стек нет; SDK-независимый MCP-клиент examples/mcp-client.mjs и docs/AGENT_QUICKSTART.md, mock-каталог.
+- EN: https://opensmm.dev/en/smm-order-openai-agents/ — no ready example for this stack; the SDK-free examples/mcp-client.mjs and docs/AGENT_QUICKSTART.md, mock catalog.
