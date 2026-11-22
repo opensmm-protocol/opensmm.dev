@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenSMM plugin for ElizaOS agents: search, quote, order on a mock node</title>
+<meta name="description" content="Connect an ElizaOS agent to an OpenSMM node: search_services, get_quote, create_order actions over POST /mcp. Runs in 5 minutes, no keys, no money. Mock catalog; the order stays REQUIRES_PAYMENT.">
+<meta property="og:title" content="OpenSMM plugin for ElizaOS agents: search, quote, order on a mock node">
+<meta property="og:description" content="Connect an ElizaOS agent to an OpenSMM node: search_services, get_quote, create_order actions over POST /mcp. Runs in 5 minutes, no keys, no money. Mock catalog; the order stays REQUIRES_PAYMENT.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/en/integrations/eliza/">
+<meta property="og:image" content="https://opensmm.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenSMM — заказ SMM-услуг для AI-агентов через MCP/REST">
+<link rel="canonical" href="https://opensmm.dev/en/integrations/eliza/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/integrations/eliza/">
+<link rel="alternate" hreflang="ru" href="https://opensmm.dev/integrations/eliza/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/integrations/eliza/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>ElizaOS plugin</span>
+    </nav>
+    <h1>OpenSMM plugin for ElizaOS agents</h1>
+    <p class="section-lede">
+      The plugin gives an ElizaOS agent three actions: <code>search_services</code>, <code>get_quote</code>, <code>create_order</code>. They call an OpenSMM node over <code>POST /mcp</code> (<code>initialize</code>, <code>tools/call</code>). The code is an example in the repository: copy the folder, start a node and run the smoke script. No keys, no money, Node.js ≥ 22.18.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="https://github.com/opensmm-protocol/mcp-server/tree/main/examples/eliza">Open the example on GitHub</a>
+    </div>
+    <p class="section-note">
+      The node's catalog is a mock: every service is marked <code>synthetic</code>, there are no real services or prices. The order stays <code>REQUIRES_PAYMENT</code>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Three steps to run it</h2>
+    <h3>1. Start the node</h3>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci
+PORT=8080 npm run gateway</pre>
+    </div>
+    <p class="section-note">
+      The node prints <code>gateway listening on http://localhost:8080 (...; provider: mock, mock catalog — not real supply)</code> on stderr. Startup fixes: <a href="/en/smm-node-troubleshooting/">node startup failures</a>.
+    </p>
+    <h3>2. Check the chain in a second terminal</h3>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>node examples/eliza/smoke.mjs http://127.0.0.1:8080</pre>
+    </div>
+    <p class="section-note">
+      The script runs search → quote → order → replay with the same <code>clientReference</code>. The replay returns the same <code>orderId</code>, no second order is created, exit code 0.
+    </p>
+    <h3>3. Plug the plugin into your agent</h3>
+    <p class="section-lede">
+      Copy <code>examples/eliza/plugin.mjs</code> into your agent project, register the plugin in the character and point it at <code>http://127.0.0.1:8080/mcp</code>. The ElizaOS version the example targets is pinned in the folder's README: the framework's API changes between versions, so the plugin is kept thin.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>What each action does</h2>
+    <ul class="deal-list">
+      <li><code>search_services</code> — finds a service in the node's catalog; on a mock node every service is <code>synthetic</code>.</li>
+      <li><code>get_quote</code> — requires <code>serviceId</code>, <code>quantity</code>, <code>link</code>.</li>
+      <li><code>create_order</code> — requires <code>quoteId</code>, <code>link</code>, <code>clientReference</code>. One <code>clientReference</code> yields one order on any transport.</li>
+    </ul>
+    <p class="section-note">
+      REST equivalents of the same operations: <code>GET /v0/services</code>, <code>POST /v0/quotes</code>, <code>POST /v0/orders</code>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limits</h2>
+    <ol class="deal-list">
+      <li>The catalog is a mock (<code>synthetic: true</code>): no real services, prices or fulfilment, nothing is paid.</li>
+      <li>The order stays <code>REQUIRES_PAYMENT</code>: the plugin never pays and nothing is executed.</li>
+      <li>This is an example to copy, not a published npm package and not part of the ElizaOS repository. OpenSMM core has no <code>@elizaos/*</code> dependency.</li>
+      <li>Exact options and the ElizaOS version are in the <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/examples/eliza">example README</a>.</li>
+      <li>Other stacks: <a href="/en/smm-agent-quickstart/">agent quickstart</a>, <a href="/en/smm-order-langchain/">LangChain</a>, <a href="/en/smm-order-openai-agents/">OpenAI Agents SDK</a>.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Next: your own node</h2>
+    <p class="section-lede">
+      The example runs on a local node. To be counted in the census, run a node and report its address.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+    <p class="section-note">
+      The step-by-step guide, verification and reporting your node are on the <a href="/node/">“Run a node”</a> page.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>
