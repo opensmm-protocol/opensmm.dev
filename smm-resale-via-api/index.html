@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,16 +16,16 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Перепродажа SMM-услуг через API: гейтвей OpenSMM как касса</title>
-<meta name="description" content="Как перепродавать SMM-услуги через API: гейтвей OpenSMM принимает заказ агента, режим gateway-as-merchant для маржи и возвратов, идемпотентность по clientReference. Факты из spec/v0.">
-<meta property="og:title" content="Перепродажа SMM-услуг через API: гейтвей OpenSMM как касса">
-<meta property="og:description" content="Как перепродавать SMM-услуги через API: гейтвей OpenSMM принимает заказ агента, режим gateway-as-merchant для маржи и возвратов, идемпотентность по clientReference. Факты из spec/v0.">
+<title>Reselling SMM services via an API: the OpenSMM gateway as the cash desk</title>
+<meta name="description" content="How to resell SMM services via an API: the OpenSMM gateway accepts the agent's order, gateway-as-merchant mode handles margin and refunds, clientReference idempotency. Facts from spec/v0.">
+<meta property="og:title" content="Reselling SMM services via an API: the OpenSMM gateway as the cash desk">
+<meta property="og:description" content="How to resell SMM services via an API: the OpenSMM gateway accepts the agent's order, gateway-as-merchant mode handles margin and refunds, clientReference idempotency. Facts from spec/v0.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/smm-resale-via-api/">
 <meta property="og:image" content="https://opensmm.dev/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="OpenSMM — заказ SMM-услуг для AI-агентов через MCP/REST">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/smm-resale-via-api/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,14 +39,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -56,76 +56,76 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
-      <span>Перепродажа через API</span>
+      <span>Resale via API</span>
     </nav>
-    <h1>Перепродажа SMM-услуг через API</h1>
+    <h1>Reselling SMM services via an API</h1>
     <p class="section-lede">
-      Как построить перепродажу SMM-услуг поверх узла OpenSMM: заказ приходит по REST <code>/v0</code> или MCP <code>/mcp</code>, исполняет панель, а повтор одного запроса не создаёт второй заказ.
+      How to build SMM service resale on top of an OpenSMM node: the order arrives over REST <code>/v0</code> or MCP <code>/mcp</code>, a panel fulfils it, and repeating one request never creates a second order.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>1. Две топологии оплаты</h2>
+    <h2>1. Two payment topologies</h2>
     <p class="section-lede">
-      Протокол не привязан к способу расчётов: адрес получателя платежа <code>PaymentRequirement.payTo</code> определяет, кто принимает деньги, и оба варианта считаются OpenSMM.
+      The protocol is not tied to a settlement method: the payee address <code>PaymentRequirement.payTo</code> decides who receives the money, and both variants are valid OpenSMM.
     </p>
     <ul class="deal-list">
-      <li><strong>Прямой расчёт (канонический).</strong> <code>payTo</code> — адрес исполнителя. Агент платит ему напрямую (x402, USDC в сети Base), гейтвей не держит средства и не участвует в транзакции. Маржи у гейтвея в этом режиме нет.</li>
-      <li><strong>Gateway-as-merchant (необязательный режим).</strong> <code>payTo</code> — адрес гейтвея. Нужен, когда источник списывает только предоплаченный баланс (классические API панелей) и оператор гейтвея сам становится продавцом для своих пользователей. Маржа, возвраты и защита покупателя живут в этом режиме, как и регуляторная нагрузка кастоди.</li>
+      <li><strong>Direct settlement (canonical).</strong> <code>payTo</code> is the provider's address. The agent pays the provider directly (x402, USDC on Base); the gateway holds no funds and takes no part in the transaction. The gateway earns no margin in this mode.</li>
+      <li><strong>Gateway-as-merchant (optional mode).</strong> <code>payTo</code> is the gateway's address. It is needed when the supply source only debits a prepaid balance (classic panel APIs) and the gateway operator becomes the seller to its own users. Margin, refunds and buyer protection live in this mode, and so does the regulatory burden of custody.</li>
     </ul>
     <p class="section-note">
-      Режим выбирает оператор самостоятельно, он не включён по умолчанию. Гейтвей не смешивает топологии в одном платёжном намерении: плательщик видит получателя до оплаты. Источник — <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">spec/v0</a>.
+      The operator chooses the mode; it is not enabled by default. The gateway never mixes topologies within one payment intent: the payer sees the payee before paying. Source: <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">spec/v0</a>.
     </p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>2. Один заказ на любой повтор</h2>
+    <h2>2. One order for any retry</h2>
     <p class="section-lede">
-      Для перепродажи важно не списать клиента дважды. Идемпотентность заложена в протокол: <code>Idempotency-Key</code> в REST и <code>clientReference</code> в MCP, повтор возвращает тот же заказ.
+      For resale it matters not to charge a customer twice. Idempotency is built into the protocol: <code>Idempotency-Key</code> in REST and <code>clientReference</code> in MCP; a repeat returns the same order.
     </p>
     <div class="code-block">
       <div class="code-head"><span>flow</span></div>
 <pre>search_services → get_quote → create_order (clientReference)
-повтор с тем же clientReference → тот же orderId</pre>
+repeat with the same clientReference → the same orderId</pre>
     </div>
     <p class="section-note">
-      Котировка обязательна перед заказом и расходуется один раз. Статусы оплаты и исполнения — два отдельных автомата: <code>paymentStatus</code> и <code>executionStatus</code>. Подробнее: <a href="/opensmm-vs-direct-smm-api/">OpenSMM или прямой API панели</a>.
+      A quote is required before an order and is spent once. Payment and execution statuses are two separate state machines: <code>paymentStatus</code> and <code>executionStatus</code>. More: <a href="/opensmm-vs-direct-smm-api/">OpenSMM or a direct panel API</a>.
     </p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>3. Подключить исполнителя</h2>
+    <h2>3. Connect a provider</h2>
     <p class="section-lede">
-      Источник предложения — SMM-панель: узлу нужны <code>baseUrl</code>, <code>apiKey</code> и профиль, без кода. Как это делается — на странице <a href="/connect-smm-panel/">«Подключить SMM-панель к AI-агентам»</a>, профиль — <a href="/smm-provider-profile/">здесь</a>, транспорты и инструменты — <a href="/mcp-for-smm-panels/">MCP для SMM-панелей</a>.
+      The supply source is an SMM panel: the node needs a <code>baseUrl</code>, an <code>apiKey</code> and a profile, no code. How it works: <a href="/connect-smm-panel/">Connect an SMM panel to AI agents</a>; the profile is described <a href="/smm-provider-profile/">here</a>; transports and tools: <a href="/mcp-for-smm-panels/">MCP for SMM panels</a>.
     </p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>Честные ограничения</h2>
+    <h2>Honest limitations</h2>
     <ol class="deal-list">
-      <li>Размер маржи и цены не задаются протоколом и на этой странице не приводятся: это решение оператора гейтвея.</li>
-      <li>Платежи x402 проверяются на USDC Base Sepolia — testnet.</li>
-      <li>Публичный каталог — демонстрация (mock-фикстуры с <code>synthetic: true</code>), пока первая панель не подключена.</li>
-      <li>Пакет npm не опубликован: узел запускается из чекаута репозитория.</li>
+      <li>The protocol does not set margin or prices and this page gives none: that is the gateway operator's decision.</li>
+      <li>x402 payments are tested with USDC on Base Sepolia — testnet.</li>
+      <li>The public catalog is a demo (mock fixtures with <code>synthetic: true</code>) until the first panel is connected.</li>
+      <li>The npm package is not published: the node runs from a repository checkout.</li>
     </ol>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Следующий шаг: поднять свой узел</h2>
+    <h2>Next step: run your own node</h2>
     <p class="section-lede">
-      Узел — один процесс, отдающий REST <code>/v0</code> и MCP <code>/mcp</code> на одном порту.
+      A node is one process serving REST <code>/v0</code> and MCP <code>/mcp</code> on one port.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/node/">Поднять свой узел</a>
+      <a class="btn" href="/node/">Run your own node</a>
     </div>
   </div>
 </section>
@@ -134,12 +134,12 @@
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
-      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>
