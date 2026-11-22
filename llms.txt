@@ -154,3 +154,7 @@ setup: https://github.com/opensmm-protocol/mcp-server/blob/main/docs/DEPLOY.md
 - EN: https://opensmm.dev/en/smm-order-python/ — a REST client on the Python standard library: capabilities, catalog, quote, order, replay; no pip install, on the mock catalog.
 - Заказ SMM-услуги из Node.js-агента: https://opensmm.dev/smm-order-nodejs/ — MCP-клиент без SDK на POST /mcp: initialize, search_services, get_quote, create_order; один clientReference даёт один orderId на любом транспорте.
 - EN: https://opensmm.dev/en/smm-order-nodejs/ — an SDK-free MCP client over POST /mcp: initialize, search_services, get_quote, create_order; one clientReference gives one orderId on any transport.
+- Открытый протокол заказа SMM-услуг: https://opensmm.dev/open-smm-protocol/ — роли gateway/provider/agent, модели Service/Quote/Order, два статуса, идемпотентность по clientReference и команды протокола 0.1.
+- EN: https://opensmm.dev/en/open-smm-protocol/ — the OpenSMM 0.1 protocol: gateway/provider/agent roles, Service/Quote/Order models, two status machines, clientReference idempotency and base commands.
+- MCP для SMM-панелей: https://opensmm.dev/mcp-for-smm-panels/ — MCP как транспорт OpenSMM: диалекты smm-v2 и rest-v1, инструменты и REST-эквиваленты, подключение панели через endpoint и apiKey без кода.
+- EN: https://opensmm.dev/en/mcp-for-smm-panels/ — MCP as an OpenSMM transport for SMM panels: smm-v2/rest-v1 dialects, MCP tools with REST equivalents, zero-code panel connection via endpoint and apiKey.
