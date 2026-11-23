@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,16 +16,19 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Сбои запуска узла OpenSMM: Node.js, порт, права, npm ci, mock-каталог</title>
-<meta name="description" content="Типовые сбои запуска узла OpenSMM из исходников: Node.js старше 22.18, EADDRINUSE, EACCES на файле состояния, npm ci без сети, mock-каталог с synthetic: true. Вывод, причина, проверка, решение.">
-<meta property="og:title" content="Сбои запуска узла OpenSMM: Node.js, порт, права, npm ci, mock-каталог">
-<meta property="og:description" content="Типовые сбои запуска узла OpenSMM из исходников: Node.js старше 22.18, EADDRINUSE, EACCES на файле состояния, npm ci без сети, mock-каталог с synthetic: true. Вывод, причина, проверка, решение.">
+<title>OpenSMM node startup failures: Node.js, port, permissions, npm ci, mock catalog</title>
+<meta name="description" content="Typical startup failures of an OpenSMM node run from source: Node.js older than 22.18, EADDRINUSE, EACCES on the state file, npm ci offline, mock catalog with synthetic: true. Output, cause, check, fix.">
+<meta property="og:title" content="OpenSMM node startup failures: Node.js, port, permissions, npm ci, mock catalog">
+<meta property="og:description" content="Typical startup failures of an OpenSMM node run from source: Node.js older than 22.18, EADDRINUSE, EACCES on the state file, npm ci offline, mock catalog with synthetic: true. Output, cause, check, fix.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/smm-node-troubleshooting/">
+<meta property="og:image" content="https://opensmm.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/smm-node-troubleshooting/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-troubleshooting/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-node-troubleshooting/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-troubleshooting/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/smm-node-troubleshooting/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/smm-node-troubleshooting/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,14 +41,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -55,22 +58,22 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
-      <span>Сбои запуска узла</span>
+      <span>Node startup failures</span>
     </nav>
-    <h1>Сбои запуска узла OpenSMM</h1>
+    <h1>OpenSMM node startup failures</h1>
     <p class="section-lede">
-      Пять типовых сбоев при запуске узла из исходников: что вы увидите, почему так, как проверить и как исправить. Вывод взят из реальных локальных запусков.
+      Five typical failures when running a node from source: what you will see, why it happens, how to check and how to fix it. The output comes from real local runs.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>1. Node.js старше 22.18</h2>
+    <h2>1. Node.js older than 22.18</h2>
     <p class="section-lede">
-      Узел запускает TypeScript напрямую, без компиляции. На старой версии Node.js процесс падает сразу, а <code>npm ci</code> печатает <code>EBADENGINE</code>.
+      The node runs TypeScript directly, with no compile step. On an older Node.js the process crashes at once, and <code>npm ci</code> prints <code>EBADENGINE</code>.
     </p>
     <div class="code-block">
       <div class="code-head"><span>text</span></div>
@@ -78,25 +81,25 @@
     </div>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
-<pre>node -v   # нужно v22.18.0 или выше</pre>
+<pre>node -v   # must be v22.18.0 or higher</pre>
     </div>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
 <pre>nvm install 22.18.0 &amp;&amp; nvm use 22.18.0
-# или с fnm:
+# or with fnm:
 fnm use 22.18.0</pre>
     </div>
     <p class="section-note">
-      Причина: нативное удаление типов TypeScript доступно с Node.js 22.18.
+      Cause: native TypeScript type stripping is available from Node.js 22.18.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>2. Порт занят: EADDRINUSE</h2>
+    <h2>2. Port in use: EADDRINUSE</h2>
     <p class="section-lede">
-      Порт по умолчанию — 8080. Если его держит другой процесс, узел падает с необработанным событием <code>error</code>.
+      The default port is 8080. If another process holds it, the node crashes with an unhandled <code>error</code> event.
     </p>
     <div class="code-block">
       <div class="code-head"><span>text</span></div>
@@ -105,25 +108,25 @@ fnm use 22.18.0</pre>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
 <pre>lsof -i :8080
-# или:
+# or:
 ss -tulpn | grep 8080</pre>
     </div>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
-<pre>PORT=8081 npm run gateway          # другой порт
-node bin/opensmm.mjs gateway --port 0   # свободный порт выберет ОС</pre>
+<pre>PORT=8081 npm run gateway               # another port
+node bin/opensmm.mjs gateway --port 0   # the OS picks a free port</pre>
     </div>
     <p class="section-note">
-      Остановить занявший порт процесс можно так: <code>kill $(lsof -t -i :8080)</code>. С <code>--port 0</code> узел напечатает выбранный порт в stderr.
+      To stop the process holding the port: <code>kill $(lsof -t -i :8080)</code>. With <code>--port 0</code> the node prints the chosen port on stderr.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>3. Права на файл состояния: EACCES</h2>
+    <h2>3. State file permissions: EACCES</h2>
     <p class="section-lede">
-      Если <code>OPENSMM_STATE_FILE</code> (или <code>--state</code>) указывает туда, куда нельзя писать, сохранение снимка падает. Если у файла нет прав на чтение, узел молча стартует с пустым состоянием и не восстанавливает заказы, метрики и узлы.
+      If <code>OPENSMM_STATE_FILE</code> (or <code>--state</code>) points somewhere you cannot write, saving the snapshot fails. If the file is not readable, the node silently starts with empty state and does not restore orders, metrics and registered nodes.
     </p>
     <div class="code-block">
       <div class="code-head"><span>text</span></div>
@@ -141,16 +144,16 @@ chmod 600 "$OPENSMM_STATE_FILE"
 chown $(id -u):$(id -g) "$OPENSMM_STATE_FILE"</pre>
     </div>
     <p class="section-note">
-      Обычная причина: файл или каталог принадлежит root после прошлого запуска в Docker. Снимок содержит учётные данные провайдера и пишется с правами <code>0600</code>.
+      The usual cause is a file or directory owned by root after an earlier Docker run. The snapshot holds provider credentials and is written with mode <code>0600</code>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>4. npm ci без сети</h2>
+    <h2>4. npm ci without a network</h2>
     <p class="section-lede">
-      <code>npm ci</code> скачивает пакеты из <code>package-lock.json</code>. Без доступа к реестру установка не пройдёт.
+      <code>npm ci</code> downloads the packages from <code>package-lock.json</code>. Without access to the registry the install cannot finish.
     </p>
     <div class="code-block">
       <div class="code-head"><span>text</span></div>
@@ -167,19 +170,19 @@ npm config get https-proxy</pre>
     </div>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
-<pre>npm ci --prefer-offline   # если пакеты заранее лежат в ~/.npm</pre>
+<pre>npm ci --prefer-offline   # if the packages are already in ~/.npm</pre>
     </div>
     <p class="section-note">
-      В изолированной среде заранее прогрейте кэш на машине с интернетом. В Docker проверьте, что у контекста сборки есть доступ в сеть или локальное зеркало.
+      In an isolated environment, warm the cache beforehand on a machine with internet access. In Docker, make sure the build context has network access or a local mirror.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>5. Каталог пустой или целиком synthetic</h2>
+    <h2>5. Empty or fully synthetic catalog</h2>
     <p class="section-lede">
-      Если не заданы обе переменные <code>OPENSMM_REST_V1_BASE_URL</code> и <code>OPENSMM_REST_V1_API_KEY</code>, узел работает на встроенном mock-каталоге: все услуги с <code>"synthetic": true</code>, провайдер <code>provider-alpha</code>, а фильтр по платформе вне набора (например <code>?platform=twitter</code>) возвращает <code>{"services":[]}</code>. Заказы по mock-услугам живут только в памяти и никуда не отправляются.
+      Unless both <code>OPENSMM_REST_V1_BASE_URL</code> and <code>OPENSMM_REST_V1_API_KEY</code> are set, the node runs on the built-in mock catalog: every service has <code>"synthetic": true</code>, the provider is <code>provider-alpha</code>, and a platform filter outside the set (for example <code>?platform=twitter</code>) returns <code>{"services":[]}</code>. Orders on mock services live in memory only and are never sent anywhere.
     </p>
     <div class="code-block">
       <div class="code-head"><span>stderr</span></div>
@@ -197,33 +200,33 @@ export OPENSMM_REST_V1_API_KEY="your-api-key"
 npm run gateway</pre>
     </div>
     <p class="section-note">
-      Для панелей SMM API v2 сначала запустите диагностику: <code>OPENSMM_PANEL_KEY="YOUR_KEY" npm run doctor -- --url https://panel.example/api/v2</code>. Ключ берётся из переменной окружения и не попадает в argv. Подробнее — <a href="/smm-panel-doctor-check/">проверка панели и узла: doctor</a>.
+      For SMM API v2 panels, run the diagnostic first: <code>OPENSMM_PANEL_KEY="YOUR_KEY" npm run doctor -- --url https://panel.example/api/v2</code>. The key comes from the environment and stays out of argv. More: <a href="/smm-panel-doctor-check/">SMM panel and node check: doctor</a>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Честные ограничения</h2>
+    <h2>Honest limits</h2>
     <ol class="deal-list">
-      <li>Страница пересказывает <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/TROUBLESHOOTING.md">docs/TROUBLESHOOTING.md</a> репозитория mcp-server; полный текст и вывод — там.</li>
-      <li>Mock-каталог — это фикстуры (<code>synthetic: true</code>), а не реальное предложение: живой провайдер подключается отдельным шагом.</li>
-      <li>Пакет npm и публичный образ не опубликованы: узел собирается из чекаута репозитория.</li>
+      <li>This page retells <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/docs/TROUBLESHOOTING.md">docs/TROUBLESHOOTING.md</a> from the mcp-server repository; the full text and output are there.</li>
+      <li>The mock catalog is fixtures (<code>synthetic: true</code>), not real supply: a live provider is a separate step.</li>
+      <li>The npm package and a public image are not published: the node is built from a repository checkout.</li>
     </ol>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Узел запущен — поднять его до конца</h2>
+    <h2>Node is up — take it all the way</h2>
     <p class="section-lede">
-      Если узел стартовал, пройдите пошаговую инструкцию: проверка, перепись и отчёт об узле.
+      Once the node starts, follow the step-by-step guide: verification, census and reporting your node.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/node/">Поднять свой узел</a>
+      <a class="btn" href="/node/">Run your own node</a>
     </div>
     <p class="section-note">
-      Пошаговая инструкция — на странице <a href="/node/">«Запустить узел»</a>; развёртывание в Docker и за прокси — в <a href="/smm-node-deploy-guide/">руководстве по развёртыванию</a>.
+      The step-by-step guide is on the <a href="/node/">“Run a node”</a> page; Docker and proxy setup is in the <a href="/smm-node-deploy-guide/">deployment guide</a>.
     </p>
   </div>
 </section>
@@ -232,12 +235,12 @@ npm run gateway</pre>
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
-      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>

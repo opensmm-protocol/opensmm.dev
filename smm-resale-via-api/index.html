@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reselling SMM services via an API: the OpenSMM gateway as the cash desk</title>
+<meta name="description" content="How to resell SMM services via an API: the OpenSMM gateway accepts the agent's order, gateway-as-merchant mode handles margin and refunds, clientReference idempotency. Facts from spec/v0.">
+<meta property="og:title" content="Reselling SMM services via an API: the OpenSMM gateway as the cash desk">
+<meta property="og:description" content="How to resell SMM services via an API: the OpenSMM gateway accepts the agent's order, gateway-as-merchant mode handles margin and refunds, clientReference idempotency. Facts from spec/v0.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/smm-resale-via-api/">
+<meta property="og:image" content="https://opensmm.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
+<link rel="canonical" href="https://opensmm.dev/smm-resale-via-api/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>Resale via API</span>
+    </nav>
+    <h1>Reselling SMM services via an API</h1>
+    <p class="section-lede">
+      How to build SMM service resale on top of an OpenSMM node: the order arrives over REST <code>/v0</code> or MCP <code>/mcp</code>, a panel fulfils it, and repeating one request never creates a second order.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. Two payment topologies</h2>
+    <p class="section-lede">
+      The protocol is not tied to a settlement method: the payee address <code>PaymentRequirement.payTo</code> decides who receives the money, and both variants are valid OpenSMM.
+    </p>
+    <ul class="deal-list">
+      <li><strong>Direct settlement (canonical).</strong> <code>payTo</code> is the provider's address. The agent pays the provider directly (x402, USDC on Base); the gateway holds no funds and takes no part in the transaction. The gateway earns no margin in this mode.</li>
+      <li><strong>Gateway-as-merchant (optional mode).</strong> <code>payTo</code> is the gateway's address. It is needed when the supply source only debits a prepaid balance (classic panel APIs) and the gateway operator becomes the seller to its own users. Margin, refunds and buyer protection live in this mode, and so does the regulatory burden of custody.</li>
+    </ul>
+    <p class="section-note">
+      The operator chooses the mode; it is not enabled by default. The gateway never mixes topologies within one payment intent: the payer sees the payee before paying. Source: <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">spec/v0</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>2. One order for any retry</h2>
+    <p class="section-lede">
+      For resale it matters not to charge a customer twice. Idempotency is built into the protocol: <code>Idempotency-Key</code> in REST and <code>clientReference</code> in MCP; a repeat returns the same order.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>flow</span></div>
+<pre>search_services → get_quote → create_order (clientReference)
+repeat with the same clientReference → the same orderId</pre>
+    </div>
+    <p class="section-note">
+      A quote is required before an order and is spent once. Payment and execution statuses are two separate state machines: <code>paymentStatus</code> and <code>executionStatus</code>. More: <a href="/opensmm-vs-direct-smm-api/">OpenSMM or a direct panel API</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>3. Connect a provider</h2>
+    <p class="section-lede">
+      The supply source is an SMM panel: the node needs a <code>baseUrl</code>, an <code>apiKey</code> and a profile, no code. How it works: <a href="/connect-smm-panel/">Connect an SMM panel to AI agents</a>; the profile is described <a href="/smm-provider-profile/">here</a>; transports and tools: <a href="/mcp-for-smm-panels/">MCP for SMM panels</a>.
+    </p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limitations</h2>
+    <ol class="deal-list">
+      <li>The protocol does not set margin or prices and this page gives none: that is the gateway operator's decision.</li>
+      <li>x402 payments are tested with USDC on Base Sepolia — testnet.</li>
+      <li>The public catalog is a demo (mock fixtures with <code>synthetic: true</code>) until the first panel is connected.</li>
+      <li>The npm package is not published: the node runs from a repository checkout.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Next step: run your own node</h2>
+    <p class="section-lede">
+      A node is one process serving REST <code>/v0</code> and MCP <code>/mcp</code> on one port.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>

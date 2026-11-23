@@ -22,6 +22,10 @@
 <meta property="og:description" content="Provider-neutral order protocol: search, quote, direct USDC settlement on Base (tested on Base Sepolia testnet), measured provider quality. MCP tools or plain HTTP.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/">
+<meta property="og:image" content="https://opensmm.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/">
 <script type="application/ld+json">
 {
@@ -266,6 +270,10 @@ npm run gateway</pre>
         <p>Runnable script: catalog → quote → order → idempotent replay.</p>
       </div>
       <div class="tool">
+        <code><a href="/integrations/eliza/">ElizaOS</a></code>
+        <p>Plugin with search, quote and order actions over <code>POST /mcp</code>; step-by-step guide.</p>
+      </div>
+      <div class="tool">
         <code><a href="https://github.com/opensmm-protocol/mcp-server/tree/develop/examples/n8n" data-node-cta>n8n</a></code>
         <p>Importable workflow: quote → order → poll over HTTP.</p>
       </div>
@@ -302,7 +310,7 @@ npm run gateway</pre>
       <a href="/node/">node setup guide</a>.
     </p>
     <p class="section-note">
-      Подробнее: <a href="/connect-smm-panel/">подключить SMM-панель к AI-агентам</a>, <a href="/order-smm-via-ai-agent/">заказ SMM-услуг через ИИ-агента</a>, <a href="/smm-api-mcp/">SMM API для MCP</a>.
+      More: <a href="/connect-smm-panel/">connect an SMM panel to AI agents</a>, <a href="/order-smm-via-ai-agent/">ordering SMM services through an AI agent</a>, <a href="/smm-api-mcp/">SMM API for MCP</a>.
     </p>
   </div>
 </section>

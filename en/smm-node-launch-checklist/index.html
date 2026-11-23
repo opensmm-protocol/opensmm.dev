@@ -21,11 +21,14 @@
 <meta property="og:title" content="OpenSMM node launch checklist: from git clone to a node report">
 <meta property="og:description" content="OpenSMM node launch checklist: Node.js ≥ 22.18, start from source, verify:node check, public URL, payout address, node report for the census. No keys, mock catalog.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://opensmm.dev/en/smm-node-launch-checklist/">
-<link rel="canonical" href="https://opensmm.dev/en/smm-node-launch-checklist/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-node-launch-checklist/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-node-launch-checklist/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-node-launch-checklist/">
+<meta property="og:url" content="https://opensmm.dev/smm-node-launch-checklist/">
+<meta property="og:image" content="https://opensmm.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
+<link rel="canonical" href="https://opensmm.dev/smm-node-launch-checklist/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/smm-node-launch-checklist/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/smm-node-launch-checklist/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -185,6 +188,18 @@ npm run verify:node -- http://127.0.0.1:8080</pre>
     <p class="section-note">
       The step-by-step guide, node verification and reporting your node live on the <a href="/node/">“Run a node”</a> page.
     </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Check your node online</h2>
+    <p class="section-lede">
+      Enter the https address of your node — the page checks <code>/health</code>, <code>server.json</code>, <code>/v0/services</code> and MCP <code>initialize</code> from your browser.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/en/check/">Check node</a>
+    </div>
   </div>
 </section>
 

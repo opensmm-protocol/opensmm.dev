@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open SMM protocol for ordering social growth services by AI agents</title>
+<meta name="description" content="What the OpenSMM 0.1 open protocol is: gateway, provider and agent roles, Service/Quote/Order models, two status machines, clientReference idempotency and the base commands. Facts from spec/v0.">
+<meta property="og:title" content="Open SMM protocol for ordering social growth services by AI agents">
+<meta property="og:description" content="Gateway, provider and agent roles, Service/Quote/Order models, two status machines, clientReference idempotency and base commands of OpenSMM 0.1 — from spec/v0.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/open-smm-protocol/">
+<meta property="og:image" content="https://opensmm.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
+<link rel="canonical" href="https://opensmm.dev/open-smm-protocol/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/open-smm-protocol/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/open-smm-protocol/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>Open protocol</span>
+    </nav>
+    <h1>The open protocol for ordering SMM services</h1>
+    <p class="section-lede">
+      OpenSMM is a domain protocol for ordering and executing social-growth services by AI agents. Version 0.1.0, URL prefix <code>/v0</code>, MIT license. REST is the canonical HTTP binding; MCP is one inbound adapter. The same operation over both transports produces the same domain objects.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. Who takes part</h2>
+    <ul class="deal-list">
+      <li><strong>Gateway</strong> — the server agents talk to. It owns the catalog, quotes, prices, payments, idempotency, policy and refunds.</li>
+      <li><strong>Provider</strong> — the execution supplier behind the Provider SPI. It knows nothing about MCP, x402 or <code>clientReference</code>.</li>
+      <li><strong>Agent</strong> — the buyer. This version assumes a mock payment rail for local development.</li>
+    </ul>
+    <p class="section-note">
+      The protocol is settlement-agnostic: <code>payTo</code> picks the topology. The canonical one is direct payment from agent to provider (x402, USDC on Base); money never transits a routing-only gateway. x402 payment is tested on the Base Sepolia testnet only; mainnet USDC is not enabled.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>2. Models, not a single “status”</h2>
+    <ul class="deal-list">
+      <li><strong>Service</strong> — a curated SKU; <code>serviceId</code> stays stable when the underlying provider changes. Price is a <code>Money</code> object with a decimal string, never a float.</li>
+      <li><strong>Quote</strong> — a priced, expiring offer; mandatory before ordering, binding service, quantity, link and amount.</li>
+      <li><strong>Order</strong> — the purchased execution with two independent statuses: <code>paymentStatus</code> and <code>executionStatus</code>.</li>
+      <li><strong>PaymentIntent</strong> — the payment for an order, separated from Order so new rails do not change the lifecycle.</li>
+      <li><strong>Capabilities</strong> — what a gateway supports: version, commands, payment methods, <code>catalogVersion</code>.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>3. Two statuses instead of one</h2>
+    <p class="section-lede">
+      <code>paymentStatus</code>: <code>REQUIRES_PAYMENT → VERIFYING → SETTLED</code> (then <code>REFUNDING/REFUNDED</code> for refunds). <code>SETTLEMENT_PENDING</code> is not an error and not a reason to pay again.
+    </p>
+    <p class="section-lede">
+      <code>executionStatus</code>: <code>NOT_STARTED → SUBMITTING → PENDING → IN_PROGRESS → COMPLETED</code>. An ambiguous provider result becomes <code>SUBMISSION_UNKNOWN</code>; there is no blind resubmission.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>4. Idempotency at the protocol level</h2>
+    <p class="section-lede">
+      The <code>Idempotency-Key</code> header (REST) or the <code>clientReference</code> field (MCP). Repeating the same key with the same payload returns the original order — no second charge, no second execution. The same key with different parameters returns <code>IDEMPOTENCY_CONFLICT</code>.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>rule</span></div>
+<pre>one clientReference → one orderId on any transport</pre>
+    </div>
+    <p class="section-note">
+      Provider APIs (SMM API v2) have no idempotency: after an ambiguous <code>add</code> result the order goes to <code>SUBMISSION_UNKNOWN</code> and is reconciled manually.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>5. Protocol commands</h2>
+    <div class="code-block">
+      <div class="code-head"><span>REST / MCP</span></div>
+<pre>getCapabilities      GET  /v0/capabilities        get_capabilities
+searchServices       GET  /v0/services             search_services
+getService           GET  /v0/services/{id}        get_service
+getQuote             POST /v0/quotes               get_quote
+createOrder          POST /v0/orders               create_order
+getOrder             GET  /v0/orders/{id}          get_order_status
+cancelOrder          POST /v0/orders/{id}/cancel   cancel_order      — optional
+requestRefill        POST /v0/orders/{id}/refill   request_refill    — optional
+listProviders        GET  /v0/providers            list_providers
+registerProvider     POST /v0/providers            register_provider — optional</pre>
+    </div>
+    <p class="section-note">
+      Seven of ten are mandatory. Out of scope for 0.1: campaigns, subscriptions, mass orders, bargaining, auto-orders, account farms and A2A. For how MCP relates to REST see <a href="/mcp-for-smm-panels/">MCP for SMM panels</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limits</h2>
+    <ol class="deal-list">
+      <li>This page retells <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">spec/v0</a> and <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; exact schemas and statuses are there.</li>
+      <li>The site and local node catalogs are mock (<code>synthetic: true</code>): no real services, prices or orders here, and the rates in examples are test ones.</li>
+      <li>Breaking changes are allowed without notice until <code>/v1</code>; there is no SLA in 0.1.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Next: run your own node</h2>
+    <p class="section-lede">
+      The protocol comes alive on a node. Start a local node, walk the “catalog → quote → order → replay” path from the guide and report your node's address.
+    </p>
+    <p class="section-note">
+      Step-by-step guide: <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; setup and verification are on the <a href="/node/">“Run a node”</a> page.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>

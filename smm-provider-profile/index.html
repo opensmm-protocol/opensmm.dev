@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,16 +16,19 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Профиль подключения SMM-панели: baseUrl, apiKey, профиль — OpenSMM</title>
-<meta name="description" content="Профиль подключения SMM-панели к узлу OpenSMM: baseUrl, apiKey, профиль поведения и payoutAddress. Доктор проверяет API панели на чтение и предлагает готовый профиль — без кода.">
-<meta property="og:title" content="Профиль подключения SMM-панели: baseUrl, apiKey, профиль — OpenSMM">
-<meta property="og:description" content="Профиль подключения SMM-панели к узлу OpenSMM: baseUrl, apiKey, профиль поведения и payoutAddress. Доктор проверяет API панели на чтение и предлагает готовый профиль — без кода.">
+<title>SMM panel connection profile: baseUrl, apiKey, profile — OpenSMM</title>
+<meta name="description" content="The connection profile for an SMM panel on an OpenSMM node: baseUrl, apiKey, behavior profile and payoutAddress. The doctor checks your panel API read-only and suggests a ready profile — no code.">
+<meta property="og:title" content="SMM panel connection profile: baseUrl, apiKey, profile — OpenSMM">
+<meta property="og:description" content="The connection profile for an SMM panel on an OpenSMM node: baseUrl, apiKey, behavior profile and payoutAddress. The doctor checks your panel API read-only and suggests a ready profile — no code.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/smm-provider-profile/">
+<meta property="og:image" content="https://opensmm.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/smm-provider-profile/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-provider-profile/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-provider-profile/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-provider-profile/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/smm-provider-profile/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/smm-provider-profile/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,14 +41,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -55,49 +58,49 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
-      <span>Профиль подключения</span>
+      <span>Connection profile</span>
     </nav>
-    <h1>Профиль подключения SMM-панели</h1>
+    <h1>SMM panel connection profile</h1>
     <p class="section-lede">
-      Профиль — это данные, которыми узел OpenSMM описывает вашу панель: <code>baseUrl</code>, <code>apiKey</code>, профиль поведения и адрес выплат. Код интеграции писать не нужно.
+      A profile is the data an OpenSMM node uses to describe your panel: <code>baseUrl</code>, <code>apiKey</code>, a behavior profile and a payout address. You write no integration code.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Из чего состоит профиль</h2>
+    <h2>What a profile contains</h2>
     <ul class="deal-list">
-      <li><strong>adapter</strong> — диалект API панели: <code>smm-v2</code> (классический <code>key</code> + <code>action</code>) или <code>rest-v1</code> (<code>GET /services</code>, <code>POST /orders</code>, Bearer-авторизация).</li>
-      <li><strong>endpoint / baseUrl</strong> — публичный <code>https://</code>-URL API панели (защита от SSRF, spec/v0 §10.2).</li>
-      <li><strong>apiKey</strong> — ключ панели. Используется только для вызовов вашего API, не возвращается протоколом, не логируется и не показывается в списках.</li>
-      <li><strong>profile</strong> (только <code>smm-v2</code>) — чем API панели отличается от классической формы: поле авторизации, конверт ответа, псевдонимы полей.</li>
-      <li><strong>payoutAddress</strong> — адрес USDC на Base для прямых выплат (необязателен, но рекомендован).</li>
+      <li><strong>adapter</strong> — your panel API dialect: <code>smm-v2</code> (classic <code>key</code> + <code>action</code>) or <code>rest-v1</code> (<code>GET /services</code>, <code>POST /orders</code>, Bearer auth).</li>
+      <li><strong>endpoint / baseUrl</strong> — the public <code>https://</code> URL of your panel API (SSRF guard, spec/v0 §10.2).</li>
+      <li><strong>apiKey</strong> — your panel key. It is used only to call your API; it is never returned by the protocol, never logged, never shown in listings.</li>
+      <li><strong>profile</strong> (<code>smm-v2</code> only) — how your panel API differs from the classic shape: auth field, response envelope, field aliases.</li>
+      <li><strong>payoutAddress</strong> — a USDC address on Base for direct payouts (optional but recommended).</li>
     </ul>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Как получить профиль</h2>
+    <h2>How to get the profile</h2>
     <p class="section-lede">
-      Доктор — проверка только на чтение: HTTPS и JSON против HTML/Cloudflare, <code>action=balance</code>, <code>action=services</code>, конверт и псевдонимы полей. Ничего не регистрируется, ключ не печатается. В отчёте — предложенное имя профиля и готовый сниппет подключения.
+      The doctor is a read-only check: HTTPS and JSON vs HTML/Cloudflare, <code>action=balance</code>, <code>action=services</code>, envelope and field aliases. Nothing is registered and the key is never printed. The report names a suggested profile and a ready connection snippet.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
 <pre>OPENSMM_PANEL_KEY="&lt;panel api key&gt;" npm run doctor -- --url https://your-panel.example/api/v2</pre>
     </div>
     <p class="section-note">
-      Код выхода <code>0</code> — все проверки прошли, <code>1</code> — отчёт называет проваленную проверку. Доктор говорит только на <code>smm-v2</code>; для <code>rest-v1</code> аналогичная проверка — healthcheck гейтвея при регистрации.
+      Exit code <code>0</code> — every check passed; <code>1</code> — the report names the failed check. The doctor speaks <code>smm-v2</code> only; for <code>rest-v1</code> the equivalent check is the gateway healthcheck at registration.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Зарегистрировать панель</h2>
+    <h2>Register the panel</h2>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
 <pre>curl -X POST http://localhost:8080/v0/providers \
@@ -111,34 +114,34 @@
   }'</pre>
     </div>
     <p class="section-note">
-      Повторная регистрация того же <code>endpoint</code> идемпотентна — вы получите тот же <code>providerKey</code>. Готовый шаблон с плейсхолдерами для <code>rest-v1</code>: <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/examples/provider-profile.example.json">examples/provider-profile.example.json</a>. Заполненный файл — секрет: держите его вне git и чатов.
+      Re-registering the same <code>endpoint</code> is idempotent — you get the same <code>providerKey</code>. A ready placeholder template for <code>rest-v1</code>: <a href="https://github.com/opensmm-protocol/mcp-server/blob/main/examples/provider-profile.example.json">examples/provider-profile.example.json</a>. A filled file is a secret — keep it out of git and chats.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Честные ограничения</h2>
+    <h2>Honest limitations</h2>
     <ol class="deal-list">
-      <li>Пакет npm ещё не опубликован: установка из чекаута репозитория.</li>
-      <li>Узел вы запускаете и обслуживаете сами; у него нет своего TLS и аутентификации — см. docs/DEPLOY.md.</li>
-      <li>Платежи x402 проверяются на USDC Base Sepolia — testnet.</li>
-      <li>Публичный каталог — демонстрация (mock-фикстуры с <code>synthetic: true</code>), пока первая панель не подключена.</li>
+      <li>The npm package is not published yet: install from the repository checkout.</li>
+      <li>You run and maintain the node yourself; it has no built-in TLS or authentication — see docs/DEPLOY.md.</li>
+      <li>x402 payments are validated on USDC Base Sepolia — testnet.</li>
+      <li>The public catalog is a demo (mock fixtures with <code>synthetic: true</code>) until the first panel connects.</li>
     </ol>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Последний шаг: поднять свой узел</h2>
+    <h2>The last step: run your own node</h2>
     <p class="section-lede">
-      Узел — один процесс, отдающий REST <code>/v0</code> и MCP <code>/mcp</code> на одном порту. Нужен Node.js ≥ 22.18.
+      The node is a single process serving REST <code>/v0</code> and MCP <code>/mcp</code> on one port. You need Node.js ≥ 22.18.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/node/">Поднять свой узел</a>
+      <a class="btn" href="/node/">Run your own node</a>
     </div>
     <p class="section-note">
-      Пошаговая инструкция, проверка узла и отчёт о нём — на странице <a href="/node/">«Запустить узел»</a>.
+      The step-by-step guide, node verification and reporting your node live on the <a href="/node/">“Run a node”</a> page.
     </p>
   </div>
 </section>
@@ -147,12 +150,12 @@
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
-      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>

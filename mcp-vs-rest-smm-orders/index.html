@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,16 +16,19 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MCP или REST для заказа SMM-услуг: один clientReference — один orderId — OpenSMM</title>
-<meta name="description" content="Заказ SMM-услуг через MCP и через REST /v0 в протоколе OpenSMM даёт одни и те же объекты: один clientReference → один orderId на любом транспорте, повтор возвращает тот же заказ.">
-<meta property="og:title" content="MCP или REST для заказа SMM-услуг: один clientReference — один orderId — OpenSMM">
-<meta property="og:description" content="Заказ SMM-услуг через MCP и через REST /v0 в протоколе OpenSMM даёт одни и те же объекты: один clientReference → один orderId на любом транспорте, повтор возвращает тот же заказ.">
+<title>MCP vs REST for ordering SMM services: one clientReference, one orderId — OpenSMM</title>
+<meta name="description" content="Ordering SMM services over MCP or REST /v0 in the OpenSMM protocol yields the same objects: one clientReference maps to one orderId on any transport, and a replay returns the same order.">
+<meta property="og:title" content="MCP vs REST for ordering SMM services: one clientReference, one orderId — OpenSMM">
+<meta property="og:description" content="Ordering SMM services over MCP or REST /v0 in the OpenSMM protocol yields the same objects: one clientReference maps to one orderId on any transport, and a replay returns the same order.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/mcp-vs-rest-smm-orders/">
+<meta property="og:image" content="https://opensmm.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/mcp-vs-rest-smm-orders/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/mcp-vs-rest-smm-orders/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/mcp-vs-rest-smm-orders/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/mcp-vs-rest-smm-orders/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/mcp-vs-rest-smm-orders/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/mcp-vs-rest-smm-orders/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,14 +41,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -55,22 +58,22 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
-      <span>MCP или REST</span>
+      <span>MCP vs REST</span>
     </nav>
-    <h1>MCP или REST: заказ SMM-услуг</h1>
+    <h1>MCP vs REST: ordering SMM services</h1>
     <p class="section-lede">
-      MCP — один из транспортов протокола OpenSMM, REST <code>/v0</code> — канонический HTTP-биндинг. Одна и та же операция через оба даёт одни и те же доменные объекты.
+      MCP is one transport of the OpenSMM protocol; REST <code>/v0</code> is the canonical HTTP binding. The same operation through either produces the same domain objects.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Одно правило</h2>
+    <h2>The one rule</h2>
     <p class="section-lede">
-      <strong>Один clientReference → один orderId на любом транспорте.</strong> REST передаёт заголовок <code>Idempotency-Key</code>, MCP — поле <code>clientReference</code>. Повтор возвращает тот же заказ; тот же ключ с другими параметрами — <code>IDEMPOTENCY_CONFLICT</code>.
+      <strong>One clientReference → one orderId on any transport.</strong> REST carries the <code>Idempotency-Key</code> header, MCP the <code>clientReference</code> field. A replay returns the same order; the same key with different parameters returns <code>IDEMPOTENCY_CONFLICT</code>.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
@@ -86,7 +89,7 @@ create_order({"quoteId":"&lt;quoteId&gt;","link":"https://t.me/example_channel",
 
 <section class="section">
   <div class="wrap">
-    <h2>Соответствие команд</h2>
+    <h2>Command mapping</h2>
     <ul class="deal-list">
       <li>searchServices — <code>GET /v0/services</code> / <code>search_services</code></li>
       <li>getQuote — <code>POST /v0/quotes</code> / <code>get_quote</code></li>
@@ -96,57 +99,57 @@ create_order({"quoteId":"&lt;quoteId&gt;","link":"https://t.me/example_channel",
       <li>requestRefill — <code>POST /v0/orders/{id}/refill</code> / <code>request_refill</code></li>
     </ul>
     <p class="section-note">
-      Полный список из десяти команд — в <a href="/smm-api-mcp/">SMM API для MCP</a>.
+      The full list of ten commands is in <a href="/smm-api-mcp/">SMM API for MCP</a>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Что выбрать</h2>
+    <h2>Which to pick</h2>
     <ul class="deal-list">
-      <li>Агент в Claude Desktop, Cursor, LangChain или n8n — MCP: узел отдаёт <code>/mcp</code> (Streamable HTTP, заголовок <code>accept: application/json, text/event-stream</code>).</li>
-      <li>Скрипт, бэкенд или cron — REST <code>/v0</code>: <code>curl</code> и обычный HTTP-клиент.</li>
-      <li>Смешивать можно: заказ, созданный по одному транспорту, виден и опрашивается по другому.</li>
+      <li>An agent in Claude Desktop, Cursor, LangChain or n8n — MCP: the node serves <code>/mcp</code> (Streamable HTTP, send <code>accept: application/json, text/event-stream</code>).</li>
+      <li>A script, backend or cron job — REST <code>/v0</code>: <code>curl</code> or any HTTP client.</li>
+      <li>You can mix them: an order created over one transport is visible and pollable over the other.</li>
     </ul>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Что одинаково на обоих транспортах</h2>
+    <h2>What is identical on both</h2>
     <ul class="deal-list">
-      <li>Котировка обязательна перед заказом и расходуется ровно один раз.</li>
-      <li><code>paymentStatus</code> и <code>executionStatus</code> — два отдельных автомата состояний.</li>
-      <li>Создание заказа отвечает HTTP 402 с требованиями оплаты — это ожидаемо, а не ошибка.</li>
-      <li>Деньги — десятичные строки на целочисленных микроединицах, не float.</li>
-      <li>Неоднозначная отправка становится <code>SUBMISSION_UNKNOWN</code> и ждёт сверки — слепых повторов провайдеру нет.</li>
+      <li>A quote is mandatory before ordering and is consumed exactly once.</li>
+      <li><code>paymentStatus</code> and <code>executionStatus</code> are two separate state machines.</li>
+      <li>Creating an order answers HTTP 402 with payment requirements — expected, not a failure.</li>
+      <li>Money is decimal strings on integer micro-units, never floats.</li>
+      <li>An ambiguous submission becomes <code>SUBMISSION_UNKNOWN</code> and waits for reconciliation — no blind provider retries.</li>
     </ul>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Честные ограничения</h2>
+    <h2>Honest limitations</h2>
     <ol class="deal-list">
-      <li>Каталог на сайте и у локального узла — mock-фикстуры (<code>synthetic: true</code>), не реальное предложение.</li>
-      <li>Платежи x402 проверяются на USDC Base Sepolia — testnet.</li>
-      <li>Протокол — версия 0.1, без SLA.</li>
+      <li>The catalog on the site and on a local node is mock fixtures (<code>synthetic: true</code>), not real supply.</li>
+      <li>x402 payments are validated on USDC Base Sepolia — testnet.</li>
+      <li>The protocol is version 0.1, with no SLA.</li>
     </ol>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Последний шаг: поднять свой узел</h2>
+    <h2>The last step: run your own node</h2>
     <p class="section-lede">
-      Узел — один процесс, отдающий REST <code>/v0</code> и MCP <code>/mcp</code> на одном порту. Нужен Node.js ≥ 22.18.
+      The node is a single process serving REST <code>/v0</code> and MCP <code>/mcp</code> on one port. You need Node.js ≥ 22.18.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/node/">Поднять свой узел</a>
+      <a class="btn" href="/node/">Run your own node</a>
     </div>
     <p class="section-note">
-      Пошаговая инструкция, проверка узла и отчёт о нём — на странице <a href="/node/">«Запустить узел»</a>.
+      The step-by-step guide, node verification and reporting your node live on the <a href="/node/">“Run a node”</a> page.
     </p>
   </div>
 </section>
@@ -155,12 +158,12 @@ create_order({"quoteId":"&lt;quoteId&gt;","link":"https://t.me/example_channel",
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
-      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,16 +16,19 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FAQ протокола OpenSMM: заказ SMM-услуг для AI-агентов</title>
-<meta name="description" content="Частые вопросы о протоколе OpenSMM: MCP и REST, котировка, HTTP 402, идемпотентность по clientReference, оплата x402, что такое узел, что вне версии 0.1.">
-<meta property="og:title" content="FAQ протокола OpenSMM: заказ SMM-услуг для AI-агентов">
-<meta property="og:description" content="Частые вопросы о протоколе OpenSMM: MCP и REST, котировка, HTTP 402, идемпотентность по clientReference, оплата x402, что такое узел, что вне версии 0.1.">
+<title>OpenSMM protocol FAQ: ordering SMM services by AI agents</title>
+<meta name="description" content="Frequently asked questions about the OpenSMM protocol: MCP vs REST, quote, HTTP 402, clientReference idempotency, x402 payment, what a node is, what is out of v0.1.">
+<meta property="og:title" content="OpenSMM protocol FAQ: ordering SMM services by AI agents">
+<meta property="og:description" content="Frequently asked questions about the OpenSMM protocol: MCP vs REST, quote, HTTP 402, clientReference idempotency, x402 payment, what a node is, what is out of v0.1.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/opensmm-protocol-faq/">
+<meta property="og:image" content="https://opensmm.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/opensmm-protocol-faq/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/opensmm-protocol-faq/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/opensmm-protocol-faq/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/opensmm-protocol-faq/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/opensmm-protocol-faq/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/opensmm-protocol-faq/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,14 +41,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -55,40 +58,40 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
-      <span>FAQ протокола</span>
+      <span>Protocol FAQ</span>
     </nav>
-    <h1>FAQ протокола OpenSMM</h1>
+    <h1>OpenSMM protocol FAQ</h1>
     <p class="section-lede">
-      Короткие ответы по спеке v0 и документации репозитория: что такое протокол, как заказывать, как платить и что считается узлом. Каталог пока mock.
+      Short answers from the v0 spec and repository docs: what the protocol is, how to order, how to pay and what counts as a node. The catalog is still a mock.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Вопросы и ответы</h2>
+    <h2>Questions and answers</h2>
     <ul class="deal-list">
-      <li><strong>Что такое OpenSMM?</strong><br>Открытый протокол заказа SMM-услуг для AI-агентов: каталог, котировка, заказ, оплата, статусы. Лицензия MIT, версия 0.1.0, URL-префикс <code>/v0</code>.</li>
-      <li><strong>MCP — это и есть протокол?</strong><br>Нет. MCP — один из транспортов, REST <code>/v0</code> — канонический HTTP-биндинг. Одна операция по обоим даёт одни и те же объекты; тот же <code>clientReference</code> — тот же <code>orderId</code>. Подробнее: <a href="/mcp-vs-rest-smm-orders/">MCP или REST</a>.</li>
-      <li><strong>Какие команды есть у протокола?</strong><br>Десять: getCapabilities, searchServices, getService, getQuote, createOrder, getOrder, cancelOrder, requestRefill, listProviders, registerProvider. cancelOrder, requestRefill и registerProvider необязательны, остальные семь обязательны. Таблица: <a href="/smm-api-mcp/">SMM API для MCP</a>.</li>
-      <li><strong>Зачем нужна котировка?</strong><br>Заказ без котировки создать нельзя: она фиксирует услугу, количество, ссылку и сумму, истекает и расходуется ровно один раз.</li>
-      <li><strong>Что значит HTTP 402 при создании заказа?</strong><br>Ожидаемый ответ: заказ создан и ждёт оплаты (<code>REQUIRES_PAYMENT</code>), в теле — требования оплаты. Это не ошибка.</li>
-      <li><strong>Как протокол защищает от дублей заказа?</strong><br>Идемпотентность на уровне протокола: заголовок <code>Idempotency-Key</code> (REST) или поле <code>clientReference</code> (MCP). Повтор возвращает тот же заказ, тот же ключ с другими параметрами — <code>IDEMPOTENCY_CONFLICT</code>.</li>
-      <li><strong>Как устроена оплата?</strong><br>Расчёт напрямую: деньги идут от агента к поставщику и не проходят через узел (x402, USDC). Сейчас проверено только на тестовой сети Base Sepolia; основная сеть не включена. Подробнее: <a href="/smm-agent-payments-x402/">оплата по x402</a>.</li>
-      <li><strong>Реальный каталог уже есть?</strong><br>Нет. Каталог на сайте и у локального узла — mock-фикстуры (<code>synthetic: true</code>), а не продаваемое предложение. Заказы возможны после подключения поставщика (панели или другого узла).</li>
-      <li><strong>Что считается узлом?</strong><br>Публичный URL, у которого <code>GET /v0/services</code> отвечает 200 с JSON-массивом <code>services</code>, а <code>POST /mcp</code> с <code>initialize</code> — 200 с JSON-RPC <code>result</code>. Проверка: <code>npm run verify:node</code>. Подробнее: <a href="/smm-node-registry/">реестр узлов</a>.</li>
-      <li><strong>Как подключить свою панель?</strong><br>Через <code>baseUrl</code>, <code>apiKey</code> и профиль, без кода; доктор (<code>npm run doctor</code>) проверяет панель до подключения. См. <a href="/connect-smm-panel/">подключить панель</a>.</li>
-      <li><strong>Что вне рамок версии 0.1?</strong><br>Кампании, подписки, массовые заказы, торг, автозаказы, фермы аккаунтов и A2A. Версия 0.1 — без SLA, до <code>/v1</code> возможны несовместимые изменения без уведомления.</li>
+      <li><strong>What is OpenSMM?</strong><br>An open protocol for ordering social-growth services by AI agents: catalog, quote, order, payment, status. MIT licence, version 0.1.0, URL prefix <code>/v0</code>.</li>
+      <li><strong>Is MCP the protocol?</strong><br>No. MCP is one transport; REST <code>/v0</code> is the canonical HTTP binding. One operation over either yields the same objects; the same <code>clientReference</code> gives the same <code>orderId</code>. More: <a href="/mcp-vs-rest-smm-orders/">MCP or REST</a>.</li>
+      <li><strong>Which commands does it define?</strong><br>Ten: getCapabilities, searchServices, getService, getQuote, createOrder, getOrder, cancelOrder, requestRefill, listProviders, registerProvider. cancelOrder, requestRefill and registerProvider are optional; the rest are required. Table: <a href="/smm-api-mcp/">SMM API for MCP</a>.</li>
+      <li><strong>Why is a quote required?</strong><br>An order cannot be created without one: a quote binds service, quantity, link and amount, expires, and is consumed exactly once.</li>
+      <li><strong>What does HTTP 402 on order creation mean?</strong><br>Expected: the order exists and waits for payment (<code>REQUIRES_PAYMENT</code>), with payment requirements in the body. It is not an error.</li>
+      <li><strong>How does the protocol prevent duplicate orders?</strong><br>Idempotency is protocol-level: the <code>Idempotency-Key</code> header (REST) or the <code>clientReference</code> field (MCP). A replay returns the same order; the same key with other parameters gives <code>IDEMPOTENCY_CONFLICT</code>.</li>
+      <li><strong>How does payment work?</strong><br>Direct settlement: money flows from agent to supplier and never transits the node (x402, USDC). It is tested only on the Base Sepolia testnet; mainnet is not enabled. More: <a href="/smm-agent-payments-x402/">paying over x402</a>.</li>
+      <li><strong>Is there a live catalog yet?</strong><br>No. The catalog on the site and on a local node is mock fixtures (<code>synthetic: true</code>), not sellable supply. Ordering becomes possible after a provider (a panel or another node) is connected.</li>
+      <li><strong>What counts as a node?</strong><br>A public URL where <code>GET /v0/services</code> returns 200 with a JSON <code>services</code> array and <code>POST /mcp</code> with <code>initialize</code> returns 200 with a JSON-RPC <code>result</code>. Check it with <code>npm run verify:node</code>. More: <a href="/smm-node-registry/">node registry</a>.</li>
+      <li><strong>How do I connect my panel?</strong><br>With a <code>baseUrl</code>, an <code>apiKey</code> and a profile, no code; the doctor (<code>npm run doctor</code>) checks the panel before you hand it over. See <a href="/connect-smm-panel/">connect a panel</a>.</li>
+      <li><strong>What is out of scope for 0.1?</strong><br>Campaigns, subscriptions, mass orders, bargaining, auto-orders, account farms and A2A. Version 0.1 has no SLA, and breaking changes are allowed without notice until <code>/v1</code>.</li>
     </ul>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>Проверить на своей машине</h2>
+    <h2>Check it on your machine</h2>
     <p class="section-lede">
-      Локальный узел, mock-каталог, без ключей и денег (Node.js ≥ 22.18).
+      A local node, mock catalog, no keys, no money (Node.js ≥ 22.18).
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
@@ -99,31 +102,31 @@ npm run gateway
 curl -s http://127.0.0.1:8080/v0/services | head -30</pre>
     </div>
     <p class="section-note">
-      Пошагово с заказом — <a href="/smm-agent-quickstart/">быстрый старт агента</a>; стек n8n — <a href="/smm-order-n8n/">заказ из n8n</a>; отличие от прямого API — <a href="/opensmm-vs-direct-smm-api/">OpenSMM или прямой API</a>.
+      A step-by-step order is in the <a href="/smm-agent-quickstart/">agent quickstart</a>; for n8n see <a href="/smm-order-n8n/">ordering from n8n</a>; the difference from a direct API is in <a href="/opensmm-vs-direct-smm-api/">OpenSMM vs direct API</a>.
     </p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>Честные ограничения</h2>
+    <h2>Honest limits</h2>
     <ol class="deal-list">
-      <li>Страница пересказывает <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; точные версии и конфиги — там.</li>
-      <li>Каталог — mock (<code>synthetic: true</code>): реальных услуг, цен и заказов здесь нет, курс в примерах — тестовый.</li>
-      <li>Ответы взяты из спеки v0 и документации репозитория; чего там нет, здесь не обещано.</li>
+      <li>This page summarises <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>; exact versions and configs live there.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): there are no real services, prices or orders here, and rates in examples are test values.</li>
+      <li>Answers come from the v0 spec and repository docs; what they do not say is not promised here.</li>
     </ol>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <h2>Дальше: поднять свой узел</h2>
+    <h2>Next: run your own node</h2>
     <p class="section-lede">
-      Пример идёт на локальном узле. Чтобы вас учли в переписи, поднимите узел и сообщите его адрес.
+      The example runs on a local node. To be counted in the census, start a node and report its address.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/node/">Поднять свой узел</a>
+      <a class="btn" href="/node/">Run your own node</a>
     </div>
     <p class="section-note">
-      Пошаговая инструкция, проверка <code>verify:node</code> и отчёт об узле — на странице <a href="/node/">«Запустить узел»</a>.
+      Step-by-step instructions, the <code>verify:node</code> check and the node report are on the <a href="/node/">“Run a node”</a> page.
     </p>
   </div>
 </section>
@@ -132,12 +135,12 @@ curl -s http://127.0.0.1:8080/v0/services | head -30</pre>
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
-      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>

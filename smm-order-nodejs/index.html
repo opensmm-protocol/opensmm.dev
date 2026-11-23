@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -16,16 +16,19 @@
 <!-- /Yandex.Metrika counter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Заказ SMM-услуги из Node.js-агента: MCP-клиент без SDK на POST /mcp</title>
-<meta name="description" content="Запустить MCP-клиент на Node.js против узла OpenSMM: initialize, search_services, get_quote, create_order по POST /mcp. Без MCP SDK и зависимостей. Один clientReference даёт один orderId на любом транспорте. Mock-каталог.">
-<meta property="og:title" content="Заказ SMM-услуги из Node.js-агента: MCP-клиент без SDK на POST /mcp">
-<meta property="og:description" content="Запустить MCP-клиент на Node.js против узла OpenSMM: initialize, search_services, get_quote, create_order по POST /mcp. Без MCP SDK и зависимостей. Один clientReference даёт один orderId на любом транспорте. Mock-каталог.">
+<title>Order SMM services from a Node.js agent: MCP client without an SDK</title>
+<meta name="description" content="Run a Node.js MCP client against an OpenSMM node: initialize, search_services, get_quote, create_order over POST /mcp. No MCP SDK, no dependencies. One clientReference gives one orderId on any transport. Mock catalog.">
+<meta property="og:title" content="Order SMM services from a Node.js agent: MCP client without an SDK">
+<meta property="og:description" content="Run a Node.js MCP client against an OpenSMM node: initialize, search_services, get_quote, create_order over POST /mcp. No MCP SDK, no dependencies. One clientReference gives one orderId on any transport. Mock catalog.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opensmm.dev/smm-order-nodejs/">
+<meta property="og:image" content="https://opensmm.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
 <link rel="canonical" href="https://opensmm.dev/smm-order-nodejs/">
-<link rel="alternate" hreflang="en" href="https://opensmm.dev/en/smm-order-nodejs/">
-<link rel="alternate" hreflang="ru" href="https://opensmm.dev/smm-order-nodejs/">
-<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/en/smm-order-nodejs/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/smm-order-nodejs/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/smm-order-nodejs/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,14 +41,14 @@
   <div class="wrap nav-row">
     <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
     <nav class="nav-links">
-      <a href="/catalog/">Каталог</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
-      <a href="/#how">Как это работает</a>
-      <a href="/#tools">Инструменты</a>
-      <a href="/#settlement">Расчёты</a>
-      <a href="/#trust">Доверие</a>
-      <a href="/#supply">Поставщики</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Providers</a>
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
     </nav>
   </div>
@@ -55,22 +58,22 @@
 <section class="section catalog-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Главная</a>
+      <a href="/">Home</a>
       <span class="crumb-sep">/</span>
-      <span>Node.js-агент</span>
+      <span>Node.js agent</span>
     </nav>
-    <h1>Заказ SMM-услуги из Node.js-агента</h1>
+    <h1>Order SMM services from a Node.js agent</h1>
     <p class="section-lede">
-      Готовый MCP-клиент против локального узла OpenSMM на чистом Node.js: JSON-RPC на <code>POST /mcp</code> через встроенный <code>fetch</code> — без MCP SDK, без <code>npm install</code>, без ключей и денег. Сценарий целиком: initialize → каталог → котировка → заказ → повтор по <code>clientReference</code>.
+      A ready MCP client against a local OpenSMM node in plain Node.js: JSON-RPC on <code>POST /mcp</code> over the built-in <code>fetch</code> — no MCP SDK, no <code>npm install</code>, no keys, no money. The whole scenario: initialize → catalog → quote → order → replay by <code>clientReference</code>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>1. Поднять узел (около 2 минут)</h2>
+    <h2>1. Start the node (about 2 minutes)</h2>
     <p class="section-lede">
-      Node.js ≥ 22.18 нужен и узлу, и клиенту.
+      Node.js ≥ 22.18 is needed for both the node and the client.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
@@ -80,14 +83,14 @@ npm ci
 npm run gateway</pre>
     </div>
     <p class="section-note">
-      Узел печатает на stderr строку вида <code>gateway listening on http://localhost:8080 (REST /v0, MCP /mcp; provider: mock, mock catalog — not real supply)</code>. Порт занят? <code>PORT=8081 npm run gateway</code>. Другие сбои запуска — <a href="/smm-node-troubleshooting/">сбои запуска узла</a>.
+      The node prints a line like <code>gateway listening on http://localhost:8080 (REST /v0, MCP /mcp; provider: mock, mock catalog — not real supply)</code> on stderr. Port taken? <code>PORT=8081 npm run gateway</code>. Other startup fixes: <a href="/smm-node-troubleshooting/">node startup failures</a>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>2. Запустить MCP-клиент (второй терминал)</h2>
+    <h2>2. Run the MCP client (a second terminal)</h2>
     <p class="section-lede">
       
     </p>
@@ -107,16 +110,16 @@ replay:  osmm_order_... — same orderId, no second order created
 done:    MCP client OK</pre>
     </div>
     <p class="section-note">
-      Опции: <code>[base-url]</code> (по умолчанию <code>http://127.0.0.1:8080</code>), <code>--client-reference &lt;ref&gt;</code> (по умолчанию <code>examples-demo-&lt;random&gt;</code>), <code>--quote &lt;quote-id&gt;</code> — переиспользовать котировку из прошлого запуска, <code>--help</code>.
+      Options: <code>[base-url]</code> (default <code>http://127.0.0.1:8080</code>), <code>--client-reference &lt;ref&gt;</code> (default <code>examples-demo-&lt;random&gt;</code>), <code>--quote &lt;quote-id&gt;</code> to reuse a quote printed by another run, <code>--help</code>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>3. Один clientReference — один orderId на любом транспорте</h2>
+    <h2>3. One clientReference — one orderId on any transport</h2>
     <p class="section-lede">
-      Котировка расходуется один раз. Чтобы продолжить заказ с другого транспорта, передайте котировку и тот же <code>clientReference</code> — например, из Python REST-клиента в этот MCP-клиент.
+      A quote is consumed once. To continue an order from another transport, pass the quote and the same <code>clientReference</code> — for example, from the Python REST client to this MCP client.
     </p>
     <div class="code-block">
       <div class="code-head"><span>bash</span></div>
@@ -130,67 +133,67 @@ MCP:  quote:   osmm_quote_... (reused)
 MCP:  order:   osmm_order_... — REQUIRES_PAYMENT, clientReference "my-first-order"</pre>
     </div>
     <p class="section-note">
-      Строка <code>order:</code> у MCP-клиента повторяет <code>orderId</code> из REST-запуска: один <code>clientReference</code> даёт один заказ на любом транспорте — REST и MCP возвращают одни объекты.
+      The MCP client's <code>order:</code> line repeats the <code>orderId</code> from the REST run: one <code>clientReference</code> gives one order on any transport — REST and MCP return the same objects.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>4. Что на самом деле вызвал клиент</h2>
+    <h2>4. What the client actually calls</h2>
     <p class="section-lede">
       
     </p>
     <ol class="deal-list">
-      <li><code>initialize</code> — рукопожатие MCP (JSON-RPC на <code>POST /mcp</code>, узел stateless); ответ узла объявляет его возможности.</li>
-      <li><code>search_services</code> — читает каталог; на mock-узле каждая услуга <code>synthetic: true</code>, пример отказывается продолжать, если услуга не помечена как mock.</li>
-      <li><code>get_quote</code> — нужны <code>serviceId</code>, <code>quantity</code>, <code>link</code>. Котировка расходуется один раз, под каждый заказ нужна своя.</li>
-      <li><code>create_order</code> — нужны <code>quoteId</code>, <code>link</code>, <code>clientReference</code>. Заказ остаётся в статусе <code>REQUIRES_PAYMENT</code> — ничего не оплачивается и не исполняется.</li>
-      <li><code>create_order</code> ещё раз с тем же <code>clientReference</code> — повтор возвращает сохранённый заказ, а не создаёт второй.</li>
+      <li><code>initialize</code> — the MCP handshake (JSON-RPC on <code>POST /mcp</code>, the node is stateless); the node's answer declares its capabilities.</li>
+      <li><code>search_services</code> — reads the catalog; on a mock node every service is <code>synthetic: true</code>, and the example refuses to continue unless the service is marked as a mock.</li>
+      <li><code>get_quote</code> — needs <code>serviceId</code>, <code>quantity</code>, <code>link</code>. A quote is consumed once; every order needs its own.</li>
+      <li><code>create_order</code> — needs <code>quoteId</code>, <code>link</code>, <code>clientReference</code>. The order stays <code>REQUIRES_PAYMENT</code> — nothing is paid or executed.</li>
+      <li><code>create_order</code> again with the same <code>clientReference</code> — the replay returns the stored order instead of creating a second one.</li>
     </ol>
     <p class="section-note">
-      REST-эквиваленты тех же операций: <code>GET /v0/capabilities</code>, <code>GET /v0/services</code>, <code>POST /v0/quotes</code>, <code>POST /v0/orders</code> — <a href="/smm-order-python/">REST-клиент на Python</a>.
+      The REST equivalents of the same operations: <code>GET /v0/capabilities</code>, <code>GET /v0/services</code>, <code>POST /v0/quotes</code>, <code>POST /v0/orders</code> — the <a href="/smm-order-python/">Python REST client</a>.
     </p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>5. Защита от живого провайдера</h2>
+    <h2>5. Guard against a live provider</h2>
     <p class="section-lede">
       
     </p>
     <ul class="deal-list">
-      <li>Клиент берёт <strong>первую услугу</strong> из ответа узла — не придумывает ID — и сразу останавливается, если она не помечена <code>synthetic: true</code>.</li>
-      <li>Сообщение об ошибке: <code>refusing to place a demo order: ... is not marked synthetic. This example orders only on the mock catalog — see examples/README.md.</code></li>
-      <li>Это защита от узла, к которому подключён живой провайдер: демо-заказ не уйдёт в реальное предложение.</li>
+      <li>The client takes the <strong>first service</strong> from the node's answer — it invents no IDs — and stops at once unless it is marked <code>synthetic: true</code>.</li>
+      <li>The error message: <code>refusing to place a demo order: ... is not marked synthetic. This example orders only on the mock catalog — see examples/README.md.</code></li>
+      <li>This guards against a node with a live provider attached: the demo order never reaches real supply.</li>
     </ul>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Честные ограничения</h2>
+    <h2>Honest limits</h2>
     <ol class="deal-list">
-      <li>Страница пересказывает <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/README.md">examples/README.md</a> в репозитории mcp-server; точный вывод и опции скрипта — там.</li>
-      <li>Сценарий для всех стеков сразу: <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>.</li>
-      <li>Каталог — mock (<code>synthetic: true</code>): реальных услуг, цен и заказов здесь нет; курс в примере — тестовый, оплата не проходит.</li>
-      <li>Другие стеки: <a href="/smm-agent-quickstart/">быстрый старт агента</a>, <a href="/smm-order-python/">REST-клиент на Python</a>, <a href="/smm-order-claude-desktop/">заказ из Claude Desktop</a>, <a href="/smm-order-cursor/">заказ из Cursor</a>.</li>
+      <li>This page retells <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/README.md">examples/README.md</a> in the mcp-server repo; the exact script output and options are there.</li>
+      <li>The scenario for all stacks at once: <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): no real services, prices or orders here; the rate in the example is a test one, nothing is paid.</li>
+      <li>Other stacks: the <a href="/smm-agent-quickstart/">agent quickstart</a>, the <a href="/smm-order-python/">Python REST client</a>, <a href="/smm-order-claude-desktop/">ordering from Claude Desktop</a>, <a href="/smm-order-cursor/">ordering from Cursor</a>.</li>
     </ol>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Дальше: свой узел</h2>
+    <h2>Next: your own node</h2>
     <p class="section-lede">
-      Пример идёт на локальном узле. Чтобы вас учли в переписи, поднимите узел и сообщите его адрес.
+      The example runs on a local node. To be counted in the census, run a node and report its address.
     </p>
     <div style="margin-top: 28px;">
-      <a class="btn" href="/node/">Поднять свой узел</a>
+      <a class="btn" href="/node/">Run your own node</a>
     </div>
     <p class="section-note">
-      Пошаговая инструкция, проверка и отчёт об узле — на странице <a href="/node/">«Запустить узел»</a>.
+      The step-by-step guide, verification and reporting your node are on the <a href="/node/">“Run a node”</a> page.
     </p>
   </div>
 </section>
@@ -199,12 +202,12 @@ MCP:  order:   osmm_order_... — REQUIRES_PAYMENT, clientReference "my-first-or
 
 <footer class="footer">
   <div class="wrap footer-row">
-    <span>OpenSMM Protocol — открытое ПО под лицензией MIT</span>
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
     <nav class="footer-links">
       <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
-      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Спека v0</a>
-      <a href="/node/">Запустить узел</a>
-      <a href="/panels/">Для панелей</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="/mcp.json">mcp.json</a>
     </nav>
