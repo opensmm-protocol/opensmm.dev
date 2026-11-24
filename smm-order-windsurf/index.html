@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order SMM services from Windsurf: MCP config for mcp_config.json</title>
+<meta name="description" content="Connect Windsurf to an OpenSMM node: mcp_config.json launches npm run mcp over stdio or points at POST /mcp of a running gateway. Catalog → quote → order → replay by clientReference on the mock catalog.">
+<meta property="og:title" content="Order SMM services from Windsurf: MCP config for mcp_config.json">
+<meta property="og:description" content="Connect Windsurf to an OpenSMM node: mcp_config.json launches npm run mcp over stdio or points at POST /mcp of a running gateway. Catalog → quote → order → replay by clientReference on the mock catalog.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/smm-order-windsurf/">
+<meta property="og:image" content="https://opensmm.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
+<link rel="canonical" href="https://opensmm.dev/smm-order-windsurf/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/smm-order-windsurf/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/smm-order-windsurf/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Order SMM services from Windsurf through an OpenSMM node",
+  "description": "Start an OpenSMM node, add the opensmm server to ~/.codeium/windsurf/mcp_config.json over stdio or HTTP, then run catalog, quote, order and an idempotent replay on the mock catalog.",
+  "totalTime": "PT5M",
+  "tool": [
+    { "@type": "HowToTool", "name": "Node.js (>= 22.18)" },
+    { "@type": "HowToTool", "name": "Windsurf with MCP support" }
+  ]
+}
+</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>Ordering from Windsurf</span>
+    </nav>
+    <h1>Order SMM services from Windsurf</h1>
+    <p class="section-lede">
+      Windsurf (Codeium) reads MCP servers from <code>~/.codeium/windsurf/mcp_config.json</code>. The <code>opensmm</code> entry below either launches the OpenSMM MCP server as a local child process (<code>npm run mcp</code> over stdio) or points Cascade at the <code>POST /mcp</code> endpoint of a running node. No keys, no accounts, no credentials. Everything runs on the mock catalog: every service is marked <code>synthetic: true</code>, orders stay <code>REQUIRES_PAYMENT</code> and are never paid.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. Install the node (about 2 minutes)</h2>
+    <p class="section-lede">
+      You need Node.js ≥ 22.18 and a Windsurf build with MCP support: the MCP panel in Cascade settings, MCP protocol <code>2025-06-18</code>.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci</pre>
+    </div>
+    <p class="section-note">
+      The stdio block in step 2 starts the MCP server by itself. The HTTP block also needs a running node: <code>npm run gateway</code> in the same checkout. The node prints a line like <code>gateway listening on http://localhost:8080 (REST /v0, MCP /mcp; provider: mock, mock catalog — not real supply)</code> on stderr. Port taken? <code>PORT=8081 npm run gateway</code> and use that address in <code>mcp_config.json</code>. Other startup fixes: <a href="/smm-node-troubleshooting/">node startup failures</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>2. Add the server to mcp_config.json</h2>
+    <p class="section-lede">
+      Open <code>~/.codeium/windsurf/mcp_config.json</code> — create the file with an empty <code>{}</code> object if it does not exist yet — and add the <code>opensmm</code> entry. On Windows the file is <code>%USERPROFILE%\.codeium\windsurf\mcp_config.json</code>. Pick one of the two blocks: the stdio config is the one in <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/README.md">examples/README.md</a>, the remote one is the same server reached at <code>POST /mcp</code>.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>json — stdio (npm run mcp)</span></div>
+<pre>{
+  "mcpServers": {
+    "opensmm": {
+      "command": "npm",
+      "args": ["run", "mcp"],
+      "cwd": "/path/to/mcp-server"
+    }
+  }
+}</pre>
+    </div>
+    <p class="section-note">
+      Replace <code>/path/to/mcp-server</code> with the absolute path of your checkout: <code>npm run mcp</code> runs inside that directory, and the <code>mcp</code> script is in the checkout's <code>package.json</code> by default.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>json — HTTP (POST /mcp of a running node)</span></div>
+<pre>{
+  "mcpServers": {
+    "opensmm": {
+      "serverUrl": "http://127.0.0.1:8080/mcp"
+    }
+  }
+}</pre>
+    </div>
+    <p class="section-note">
+      <code>serverUrl</code> is the key Windsurf uses for a server that runs on its own, and the URL must end in <code>/mcp</code>. The OpenSMM node's HTTP binding accepts <code>POST /mcp</code> only and opens no event stream — <code>GET /mcp</code> answers 405. If Cascade reports the remote server as failed, use the stdio block above: the same tools, no port.
+    </p>
+    <p class="section-note">
+      Reload the Windsurf window or restart Windsurf, then confirm the <code>opensmm</code> tools are listed: <code>search_services</code>, <code>get_quote</code>, <code>create_order</code>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>3. What to ask the agent</h2>
+    <p class="section-lede">
+      Open a Cascade chat and ask Windsurf to run the whole scenario in one prompt:
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>text</span></div>
+<pre>Using the opensmm tools, call search_services and confirm every service
+is synthetic. Then call get_quote for the first service with quantity 100
+and link https://t.me/opensmm_example, call create_order with that quote
+and clientReference windsurf-demo-1, then call create_order again with the
+same quote and reference. Report both order IDs.</pre>
+    </div>
+    <p class="section-lede">
+      Expected result:
+    </p>
+    <ul class="deal-list">
+      <li><code>search_services</code> → the mock catalog, every service <code>synthetic: true</code>;</li>
+      <li><code>get_quote</code> → <code>osmm_quote_...</code>, quantity 100;</li>
+      <li>first <code>create_order</code> → <code>osmm_order_...</code>, <code>paymentStatus: REQUIRES_PAYMENT</code>;</li>
+      <li>second <code>create_order</code> → <strong>the same</strong> <code>orderId</code> — one <code>clientReference</code>, one order, even though each call is a separate <code>POST /mcp</code>.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>If something looks wrong</h2>
+    <p class="section-lede">
+      
+    </p>
+    <ul class="deal-list">
+      <li>A service is not marked <code>synthetic</code> — stop, do not order: this demo must not order real supply. The order is never paid, so nothing executes.</li>
+      <li>The <code>opensmm</code> tools did not appear — check <code>cwd</code> (it must be the absolute path of your checkout) and reload the Windsurf window.</li>
+      <li><code>ECONNREFUSED</code> — the node from step 1 is not running, or uses another port. Only the HTTP block needs it.</li>
+      <li><code>IDEMPOTENCY_CONFLICT</code> — that <code>clientReference</code> already belongs to an order made from a different quote: pass the original or use a new reference.</li>
+      <li>HTTP 402 on <code>POST /v0/orders</code> is expected, not a failure.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limits</h2>
+    <ol class="deal-list">
+      <li>There is no dedicated Windsurf directory in <code>examples/</code> yet: the stdio block above is the config from <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/examples/README.md">examples/README.md</a>, and the file path plus the <code>serverUrl</code> key are the ones Windsurf documents for <code>mcp_config.json</code>.</li>
+      <li>The scenario for all stacks at once: <a href="https://github.com/opensmm-protocol/mcp-server/blob/develop/docs/AGENT_QUICKSTART.md">docs/AGENT_QUICKSTART.md</a>.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): no real services, prices or orders here; orders are not paid in this guide.</li>
+      <li>Other stacks: <a href="/smm-agent-quickstart/">agent quickstart</a>, <a href="/smm-order-cursor/">ordering from Cursor</a>, <a href="/smm-order-claude-desktop/">ordering from Claude Desktop</a>.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Next: your own node</h2>
+    <p class="section-lede">
+      The example runs on a local node. To be counted in the census, run a node and report its address.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+    <p class="section-note">
+      The step-by-step guide, verification and reporting your node are on the <a href="/node/">“Run a node”</a> page.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>
