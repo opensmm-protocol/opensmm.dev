@@ -439,6 +439,14 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/integrations/llamaindex/"/>
   </url>
   <url>
+    <loc>https://opensmm.dev/integrations/autogen/</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://opensmm.dev/integrations/autogen/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://opensmm.dev/integrations/autogen/"/>
+  </url>
+  <url>
     <loc>https://opensmm.dev/smm-order-python/</loc>
     <lastmod>2026-11-21</lastmod>
     <changefreq>monthly</changefreq>
