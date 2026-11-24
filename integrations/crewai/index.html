@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114382488', 'ym');
+
+    ym(114382488, 'init', {ssr:true, clickmap:true, params: {__ym: {isFromApi: 'yesIsFromApi'}}, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114382488" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order SMM services from a CrewAI agent: MCP and REST tools</title>
+<meta name="description" content="Connect a CrewAI crew to an OpenSMM node: MCPServerAdapter over POST /mcp, or three native tools on REST /v0. Verified on the mock catalog; orders stay REQUIRES_PAYMENT.">
+<meta property="og:title" content="Order SMM services from a CrewAI agent: MCP and REST tools">
+<meta property="og:description" content="Connect a CrewAI crew to an OpenSMM node: MCPServerAdapter over POST /mcp, or three native tools on REST /v0. Verified on the mock catalog; orders stay REQUIRES_PAYMENT.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opensmm.dev/integrations/crewai/">
+<meta property="og:image" content="https://opensmm.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OpenSMM — ordering SMM services for AI agents over MCP/REST">
+<link rel="canonical" href="https://opensmm.dev/integrations/crewai/">
+<link rel="alternate" hreflang="en" href="https://opensmm.dev/integrations/crewai/">
+<link rel="alternate" hreflang="x-default" href="https://opensmm.dev/integrations/crewai/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230052FF'/%3E%3Crect x='7' y='17' width='4' height='8' rx='1' fill='%23fff'/%3E%3Crect x='14' y='12' width='4' height='13' rx='1' fill='%23fff'/%3E%3Crect x='21' y='7' width='4' height='18' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-row">
+    <a class="brand" href="/">OpenSMM <span class="version">v0.1</span></a>
+    <nav class="nav-links">
+      <a href="/catalog/">Catalog</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/#how">How it works</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#settlement">Settlement</a>
+      <a href="/#trust">Trust</a>
+      <a href="/#supply">Supply</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section catalog-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="crumb-sep">/</span>
+      <span>CrewAI integration</span>
+    </nav>
+    <h1>Order SMM services from a CrewAI agent</h1>
+    <p class="section-lede">
+      A CrewAI crew reaches an OpenSMM node in two ways. The first is <code>MCPServerAdapter</code> from <code>crewai-tools[mcp]</code>: it connects to the node's <code>POST /mcp</code> endpoint and hands the crew the node's MCP tools as CrewAI tools. The second is three native <code>@tool</code> functions that call REST <code>/v0</code> with the Python standard library. Both are on this page; both were run against the mock node from step 1 with <code>crewai 1.15.44</code>. Every service in that catalog is <code>synthetic: true</code>, orders stay <code>REQUIRES_PAYMENT</code> and nothing is paid.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>1. Start the node (about 2 minutes)</h2>
+    <p class="section-lede">
+      You need Node.js ≥ 22.18. One process serves REST <code>/v0</code> and MCP <code>/mcp</code> on the same port.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>git clone https://github.com/opensmm-protocol/mcp-server.git
+cd mcp-server
+npm ci
+PORT=8080 npm run gateway</pre>
+    </div>
+    <p class="section-note">
+      The node prints <code>gateway listening on http://localhost:8080 (REST /v0, MCP /mcp; provider: mock, mock catalog — not real supply)</code> on stderr. Check it from another terminal: <code>curl -s http://127.0.0.1:8080/v0/services | head -30</code> — every service carries <code>"synthetic": true</code>. Port taken? <code>PORT=8081 npm run gateway</code> and use that address everywhere below. Other startup fixes: <a href="/smm-node-troubleshooting/">node startup failures</a>. A Docker Compose alternative to the four commands is in <a href="/smm-node-deploy-guide/">deploying an OpenSMM node</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>2. Install the CrewAI packages</h2>
+    <p class="section-lede">
+      The versions below are the ones this page was run with: <code>crewai 1.15.44</code>, <code>crewai-tools 1.15.44</code> and the <code>mcp</code> extra, which brings <code>mcpadapt</code> and the Python MCP client. They need Python 3.10–3.13.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>bash</span></div>
+<pre>python3 -m venv .venv
+. .venv/bin/activate
+pip install "crewai==1.15.44" "crewai-tools[mcp]==1.15.44"</pre>
+    </div>
+    <p class="section-note">
+      The node from step 1 needs no credentials and no Python: the gateway is a separate process, and the crew talks to it over HTTP.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>3. Route A: the node's MCP tools as CrewAI tools</h2>
+    <p class="section-lede">
+      <code>MCPServerAdapter</code> starts the MCP session and adapts every tool the node advertises. The transport comes from the <code>transport</code> key: <code>streamable-http</code> for the node's <code>POST /mcp</code>, or <code>sse</code>. On this node the adapter lists eleven tools — <code>get_capabilities</code>, <code>list_providers</code>, <code>search_services</code>, <code>compare_offers</code>, <code>get_service</code>, <code>get_quote</code>, <code>create_order</code>, <code>get_order_status</code> and the rest; the order flow uses three of them.
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>python — crew with the node's MCP tools</span></div>
+<pre>from crewai import Agent, Crew, Process, Task
+from crewai_tools.adapters.mcp_adapter import MCPServerAdapter
+
+server = {"url": "http://127.0.0.1:8080/mcp", "transport": "streamable-http"}
+
+with MCPServerAdapter(server) as opensmm:
+    runner = Agent(
+        role="SMM order runner",
+        goal="Search the OpenSMM catalog and place one demo order",
+        backstory="Works on the mock catalog only; never pays, nothing is executed.",
+        tools=list(opensmm),
+    )
+    task = Task(
+        description=(
+            "Call search_services with query 'telegram members', platform 'telegram', "
+            "objective 'members', sort 'relevance'. Take the first serviceId and call "
+            "get_quote with quantity 100, link https://t.me/opensmm_example, parameters {}. "
+            "Then call create_order with that quoteId, link https://t.me/opensmm_example, "
+            "quantity 100, parameters {} and clientReference crewai-demo-1. Repeat the same "
+            "create_order call once. Report both orderIds and the paymentStatus."
+        ),
+        expected_output="Both orderIds, which must be identical, and paymentStatus REQUIRES_PAYMENT.",
+        agent=runner,
+    )
+    Crew(agents=[runner], tasks=[task], process=Process.sequential).kickoff()</pre>
+    </div>
+    <p class="section-note">
+      <code>kickoff()</code> runs the crew's LLM, so it needs a model key of your choice (<code>OPENAI_API_KEY</code> or any LiteLLM-supported provider). That model is yours, not OpenSMM's: the node calls no LLM. To check the connection and the order flow without any key, call the adapted tools directly — this is the part that was run for this page:
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>python — the same tools without a crew kickoff</span></div>
+<pre>import json
+from crewai_tools.adapters.mcp_adapter import MCPServerAdapter
+
+server = {"url": "http://127.0.0.1:8080/mcp", "transport": "streamable-http"}
+
+with MCPServerAdapter(server) as tools:
+    by_name = {tool.name: tool for tool in tools}
+    catalog = json.loads(
+        by_name["search_services"].run(
+            query="telegram members",
+            platform="telegram",
+            objective="members",
+            sort="relevance",
+        )
+    )
+    service_id = catalog["services"][0]["serviceId"]
+    quote = json.loads(
+        by_name["get_quote"].run(
+            serviceId=service_id,
+            quantity=100,
+            link="https://t.me/opensmm_example",
+            parameters={},
+        )
+    )
+    order = json.loads(
+        by_name["create_order"].run(
+            quoteId=quote["quoteId"],
+            link="https://t.me/opensmm_example",
+            quantity=100,
+            parameters={},
+            clientReference="crewai-mcp-1",
+        )
+    )
+    print(order["orderId"], order["paymentStatus"])</pre>
+    </div>
+    <p class="section-note">
+      Expected output: <code>osmm_order_... REQUIRES_PAYMENT</code>. The identifiers change on every run. One caveat of this adapter: it fills every argument the tool schema declares, and omitted optional arguments reach the node as <code>null</code>, which the node rejects (<code>MCP error -32602 ... expected string, received null</code>). Pass all of them, and use <code>parameters={}</code> for object fields.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>4. Route B: three native CrewAI tools over REST</h2>
+    <p class="section-lede">
+      If you would rather not add the MCP extra, the same flow is three <code>@tool</code> functions on the node's REST endpoints. Only the standard library is used for HTTP — <code>urllib</code> and <code>json</code>. Save this as <code>opensmm_tools.py</code>:
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>python — opensmm_tools.py</span></div>
+<pre>"""CrewAI tools for an OpenSMM node. Standard library only: urllib + json."""
+import json
+import urllib.error
+import urllib.parse
+import urllib.request
+
+from crewai.tools import tool
+
+BASE_URL = "http://127.0.0.1:8080"
+
+
+def _request(method, path, payload=None):
+    data = json.dumps(payload).encode("utf-8") if payload is not None else None
+    request = urllib.request.Request(
+        BASE_URL + path,
+        data=data,
+        headers={"content-type": "application/json"},
+        method=method,
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=15) as response:
+            return json.load(response)
+    except urllib.error.HTTPError as err:
+        if err.code == 402:  # an unpaid order still carries the order body
+            return json.load(err)
+        raise
+
+
+@tool("search_smm_services")
+def search_smm_services(query: str) -> str:
+    """Search the node's service catalog. Example query: 'telegram members'."""
+    catalog = _request("GET", "/v0/services?query=" + urllib.parse.quote(query))
+    return json.dumps(catalog["services"], indent=2)
+
+
+@tool("quote_smm_service")
+def quote_smm_service(service_id: str, quantity: int, link: str) -> str:
+    """Price a service before ordering. Returns a quoteId valid for 15 minutes."""
+    quote = _request(
+        "POST",
+        "/v0/quotes",
+        {"serviceId": service_id, "quantity": quantity, "link": link},
+    )
+    return json.dumps(quote, indent=2)
+
+
+@tool("create_smm_order")
+def create_smm_order(quote_id: str, link: str, client_reference: str) -> str:
+    """Create an order from a quote. One clientReference is one order, even on replay."""
+    order = _request(
+        "POST",
+        "/v0/orders",
+        {"quoteId": quote_id, "link": link, "clientReference": client_reference},
+    )
+    return json.dumps(order, indent=2)</pre>
+    </div>
+    <p class="section-note">
+      The tools are plain Python objects, so they can be checked without an LLM:
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>python — run the three tools</span></div>
+<pre>import json
+
+from opensmm_tools import create_smm_order, quote_smm_service, search_smm_services
+
+services = json.loads(search_smm_services.run(query="telegram members"))
+quote = json.loads(
+    quote_smm_service.run(
+        service_id=services[0]["serviceId"],
+        quantity=100,
+        link="https://t.me/opensmm_example",
+    )
+)
+order = json.loads(
+    create_smm_order.run(
+        quote_id=quote["quoteId"],
+        link="https://t.me/opensmm_example",
+        client_reference="crewai-1",
+    )
+)
+print(order["orderId"], order["paymentStatus"])</pre>
+    </div>
+    <p class="section-note">
+      The last line prints <code>osmm_order_... REQUIRES_PAYMENT</code>; the service the tools return is marked <code>synthetic: True</code>. A second <code>create_smm_order</code> call with the same <code>client_reference</code> returns the same <code>orderId</code>. To give the tools to a crew, list them on the agent — <code>tools=[search_smm_services, quote_smm_service, create_smm_order]</code> — and describe the flow in the task:
+    </p>
+    <div class="code-block">
+      <div class="code-head"><span>python — the crew</span></div>
+<pre>from crewai import Agent, Crew, Process, Task
+
+from opensmm_tools import create_smm_order, quote_smm_service, search_smm_services
+
+order_runner = Agent(
+    role="SMM order runner",
+    goal="Search the catalog, price one service and place a single demo order",
+    backstory="Works on the OpenSMM mock catalog only; nothing is paid or executed.",
+    tools=[search_smm_services, quote_smm_service, create_smm_order],
+)
+task = Task(
+    description=(
+        "Search the catalog for 'telegram members', price the first service for "
+        "quantity 100 with link https://t.me/opensmm_example, then create one order "
+        "with clientReference crewai-demo-1. Report the orderId and paymentStatus."
+    ),
+    expected_output="The orderId and its paymentStatus.",
+    agent=order_runner,
+)
+Crew(agents=[order_runner], tasks=[task], process=Process.sequential).kickoff()</pre>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>5. What the tools do</h2>
+    <ol class="deal-list">
+      <li><code>search_services</code> / <code>GET /v0/services</code> — reads the catalog. On the mock node every entry is <code>synthetic: true</code> with <code>providerRef: "provider-alpha"</code>: fixtures, not sellable supply.</li>
+      <li><code>get_quote</code> / <code>POST /v0/quotes</code> — takes <code>serviceId</code>, <code>quantity</code>, <code>link</code> and returns a <code>quoteId</code> that expires in 15 minutes and is consumed once.</li>
+      <li><code>create_order</code> / <code>POST /v0/orders</code> — takes <code>quoteId</code>, <code>link</code> and <code>clientReference</code>. Over REST an unpaid order answers HTTP 402 and still carries the order body; the tools above read that body instead of failing.</li>
+      <li>The replay: the same <code>clientReference</code> with the same quote returns the stored order, so one reference is one order on any transport. Keep the reference to replay an order; for a genuinely new order pick a new one — a new quote with an old reference answers 409.</li>
+      <li>Status after that: <code>get_order_status</code> / <code>GET /v0/orders/{id}</code>, <code>cancel_order</code>, <code>request_refill</code>.</li>
+    </ol>
+    <p class="section-note">
+      Protocol-level details — <code>paymentStatus</code> and <code>executionStatus</code> as separate state machines, decimal strings on integer micro-units, canonical error codes: <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">spec/v0</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>If something looks wrong</h2>
+    <ul class="deal-list">
+      <li><code>MCP error -32602 ... expected string, received null</code> — the MCP adapter sent <code>null</code> for an omitted argument. Pass every argument the tool lists: <code>query</code>, <code>platform</code>, <code>objective</code>, <code>sort</code> for <code>search_services</code>, <code>parameters={}</code> for object fields.</li>
+      <li><code>ECONNREFUSED 127.0.0.1:8080</code> — the node from step 1 is not running, or it listens on another port; change <code>BASE_URL</code> or the <code>url</code> in <code>server</code>.</li>
+      <li><code>IDEMPOTENCY_CONFLICT</code> (HTTP 409) — that <code>clientReference</code> already belongs to an order made from a different quote. Reuse the original quote or pick a new reference.</li>
+      <li>A service is not marked <code>synthetic</code> — stop and do not order: this demo must not place real orders. Restart the node without a provider configured.</li>
+      <li>HTTP 402 on <code>POST /v0/orders</code> is expected, not a failure: the order exists and waits for payment.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Honest limits</h2>
+    <ol class="deal-list">
+      <li>There is no ready-made CrewAI example in the <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/examples">mcp-server repository</a> — this page is the example. Both routes were run against the mock node with <code>crewai 1.15.44</code> and <code>crewai-tools 1.15.44</code>; a newer release of either package may change the adapter API.</li>
+      <li>The catalog is a mock (<code>synthetic: true</code>): no real services and no prices on this page, and nothing is paid or executed.</li>
+      <li><code>kickoff()</code> needs an LLM key for the crew; the node itself needs no key, account or money.</li>
+      <li>The MCP route exposes all eleven node tools to the crew, not just the three used here; the model decides when to call them.</li>
+      <li>Other stacks: <a href="/integrations/eliza/">ElizaOS plugin</a>, <a href="/smm-order-langchain/">a LangChain-style agent</a>, <a href="/smm-order-python/">a Python REST client</a>, <a href="/smm-agent-quickstart/">agent quickstart</a>.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Next: your own node</h2>
+    <p class="section-lede">
+      The example runs on a local node. To be counted in the census, run a node and report its address.
+    </p>
+    <div style="margin-top: 28px;">
+      <a class="btn" href="/node/">Run your own node</a>
+    </div>
+    <p class="section-note">
+      The step-by-step guide, verification and reporting your node are on the <a href="/node/">“Run a node”</a> page.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <span>OpenSMM Protocol — open-source software under the MIT license</span>
+    <nav class="footer-links">
+      <a href="https://github.com/opensmm-protocol/mcp-server">GitHub</a>
+      <a href="https://github.com/opensmm-protocol/mcp-server/tree/main/spec/v0">Spec v0</a>
+      <a href="/node/">Run a node</a>
+      <a href="/panels/">For panels</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp.json">mcp.json</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>
