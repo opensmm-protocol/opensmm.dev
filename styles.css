@@ -292,7 +292,7 @@ h2 {
 }
 .tool {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: minmax(170px, 210px) 1fr;
   gap: 16px;
   align-items: baseline;
   padding: 13px 0;
@@ -300,6 +300,51 @@ h2 {
 }
 .tool code { font-size: 13.5px; color: var(--ink); }
 .tool p { font-size: 14.5px; color: var(--muted); }
+
+.tool-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.tool-head code {
+  font-size: 14px;
+}
+.tool-head code a {
+  color: var(--accent-ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+.tool-head code a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.tool-tag {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: #fff;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  white-space: nowrap;
+}
+.tool-tag-mcp {
+  color: var(--accent-ink);
+  background: #edf3ff;
+  border-color: rgba(0, 82, 255, 0.28);
+}
+.tool-tag-rest {
+  color: #1b633f;
+  background: #edf8f2;
+  border-color: rgba(63, 182, 139, 0.45);
+}
 
 /* ---------- settlement diagram ---------- */
 
@@ -532,8 +577,8 @@ h2 {
   .flow { grid-template-columns: 1fr; }
   .flow li { border-right: none; border-bottom: 1px solid var(--rule); padding: 16px 0; }
   .flow li:last-child { border-bottom: none; }
-  .tools-grid { grid-template-columns: 1fr; }
-  .tool { grid-template-columns: 1fr; gap: 2px; }
+  .tools-grid { grid-template-columns: 1fr; margin-top: 28px; }
+  .tool { grid-template-columns: 1fr; gap: 4px; padding: 12px 0; }
   h1 { max-width: 18ch; }
 }
 
@@ -609,6 +654,34 @@ h2 {
   .settle-diagram {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+  }
+  .tools-grid {
+    margin-top: 22px;
+    grid-template-columns: 1fr;
+    row-gap: 0;
+  }
+  .tool {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    padding: 11px 0;
+    min-width: 0;
+  }
+  .tool-head {
+    gap: 6px;
+  }
+  .tool-head code a {
+    display: inline-block;
+    padding: 2px 0;
+    font-size: 14.5px;
+  }
+  .tool-tag {
+    font-size: 10.5px;
+    padding: 2px 6px;
+  }
+  .tool p {
+    font-size: 13.5px;
+    line-height: 1.5;
+    word-break: break-word;
   }
 }
 
