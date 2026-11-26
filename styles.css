@@ -59,6 +59,8 @@ code { font-family: var(--mono); font-size: 0.86em; }
   font-size: 19px;
   color: var(--ink);
   letter-spacing: -0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .brand:hover { text-decoration: none; }
 .version {
@@ -72,8 +74,19 @@ code { font-family: var(--mono); font-size: 0.86em; }
   margin-left: 8px;
   vertical-align: 3px;
 }
-.nav-links { display: flex; gap: 22px; flex-wrap: wrap; }
-.nav-links a { color: var(--muted); font-size: 15px; }
+.nav-links {
+  display: flex;
+  row-gap: 8px;
+  column-gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.nav-links a {
+  color: var(--muted);
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+}
 .nav-links a:hover { color: var(--ink); text-decoration: none; }
 
 /* ---------- hero ---------- */
@@ -279,7 +292,7 @@ h2 {
 }
 .tool {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: minmax(170px, 210px) 1fr;
   gap: 16px;
   align-items: baseline;
   padding: 13px 0;
@@ -287,6 +300,51 @@ h2 {
 }
 .tool code { font-size: 13.5px; color: var(--ink); }
 .tool p { font-size: 14.5px; color: var(--muted); }
+
+.tool-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.tool-head code {
+  font-size: 14px;
+}
+.tool-head code a {
+  color: var(--accent-ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+.tool-head code a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.tool-tag {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: #fff;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  white-space: nowrap;
+}
+.tool-tag-mcp {
+  color: var(--accent-ink);
+  background: #edf3ff;
+  border-color: rgba(0, 82, 255, 0.28);
+}
+.tool-tag-rest {
+  color: #1b633f;
+  background: #edf8f2;
+  border-color: rgba(63, 182, 139, 0.45);
+}
 
 /* ---------- settlement diagram ---------- */
 
@@ -519,13 +577,52 @@ h2 {
   .flow { grid-template-columns: 1fr; }
   .flow li { border-right: none; border-bottom: 1px solid var(--rule); padding: 16px 0; }
   .flow li:last-child { border-bottom: none; }
-  .tools-grid { grid-template-columns: 1fr; }
-  .tool { grid-template-columns: 1fr; gap: 2px; }
+  .tools-grid { grid-template-columns: 1fr; margin-top: 28px; }
+  .tool { grid-template-columns: 1fr; gap: 4px; padding: 12px 0; }
   h1 { max-width: 18ch; }
 }
 
 @media (max-width: 560px) {
-  .nav-row { flex-direction: column; gap: 10px; }
+  .nav-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding-top: 14px;
+    padding-bottom: 12px;
+  }
+  .brand {
+    align-self: flex-start;
+  }
+  .nav-links {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    margin: 0 -24px;
+    padding: 0 24px 4px;
+    scrollbar-width: none;
+  }
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+  .nav-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 12px;
+    font-size: 14px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    color: var(--muted);
+    border-radius: 6px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+  .nav-links a:hover,
+  .nav-links a:focus-visible {
+    color: var(--ink);
+    background: rgba(0, 0, 0, 0.04);
+  }
   .wire-body { font-size: 11.5px; min-height: 320px; }
   .code-wrap pre { white-space: pre-wrap; overflow-wrap: anywhere; }
   .hero-grid,
@@ -557,6 +654,34 @@ h2 {
   .settle-diagram {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+  }
+  .tools-grid {
+    margin-top: 22px;
+    grid-template-columns: 1fr;
+    row-gap: 0;
+  }
+  .tool {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    padding: 11px 0;
+    min-width: 0;
+  }
+  .tool-head {
+    gap: 6px;
+  }
+  .tool-head code a {
+    display: inline-block;
+    padding: 2px 0;
+    font-size: 14.5px;
+  }
+  .tool-tag {
+    font-size: 10.5px;
+    padding: 2px 6px;
+  }
+  .tool p {
+    font-size: 13.5px;
+    line-height: 1.5;
+    word-break: break-word;
   }
 }
 
